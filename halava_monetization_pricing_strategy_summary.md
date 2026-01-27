@@ -1,5 +1,8 @@
 # Halava Monetization & Pricing Strategy (Pitch & Spec Summary)
 
+> **Last updated:** January 2026  
+> **Target market:** Japan (currency: Japanese Yen ¥)
+
 ## 1. Product & Market Context
 
 Halava is a **two-sided halal commerce platform** with a strong consumer-first approach:
@@ -49,6 +52,9 @@ Key properties:
 - No hard cliffs
 - Merchants are never punished for growth
 - Platform revenue always scales with success
+
+**Note on payment processing costs:**
+Transaction fees above are Halava's platform take. Underlying payment gateway fees (e.g., Stripe ~3.6% + ¥30 in Japan) are passed through or absorbed depending on payment method configuration. Cash and external payment methods incur no gateway fee.
 
 ---
 
@@ -114,10 +120,16 @@ Merchant pays = MAX(
 - If monthly sales are high, the membership fee is **waived for that month**
 - If monthly sales are low, the membership fee applies
 
-Example (Growth Plan):
+**Example (Growth Plan):**
 - Membership: ¥3,000
-- Transaction fee: 3%
-- Break-even GMV: ¥100,000
+- Assumed transaction fee rate: ~5% (for GMV under ¥300k)
+- Break-even GMV: ~¥60,000 (¥60,000 × 5% = ¥3,000)
+- At ¥300k–1M GMV tier (4.5% fee): membership is waived if transaction fees ≥ ¥3,000 (i.e., GMV ≥ ~¥67,000)
+
+**Example (Pro Plan):**
+- Membership: ¥8,000
+- At 5% tier: break-even GMV ~¥160,000
+- At 4.5% tier: break-even GMV ~¥178,000
 
 This ensures:
 - No revenue cap for Halava
@@ -182,9 +194,28 @@ This minimizes friction in group purchase flows.
 
 ---
 
+## 11. Competitive Benchmarking
+
+| Platform | Transaction Fee | Subscription Model | Notes |
+|----------|-----------------|-------------------|-------|
+| **Halava** | 2.5–5% (GMV-based) | ¥0–¥8,000/mo (waivable) | Gradual pricing, no caps |
+| **BASE (Japan)** | 3.6% + 40¥ | ¥0 (free plan) | Simple but flat fee |
+| **STORES.jp** | 5% | ¥0 (free), ¥2,178/mo (standard) | Higher flat rate |
+| **Shopify Japan** | 3.25–3.9% + gateway | ¥3,650–¥46,000/mo | Monthly fee always applies |
+| **Rakuten Ichiba** | 2–7% + monthly | ¥50,000+ setup | High barrier, complex fees |
+| **UberEats** | 30–35% | N/A | Delivery platforms take much more |
+
+Halava's model is competitive for Japan SMEs: lower take rate than delivery platforms, no high setup fees like Rakuten, and waivable subscriptions unlike Shopify.
+
+---
+
 This document can be directly reused for:
 - Pitch deck monetization slides
 - Business model section
 - Application specification updates
 - Partner and investor explanation
+
+---
+
+*Last updated: January 2026*
 

@@ -1,4 +1,7 @@
-# Halava Pitch Deck Outline (10–12 Slides)
+# Halava Pitch Deck Outline (10–15 Slides)
+
+> **Last updated:** January 2026  
+> **Purpose:** Investor-ready, partner-friendly presentation
 
 This outline is designed to be **investor-ready**, **partner-friendly**, and directly aligned with the current Halava application specification and monetization strategy.
 
@@ -42,7 +45,27 @@ Key insight:
 
 ---
 
-## Slide 4 — The Solution (Halava)
+## Slide 4 — Market Size (TAM/SAM/SOM)
+**A large and underserved market**
+
+- **TAM (Total Addressable Market):**
+  - Global halal market: $2.5 trillion+ (food, cosmetics, lifestyle)
+  - Growing 6–8% annually
+
+- **SAM (Serviceable Available Market):**
+  - Japan halal commerce: ~¥200–300 billion
+  - ~200,000 Muslims in Japan + 40M+ annual Muslim tourists (pre-pandemic)
+  - Growing interest from health-conscious non-Muslim Japanese consumers
+
+- **SOM (Serviceable Obtainable Market):**
+  - Initial focus: Tokyo, Osaka, major cities
+  - Year 1–3 target: 500–1,000 merchants, ¥500M–¥1B GMV
+
+*Note: Customize these figures based on updated market research.*
+
+---
+
+## Slide 5 — The Solution (Halava)
 **A two-sided halal commerce platform designed for trust, utility, and coordination**
 
 - Consumer app:
@@ -57,7 +80,7 @@ Key insight:
 
 ---
 
-## Slide 5 — Product Differentiation
+## Slide 6 — Product Differentiation
 **Why Halava is different**
 
 - Group purchase as a first-class feature
@@ -65,11 +88,26 @@ Key insight:
 - Email + magic-link onboarding (low friction)
 - Offline touchpoints drive online adoption
 
-This is not just e-commerce — it’s **coordination infrastructure**.
+This is not just e-commerce — it's **coordination infrastructure**.
 
 ---
 
-## Slide 6 — Go-To-Market (GTM)
+## Slide 7 — Competitive Landscape
+**How Halava compares**
+
+| | Halava | BASE/STORES | Rakuten | UberEats/Wolt | Halal-specific apps |
+|---|--------|-------------|---------|---------------|---------------------|
+| Halal-focused | ✅ | ❌ | ❌ | ❌ | ✅ |
+| Low merchant fees | ✅ 2.5–5% | ✅ 3.6–5% | ❌ 2–7%+ | ❌ 30–35% | Varies |
+| Group purchase | ✅ | ❌ | ❌ | ❌ | ❌ |
+| POS integration | ✅ | ⚠️ Limited | ❌ | ❌ | ❌ |
+| Consumer discovery | ✅ | ❌ | ✅ | ✅ | ⚠️ Limited |
+
+**Key differentiator:** Only Halava combines halal focus + consumer discovery + group purchase + merchant operations in one platform.
+
+---
+
+## Slide 8 — Go-To-Market (GTM)
 **How Halava grows**
 
 - Merchant acquisition:
@@ -85,7 +123,7 @@ This is not just e-commerce — it’s **coordination infrastructure**.
 
 ---
 
-## Slide 7 — Monetization Philosophy
+## Slide 9 — Monetization Philosophy
 **Simple, fair, and scalable**
 
 - Transaction fees scale gradually with sales
@@ -98,7 +136,7 @@ Principle:
 
 ---
 
-## Slide 8 — Transaction Fees (Gradual Pricing)
+## Slide 10 — Transaction Fees (Gradual Pricing)
 **Fees decrease smoothly as merchants grow**
 
 Example curve (illustrative):
@@ -114,7 +152,7 @@ Example curve (illustrative):
 
 ---
 
-## Slide 9 — Membership Plans (Features Only)
+## Slide 11 — Membership Plans (Features Only)
 **Optional subscriptions for operational value**
 
 - Free:
@@ -134,7 +172,7 @@ Example curve (illustrative):
 
 ---
 
-## Slide 10 — Membership Fee Waiver Logic
+## Slide 12 — Membership Fee Waiver Logic
 **No opportunity loss, no wasted subscriptions**
 
 Monthly charge:
@@ -153,18 +191,61 @@ Fair for merchants, safe for the platform.
 
 ---
 
-## Slide 11 — Business Model Strength
-**Why this model works long-term**
+## Slide 13 — Traction & Validation
+**Early signals of product-market fit**
 
-- Scales with GMV
-- Encourages merchant growth
-- Works for small shops and large operators
-- Suitable for long-term private company
-- Aligned with Japan SME behavior
+- [Number] merchants in pilot/waitlist
+- [Number] registered consumers
+- [GMV] in test transactions
+- Key partnerships: [B2B halal supplier network name]
+- User feedback highlights:
+  - "Finally, a platform that understands halal needs"
+  - "Group purchase feature is exactly what our community wanted"
+
+*Note: Update with actual metrics as available. Pre-launch, emphasize pilot conversations and LOIs.*
 
 ---
 
-## Slide 12 — Vision & Next Steps
+## Slide 14 — Team
+**Built by people who understand the market**
+
+- **[Founder Name]** — CEO
+  - Background: [Relevant experience]
+  - Why this problem: [Personal connection to halal community]
+
+- **[Co-founder/Advisor Name]** — [Role]
+  - Background: [Relevant experience]
+
+- **Advisors:**
+  - [Advisor 1] — [Expertise]
+  - [Advisor 2] — [Expertise]
+
+*Note: Emphasize relevant domain expertise, technical skills, and market access.*
+
+---
+
+## Slide 15 — The Ask
+**What we're raising and how we'll use it**
+
+- **Raising:** ¥[Amount] ([Seed/Pre-seed])
+- **Use of funds:**
+  - Product development: X%
+  - Merchant onboarding & promotion kits: Y%
+  - Cloud infrastructure: Z%
+  - Founder runway: W%
+
+- **Milestones for this round:**
+  - Launch MVP in [City]
+  - Onboard [X] merchants
+  - Reach [Y] GMV
+
+- **Next round target:** Series A at [milestone]
+
+*Note: Customize based on actual fundraising plans.*
+
+---
+
+## Slide 16 — Vision & Next Steps
 **Building the default halal commerce infrastructure**
 
 - Short term:
@@ -181,8 +262,17 @@ Fair for merchants, safe for the platform.
 ---
 
 ## Optional Backup Slides
+
+- **Business Model Strength** (why this model works long-term)
 - Detailed pricing examples
-- CAC breakdown
-- Revenue scenarios
-- Product roadmap
+- CAC breakdown & unit economics
+- Revenue scenarios & projections
+- Product roadmap (v1 → v1.5 → v2)
+- Financial projections (3–5 year)
+- Technical architecture overview
+- Risk mitigation strategies
+
+---
+
+*Last updated: January 2026*
 

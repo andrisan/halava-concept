@@ -1,5 +1,19 @@
 # Halava — Web App Spec (v1 → v1.5)
 
+> **Last updated:** January 2026  
+> **Status:** Active specification
+
+---
+
+## Version History
+
+| Version | Date | Changes |
+|---------|------|--------|
+| v1.5 | Jan 2026 | Restaurant operations, advanced POS, multi-language |
+| v1.0 | Dec 2025 | MVP: Discover + Shop + POS, capability-based merchant model |
+
+---
+
 ## 1) Product definition
 
 ### 1.1 Vision
@@ -125,30 +139,7 @@ Capabilities are conceptually similar to *installable apps* (e.g., GCP API enabl
 
 A merchant may enable **one, multiple, or all** capabilities.
 
-### 2.4 Capability lifecycle & enablement model
-
-Each capability follows a **lifecycle**, inspired by cloud API enablement models (e.g., Google Cloud), but adapted for merchant UX and business setup.
-
-**Capability states:**
-
-- `disabled` — capability not enabled; UI and APIs are hidden
-- `enabled_needs_setup` — capability enabled but requires configuration
-- `active` — capability fully configured and usable
-- `suspended` — temporarily disabled due to policy or merchant action
-
-**Enablement flow:**
-
-1. Merchant clicks **Enable** on a capability card.
-2. Capability enters `enabled_needs_setup` state.
-3. Halava launches a **guided setup flow**, which may include:
-   - required configuration (e.g., receipt header for POS)
-   - minimum data requirements (e.g., add at least one product)
-   - role assignment (e.g., cashier staff for POS)
-4. After successful setup, capability becomes `active`.
-
-This ensures capabilities feel lightweight to enable, while remaining safe and predictable for business operations.
-
-### 2.5 Why not force shop vs restaurant upfront
+### 2.4 Why not force shop vs restaurant upfront
 
 - Many halal businesses are **hybrid** (restaurant + grocery corner).
 - Early classification increases onboarding drop-off.
@@ -170,14 +161,6 @@ This ensures capabilities feel lightweight to enable, while remaining safe and p
 - Search + filters: distance, open now, cuisine, amenities (e.g. prayer space)
 - **Marketplace**: product catalog, cart, checkout, order tracking
 - **Bulk / group purchases** (multiple users contribute to a shared order)
-- **In-city group delivery (future)**
-  - **Collaborative Shopping List:** Multiple users add items to a shared cart hosted by an "Initiator" (a regular user).
-  - **Single Payer Model:** The Initiator pays the full amount (items + shipping) to the merchant in a single transaction. Reimbursement from friends is handled offline/externally.
-  - **Dynamic Shipping:**
-    - If the total order value exceeds the configurable minimum (e.g., ¥10,000), delivery is free.
-    - Otherwise, the Initiator pays the standard shipping fee.
-  - **Simplified Fulfillment:** The merchant receives and fulfills one single order. The Initiator is responsible for local distribution to participants.
-  - **Transparency:** The Initiator receives a detailed breakdown (receipt) of "who ordered what" to facilitate offline collection.
 - **Unified purchase history** (online purchases + POS-registered in-store purchases)
 - **Buy-online–pick-up (BOPU)** options
 - Reviews/ratings (places + products)
@@ -201,7 +184,18 @@ This ensures capabilities feel lightweight to enable, while remaining safe and p
 - Reservations **or** QR menu (choose one initially)
 - Advanced POS flows (tables, split bills, modifiers)
 - Multi-language support (EN + JP + ID)
+### 3.3 Future Scope (Post-v1.5)
 
+- **In-city group delivery**
+  - **Collaborative Shopping List:** Multiple users add items to a shared cart hosted by an "Initiator" (a regular user).
+  - **Single Payer Model:** The Initiator pays the full amount (items + shipping) to the merchant in a single transaction. Reimbursement from friends is handled offline/externally.
+  - **Dynamic Shipping:**
+    - If the total order value exceeds the configurable minimum (e.g., ¥10,000), delivery is free.
+    - Otherwise, the Initiator pays the standard shipping fee.
+  - **Simplified Fulfillment:** The merchant receives and fulfills one single order. The Initiator is responsible for local distribution to participants.
+  - **Transparency:** The Initiator receives a detailed breakdown (receipt) of "who ordered what" to facilitate offline collection.
+- **Accounting capability** (bookkeeping, invoicing, tax exports)
+- **Payments / Gateway capability** (online payments, in-store terminals, payouts)
 ---
 
 ## 4) Core user journeys
@@ -613,9 +607,6 @@ This subsection serves as a **supporting reference** to Section 7 (Web app pages
 
 ---
 
-
----
-
 ## 8) Non-functional requirements
 
 This section defines **system-wide quality attributes** that are not tied to specific user features, but are critical to ensuring Halava is reliable, secure, and scalable as a platform. These requirements guide architectural decisions and help maintain consistent behavior across all modules (directory, marketplace, POS, and future capabilities).
@@ -641,6 +632,29 @@ This section defines **system-wide quality attributes** that are not tied to spe
 
   - Explicitly separates MVP scope from regulated financial operations.
   - Signals the need for stricter compliance, security audits, and infrastructure hardening in later phases.
+
+- **Availability target: 99.5% uptime for core services**
+
+  - Directory, marketplace, and POS should remain available with minimal planned downtime.
+  - POS offline mode provides resilience during network outages.
+
+- **Data backup & recovery**
+
+  - Daily automated backups with 30-day retention.
+  - Point-in-time recovery capability for transaction data.
+  - RTO (Recovery Time Objective): < 4 hours; RPO (Recovery Point Objective): < 1 hour.
+
+- **Privacy & compliance**
+
+  - User data handling follows Japan's APPI (Act on Protection of Personal Information).
+  - Clear consent flows for data collection.
+  - Right to data export and deletion upon user request.
+
+- **Mobile strategy: Progressive Web App (PWA) first**
+
+  - Responsive web app optimized for mobile browsers.
+  - Installable as PWA on iOS/Android for app-like experience.
+  - Native apps considered post-MVP based on user feedback and platform requirements.
 
 ---
 
@@ -672,4 +686,14 @@ This section defines **system-wide quality attributes** that are not tied to spe
 - Consumers can perform bulk/group purchases and choose delivery or pickup.
 - A merchant can register without selecting shop or restaurant.
 - Capabilities can be enabled incrementally without data migration.
+
+---
+
+## Appendix A: API Strategy (Overview)
+
+- **API style:** RESTful JSON APIs for MVP; GraphQL considered for v2 based on client needs.
+- **Versioning:** URL-based versioning (e.g., `/api/v1/...`) for breaking changes.
+- **Authentication:** OAuth 2.0 / JWT tokens for merchant and consumer APIs.
+- **Rate limiting:** Applied to public endpoints to prevent abuse.
+- **Documentation:** OpenAPI/Swagger specification maintained alongside implementation.
 
