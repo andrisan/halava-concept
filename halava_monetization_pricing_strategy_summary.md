@@ -60,33 +60,41 @@ They only unlock **advanced features**.
 ### Free Plan (Default)
 - Monthly fee: ¥0
 - Unlimited product uploads
-- Online & group purchase support
+- Online & group purchase
 - Basic order management
 - Basic sales summary
-- Digital QR link for sharing
+- Public web storefront
+- Limited use of POS integration (100 orders/month)
 
 Merchants can stay on this plan forever.
 
----
-
 ### Growth Plan
-- Monthly fee: ¥3,000
-- Advanced promotions (rules, limits)
-- Group purchase analytics
-- Customer repeat insights
-- Sales export (CSV)
-- Priority onboarding/support
-
----
+- Monthly fee: ¥3,000 (waived if transaction fees exceed 60,000 yen/month)
+- Everything in Free Plan, plus:
+  - Advanced promotions (rules, limits)
+  - Group purchase analytics
+  - Customer repeat insights
+  - Sales export (CSV)  
+  - Unlimited use of POS integration
+  - 2 staff roles & permissions
+  - 1 store location
+  - Priority onboarding/support
 
 ### Pro Plan
-- Monthly fee: ¥8,000
-- Advanced analytics & trends
-- Inventory alerts & forecasting
-- Staff roles & permissions
-- Accounting export
-- Featured placement (non pay-to-win)
-- Free / discounted physical promotion kits
+- Monthly fee: ¥8,000 (waived if transaction fees exceed 160,000 yen/month)
+- Everything in Growth Plan, plus:
+  - Advanced analytics & trends
+  - Inventory alerts & forecasting
+  - 5 store locations
+  - 10 staff roles & permissions
+  - Accounting export
+  - Featured placement (non pay-to-win)
+  - Free / discounted physical promotion kits
+
+### Custom Enterprise Plan
+- Monthly fee: Negotiated
+- Custom features & integrations
+- Dedicated account manager
 
 ---
 
