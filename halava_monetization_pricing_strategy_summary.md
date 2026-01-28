@@ -78,6 +78,17 @@ Key properties:
 - **POS transactions processed through the provider:** Subject to the standard transaction fee, deducted at source the same way.
 - **POS cash transactions:** Remain outside Halava's fee scope (no intermediation). Halava may introduce optional self-reported POS fee tiers in a later phase if cash-heavy merchants benefit significantly from the platform.
 
+**Phase 2.5 — In-city group delivery (Future feature post-v1.5):**
+
+- **What it is:** Halava enables groups of friends to coordinate a single bulk order from a merchant, with one person (Initiator) paying and handling offline reimbursement/distribution.
+- **Why future, not MVP:** MVP focuses on halal discovery and basic online + POS integration. Delivery coordination adds complexity without immediate revenue.
+- **Delivery fees in Phase 2.5:**
+  - Halava does NOT handle logistics/shipping itself (no delivery fleet, courier partnership required).
+  - Merchants choose their own fulfillment (self-delivery, partner courier, or digital fulfillment like QR-based pickup).
+  - Halava may introduce optional fulfillment fees (e.g., 0.5–1% if Halava partners with a logistics provider) or simply pass through merchant-configured shipping costs to consumers.
+  - **Transaction fee still applies** to the aggregated group order (same 2.5–5% model).
+- **Benefit to merchants:** Group purchases increase order value (free shipping threshold), reducing delivery cost burden when customers are price-sensitive and coordinating.
+
 **Phase 3 — Direct payment intermediation (Halava holds funds transfer license):**
 
 After demonstrating consistent scale and compliance, Halava obtains its own **資金移動業 (funds transfer business) license** from the Financial Services Agency (FSA) in Japan. This enables Halava to directly intermediate payments without relying on third-party providers.
