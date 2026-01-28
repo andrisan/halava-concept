@@ -6,7 +6,7 @@
 ## 1. Product & Market Context
 
 Halava is a **two-sided halal commerce platform** with a strong consumer-first approach:
-- **Consumers** use Halava to discover halal products, enjoy unique features (group purchase, discovery, trust, convenience), and coordinate purchases.
+- **Consumers** use Halava to discover halal products, enjoy unique features (finance management relate to groceries and eating out, halal place discovery, halal trust, and convenience), and coordinate group purchases.
 - **Merchants** join Halava because consumer demand already exists and because Halava increases order value, repeat purchases, and operational efficiency.
 
 Key characteristics:
@@ -25,8 +25,9 @@ Key characteristics:
 - **Membership plans** monetize *features and operational value*, not volume
 
 Guiding principles:
-- No paywalls on core selling functionality
-- No quotas, unlock schemes, or lifetime counters
+- No paywalls on core selling functionality (creating product listings, managing inventory, processing orders, and communicating with buyers.)
+- No quotas on revenue-generating transactions (online orders scale infinitely with transaction fees)
+- POS quotas are acceptable because POS is an operational tool, not a revenue channel Halava intermediates
 - No opportunity loss on high-GMV merchants
 - Pricing must be explainable in under 10 seconds
 
@@ -34,7 +35,8 @@ Guiding principles:
 
 ## 3. Transaction Fee Model (Gradual Pricing)
 
-Transaction fees apply to **all merchants**, regardless of plan.
+Transaction fees apply to **all merchants** for **online orders**, regardless of plan.
+For POS transactions, there are no transaction fees—instead, POS access and capabilities depend on the merchant's membership plan.
 Fees decrease **smoothly as GMV increases**.
 
 Example curve (illustrative, adjustable):
@@ -53,47 +55,105 @@ Key properties:
 - Merchants are never punished for growth
 - Platform revenue always scales with success
 
-**Note on payment processing costs:**
-Transaction fees above are Halava's platform take. Underlying payment gateway fees (e.g., Stripe ~3.6% + ¥30 in Japan) are passed through or absorbed depending on payment method configuration. Cash and external payment methods incur no gateway fee.
+### 3.1 Transaction Fee Scope
+
+**Phase 1 — MVP (off-platform settlement):**
+
+- **Online marketplace orders:** Transaction fees nominally apply to all orders placed through the Halava marketplace. However, since payment is settled directly between consumer and merchant (bank transfer), fee collection is **honor-based**: Halava invoices merchants monthly based on recorded order GMV.
+  - **Precedent:** Shopify uses a similar "Bill You Later" model when merchants use external payment gateways (e.g., KOMOJU). Shopify records sales in real-time but accumulates transaction fees and invoices them monthly on the merchant's subscription billing cycle. Merchants receive their revenue immediately but are invoiced separately for fees 30 days later.
+  - **Halava's approach:** Similar structure—merchants see their sales credited to their bank immediately, and Halava invoices accumulated fees monthly.
+  - **Cash flow implication:** Merchants must reserve a buffer to cover monthly fee invoices, which will fluctuate with GMV. This is an accepted friction point for MVP speed but should be clearly communicated during onboarding.
+- **POS in-store transactions:** Not subject to transaction fees. POS transactions are not intermediated by Halava.
+- **Enforcement limitation:** Halava cannot automatically deduct fees from transactions it does not intermediate. Merchants could route orders off-platform (bypass Halava entirely). This is an accepted risk for MVP speed, mitigated by building trust and demonstrating platform value.
+
+**Phase 2 — Payment provider integration:**
+
+- **Online marketplace orders:** Transaction fees are **deducted automatically at source** using a **connected-accounts model** (e.g., Stripe Connect, PAY.JP). Here's how it works:
+  - The payment provider maintains separate financial accounts for Halava and each merchant.
+  - When a consumer pays for an order, the payment provider splits the received amount automatically:
+    - Merchant's share is settled directly to the merchant's connected account
+    - Halava's platform fee is settled to Halava's account
+  - No invoicing or honor-based collection needed; fees are deducted at the point of payment.
+  - This eliminates enforcement risk and ensures 100% fee collection for intermediated transactions.
+- **POS transactions processed through the provider:** Subject to the standard transaction fee, deducted at source the same way.
+- **POS cash transactions:** Remain outside Halava's fee scope (no intermediation). Halava may introduce optional self-reported POS fee tiers in a later phase if cash-heavy merchants benefit significantly from the platform.
+
+**Phase 3 — Direct payment intermediation (Halava holds funds transfer license):**
+
+After demonstrating consistent scale and compliance, Halava obtains its own **資金移動業 (funds transfer business) license** from the Financial Services Agency (FSA) in Japan. This enables Halava to directly intermediate payments without relying on third-party providers.
+
+- **Online marketplace orders:** Transaction fees are **deducted at source** by Halava itself, without a payment provider intermediary.
+  - The payment flow: Consumer → Halava (temporarily holds funds) → Halava deducts its platform fee → Merchant receives net amount.
+  - Halava's fee structure remains identical to Phase 2 (2.5% – 5% depending on GMV tier).
+  - **Gateway/processing costs:** Minimal. Halava negotiates directly with bank settlement networks (Japan Clearing House, etc.), eliminating the third-party processor markup (~1.5% savings vs. Phase 2).
+  - **Benefit to merchants:** Lower total fees due to eliminated intermediary margin. Example: Phase 2 total = 5% Halava + 3.6% gateway = 8.6%; Phase 3 total = ~5% Halava + ~0.5% settlement = 5.5%.
+- **POS transactions:** Subject to standard transaction fee, deducted at source.
+- **Cash transactions:** Remain outside Halava's fee scope (no intermediation).
+
+**Regulatory and operational requirements:**
+
+- **Compliance burden:** Halava must maintain strict KYC/AML controls, transaction monitoring, and dispute resolution systems. Ongoing FSA audits and reporting required.
+- **Capital requirement:** FSA license requires maintaining a minimum reserve fund (typically ¥20–50M depending on transaction volume).
+- **Timeline:** Phase 3 is a **long-term goal** (3–5+ years), only pursued after Phase 2 generates sufficient scale and operational track record.
+- **Risk:** If Halava fails to comply with FSA regulations, the license can be revoked, causing operational collapse. Phase 2 (third-party provider) is safer operationally.
+
+### 3.2 GMV Tier Calculation
+
+- **Period:** Monthly calendar period (1st to last day of each month). GMV resets at the start of each month.
+- **Rate application:** **Marginal rate** (tax-bracket style). Each tier's rate applies only to the GMV within that tier's range, not to the entire month's GMV.
+  - Example: A merchant with ¥500k monthly GMV pays 5% on the first ¥300k (= ¥15,000) + 4.5% on the remaining ¥200k (= ¥9,000), totaling ¥24,000 — **not** 4.5% × ¥500k (= ¥22,500).
+- **Why marginal:** Eliminates cliff effects where earning ¥1 more could shift the entire GMV to a lower rate, creating unpredictable revenue for Halava and confusing billing for merchants.
+
+### 3.3 Payment Processing Costs
+
+Transaction fees above are Halava's platform take. Underlying payment gateway fees are handled as follows:
+
+- **Phase 1 — MVP (off-platform settlement):** No gateway fees apply. Consumers pay merchants directly via bank transfer; Halava does not intermediate the payment.
+- **Phase 2 — Payment provider integration (e.g., Stripe Connect, PAY.JP):** Gateway fees (e.g., Stripe ~3.6% + ¥30 in Japan) are passed through as a **separate, transparent line item** on the merchant's invoice — never bundled into the platform fee. Merchant-facing invoice shows: `Platform fee (X%) + Gateway fee (Y% + ¥Z) = Total`.
+- **Phase 3 — Direct intermediation (Halava holds license):** Halava settles payments directly with bank networks, reducing gateway costs to ~0.5%. See Phase 3 details in section 3.1 for merchant cost comparison and regulatory requirements.
+- **All phases:** Cash and external payment methods incur no gateway fee.
 
 ---
 
-## 4. Membership Plans (Features Only)
+## 4. Membership Plans (Features + POS Quota)
 
-Membership plans **do not affect transaction fee rates**.
-They only unlock **advanced features**.
+Membership plans **do not affect transaction fee rates** for online orders.
+They unlock **advanced features** and determine **POS transaction quota**.
 
 ### Free Plan (Default)
 - Monthly fee: ¥0
 - Unlimited product uploads
-- Online & group purchase
+- Online & group purchase (transaction fees apply)
 - Basic order management
 - Basic sales summary
 - Public web storefront
-- Limited use of POS integration (100 orders/month)
+- **POS: 300 transactions/month** (basic features)
+- Top-ups available (see section 4.1)
 
 Merchants can stay on this plan forever.
 
 ### Growth Plan
-- Monthly fee: ¥3,000 (waived if transaction fees exceed 60,000 yen/month)
+- Monthly fee: ¥3,000 (waived when monthly transaction fees ≥ ¥3,000)
 - Everything in Free Plan, plus:
   - Advanced promotions (rules, limits)
   - Group purchase analytics
   - Customer repeat insights
-  - Sales export (CSV)  
-  - Unlimited use of POS integration
+  - Sales export (CSV)
+  - **POS: 3,000 transactions/month** (advanced features: multi-register, shift management)
   - 2 staff roles & permissions
   - 1 store location
   - Priority onboarding/support
+- Top-ups available
 
 ### Pro Plan
-- Monthly fee: ¥8,000 (waived if transaction fees exceed 160,000 yen/month)
+- Monthly fee: ¥8,000 (waived when monthly transaction fees ≥ ¥8,000)
 - Everything in Growth Plan, plus:
   - Advanced analytics & trends
   - Inventory alerts & forecasting
   - 5 store locations
   - 10 staff roles & permissions
   - Accounting export
+  - **POS: Unlimited transactions**
   - Featured placement (non pay-to-win)
   - Free / discounted physical promotion kits
 
@@ -101,6 +161,36 @@ Merchants can stay on this plan forever.
 - Monthly fee: Negotiated
 - Custom features & integrations
 - Dedicated account manager
+- POS: Unlimited transactions
+
+### 4.1 POS Transaction Top-ups
+
+When a merchant reaches their monthly POS quota, they can purchase top-up packs to continue processing transactions.
+
+**Top-up pricing:**
+
+| Pack | Transactions | Price | Per-transaction |
+|------|--------------|-------|-----------------|
+| Small | 100 | ¥300 | ¥3.0 |
+| Medium | 300 | ¥750 | ¥2.5 |
+| Large | 500 | ¥1,000 | ¥2.0 |
+
+**Top-up rules:**
+- **Monthly expiry:** Unused top-up quota expires at month end. No rollover.
+- **Hard cap with grace buffer:** When quota is exhausted, a 5-transaction grace buffer is provided and auto-billed at ¥75 (¥15/transaction). This prevents hard-stops during service but discourages reliance on grace. Grace is 6–8x more expensive than planned top-ups, incentivizing merchants to purchase ahead.
+- **Purchase anytime:** Merchants can pre-purchase top-ups before hitting the limit.
+- **Auto top-up (opt-in):** Merchants can enable automatic top-up purchase when quota reaches 80%.
+
+**Upgrade incentive math:**
+
+| Scenario | Monthly cost | Transactions |
+|----------|--------------|--------------|
+| Free only | ¥0 | 300 |
+| Free + 2× Medium top-up | ¥1,500 | 900 |
+| Free + 3× Large top-up | ¥3,000 | 1,800 |
+| **Growth plan** | **¥3,000** | **3,000** |
+
+Merchants who consistently need 1,500+ transactions/month are better off upgrading to Growth. Top-ups are designed for occasional spikes, not sustained high usage.
 
 ---
 
@@ -115,6 +205,12 @@ Merchant pays = MAX(
   transaction_fee_for_the_month
 )
 ```
+
+**Monthly billing mechanism:**
+- Halava calculates both the transaction fee for the month and the membership fee on a **single consolidated invoice**.
+- The membership fee is **always displayed** on the invoice, even when it's waived.
+- If transaction fees ≥ membership fee, the membership fee line is marked as **crossed out** or explicitly noted as **"Waived"** to visually emphasize the benefit.
+- This transparency ensures merchants understand they are receiving value from their plan without paying additional costs in that month.
 
 **Merchant-facing explanation:**
 - If monthly sales are high, the membership fee is **waived for that month**
@@ -136,9 +232,57 @@ This ensures:
 - No wasted subscription feeling for merchants
 - Simple and fair mental model
 
+### 5.1 Merchant-Facing Invoice Presentation
+
+To maintain trust and avoid confusion, the monthly merchant invoice should present charges transparently:
+
+```
+Monthly Invoice — January 2026
+─────────────────────────────────
+Plan: Growth (¥3,000/mo)
+Online GMV: ¥450,000
+
+Transaction fees:
+  ¥0–¥300k   @ 5.0%  = ¥15,000
+  ¥300k–¥450k @ 4.5%  = ¥6,750
+  Total transaction fees: ¥21,750
+
+Membership fee: ¥3,000
+Waiver applied: ✓ (transaction fees exceed membership fee)
+
+Amount due: ¥21,750
+─────────────────────────────────
+```
+
+Key presentation principles:
+- Always show both the membership fee and the transaction fees, even when the waiver applies.
+- Explicitly label the waiver so the merchant understands they are receiving value from their plan without additional cost.
+- Never show a combined or opaque total — the breakdown builds trust.
+- When transaction fees are below the membership fee, the invoice shows: `Amount due: ¥3,000 (membership fee — includes platform usage up to this amount)`.
+
 ---
 
-## 6. Customer Acquisition Cost (CAC) Strategy
+## 6. Refund & Cancellation Policy
+
+### Phase 1 — MVP (off-platform settlement)
+
+Since Halava does not process payments in MVP, refunds are handled directly between consumer and merchant. Halava facilitates communication via order status updates but does not intermediate funds.
+
+- **Order cancellation before merchant confirmation:** Order is cancelled; no fees apply.
+- **Order cancellation after merchant confirmation:** Consumer contacts the merchant directly. Halava updates order status to "cancelled" or "refunded" based on merchant action.
+
+### Phase 2 — Payment provider integration
+
+When Halava intermediates payments via a licensed provider:
+
+- **Platform fee on refunds:** Halava's platform fee is refunded proportionally to the merchant. If a full refund is issued, the full platform fee is returned.
+- **Gateway fees on refunds:** Payment processor fees (e.g., Stripe) are generally **not refundable** and are absorbed by the merchant, consistent with industry standard. This will be disclosed clearly in merchant onboarding.
+- **Chargebacks:** Gateway chargeback fees are passed through to the merchant. Halava's platform fee is refunded if the chargeback is upheld. Dispute support is provided at Pro plan and above.
+- **Consumer protection:** Payments intermediated by the provider benefit from the provider's buyer protection policies, significantly increasing consumer trust compared to Phase 1.
+
+---
+
+## 7. Customer Acquisition Cost (CAC) Strategy
 
 ### Merchant CAC
 - Primarily driven by partner B2B network
@@ -155,18 +299,16 @@ This ensures:
 
 ---
 
-## 7. Account Creation & UX
+## 8. Account Creation & UX
 
 - Email-only sign-up with **magic link**
 - No password
 - Full name requested only when required (e.g., checkout)
-- Designed to feel like coordination, not registration
-
-This minimizes friction in group purchase flows.
+- For group purchase flows, this magic-link approach makes joining feel like coordination rather than signing up—participants commit first, authenticate later. This minimizes friction in group purchase flows.
 
 ---
 
-## 8. Funding & Business Model Alignment
+## 9. Funding & Business Model Alignment
 
 - Early capital is used mainly for:
   - Founder salary (runway)
@@ -175,15 +317,160 @@ This minimizes friction in group purchase flows.
 - Capital converts time into product leverage (not ads)
 - Pricing model supports staged funding and sustainable private operation
 
+### 9.1 Investment Staging & Co-Founder Equity Structure
+
+To align capital deployment with risk reduction and value creation, Halava uses a **3-stage equity issuance model** with a **co-founder structure** where the capital provider also serves as the legal founder and company representative.
+
+**Overall structure:**
+- **Total capital invested:** ¥15M across 3 stages (by co-founder)
+- **Total equity distribution:** Co-founder 40%, Operating Founder 60% (final)
+- **Legal structure:** Co-founder registers and legally represents the company during Stage 1 (required for Japan business registration while Operating Founder is on student visa)
+- **Key principle:** Equity allocation is earned through milestones and capital deployment
+- **Transition:** Operating Founder transitions from contractor (Stage 1) to employee (Stage 2+)
+
 ---
 
-## 9. One-Sentence Pitch Summary
+**Stage 1 — Validation Stage**
+
+- **Capital deployed:** ¥3M (by co-founder)
+- **Equity allocation:** Co-founder 10%, Operating Founder 90%
+- **Post-money valuation (implied):** ¥30M
+- **Legal setup:** Co-founder registers the company and serves as legal representative (代表取締役). Operating Founder works as part-time contractor while on student visa.
+- **Purpose:**
+  - Register legal entity (株式会社) in Japan with co-founder as representative director
+  - Build and launch MVP (Phase 1 from Section 3.1)
+  - Onboard initial merchants (5–10 pilot merchants via B2B network)
+  - Validate honor-based transaction fee collection model
+  - Prove Operating Founder's execution capability and product-market fit hypothesis
+- **Capital allocation:**
+  - ¥1.5M: Operating Founder compensation (part-time contractor rate: ¥1,500/hour while student; max 28 hours/week for 7 months ≈ 784 hours)
+  - ¥800k: Cloud infrastructure, development tools, basic SaaS subscriptions
+  - ¥500k: In-store promotion kits (QR posters, counter displays) for initial merchants
+  - ¥200k: Legal setup, business registration (株式会社 formation), initial compliance
+- **Critical requirement:** All legal entity formation, business registration, and foundational compliance **must be completed during Stage 1**. Stage 2 funding will not proceed without proper legal structure in place.
+- **Timeline:** 7 months from funding to milestone completion
+
+**Equity position after Stage 1:**
+- Operating Founder: 90%
+- Co-founder: 10%
+
+**Risk profile:** Highest risk stage (idea → execution). Co-founder provides capital and legal foundation; Operating Founder provides execution. Operating Founder retains strong majority.
+
+---
+
+**Stage 2 — Traction Stage**
+
+- **Capital deployed:** ¥5M (by co-founder)
+- **Additional equity to co-founder:** +15% (cumulative: 25%)
+- **Post-money valuation (implied):** ~¥20M (¥5M / 15% = ¥33.3M, but Stage 1 + Stage 2 basis)
+- **Triggers (must achieve ALL):**
+  - MVP is live and stable (users can complete full purchase flow)
+  - 15–25 active merchants onboarded and processing orders
+  - Real transaction volume recorded (minimum ¥5M GMV/month across all merchants)
+  - Transaction fee collection working (honor-based invoicing proven)
+- **Purpose:**
+  - Expand merchant acquisition (target 50+ merchants)
+  - Build foundation for Phase 2 (payment provider integration prep)
+  - Hire 1–2 additional team members (operations, merchant success)
+  - Improve product based on early merchant feedback
+- **Capital allocation:**
+  - ¥2.5M: Operating Founder salary (¥250,000/month for 12 months = ¥3M; adjusted with 1–2 part-time hires)
+  - ¥1.2M: Merchant acquisition (promotion kits, onboarding support, partner incentives)
+  - ¥800k: Product development (POS features, analytics, merchant dashboard improvements)
+  - ¥500k: Infrastructure scaling (database, hosting for higher traffic)
+- **Operating Founder transition:** Operating Founder changes visa status from student to employee visa (就労ビザ), becoming a formal employee of the company with monthly salary (¥250,000/month). Co-founder remains legal representative.
+- **Dividend policy:** "The company may distribute dividends of 30%–50% of annual net profit, subject to cash flow, growth plans, and board approval."
+  - Early years (Stage 2–3): 0%–30% payout (prioritize reinvestment)
+  - Mature & cash-positive: 40%–50% payout
+  - Default target: 50% is a founder-friendly baseline once stable
+  - Dividends distributed to shareholders according to equity ownership (75% Operating Founder / 25% Co-founder at this stage)
+
+**Equity position after Stage 2:**
+- Operating Founder: 75%
+- Co-founder: 25%
+
+**Risk profile:** Medium risk. Product proven, but scale unproven. Co-founder sees execution capability before committing larger capital.
+
+---
+
+**Stage 3 — Commitment Stage**
+
+- **Capital deployed:** ¥7M (by co-founder)
+- **Additional equity to co-founder:** +15% (cumulative: 40%)
+- **Post-money valuation (implied):** ~¥46.7M (¥7M / 15%)
+- **Triggers (must achieve ALL):**
+  - 50+ active merchants with consistent monthly orders
+  - ¥10M+ monthly GMV across platform
+  - Monthly revenue (transaction fees) ≥ ¥500k
+  - Stable operations (no critical outages, merchants renewing)
+  - Clear roadmap to Phase 2 (payment provider integration) with timeline and vendor selection
+- **Purpose:**
+  - Scale to 100+ merchants
+  - Transition to Phase 2 (payment provider integration — see Section 3.1)
+  - Build operational systems (customer support, merchant success, compliance)
+  - Expand team to 5–7 people
+  - Prepare for sustainable growth (accounting systems, legal structure refinement)
+- **Capital allocation:**
+  - ¥3M: Team expansion (developers, operations, merchant success) + Operating Founder salary (¥250,000/month for 18–24 months; balance for team)
+  - ¥2M: Payment provider integration (Stripe/PAY.JP setup, merchant onboarding to connected accounts, KYC compliance tools)
+  - ¥1M: Marketing & merchant acquisition (expand beyond B2B network to organic channels)
+  - ¥700k: Infrastructure & tooling (analytics, CRM, support systems)
+  - ¥300k: Legal & compliance (payment provider contracts, FSA guidance consultation)
+- **Dividend policy:** Same graduated structure as Stage 2. Dividends distributed to shareholders according to final equity ownership (Operating Founder 60%, Co-founder 40%).
+
+**Final equity position:**
+- Operating Founder: 60%
+- Co-founder: 40%
+
+**Risk profile:** Lowest risk. Revenue-generating, proven model, clear path to scale. Co-founder has seen consistent execution across 2 prior stages.
+
+---
+
+**Why this structure works:**
+
+1. **Operating Founder protection:**
+   - Retains majority (60%) and effective control throughout
+   - Can continue building even if co-founder exits or doesn't fund later stages
+   - Equity dilution happens only when capital is needed and value is proven
+   - Transitions from contractor to employee with stable income
+
+2. **Co-founder protection:**
+   - Provides capital tied to achieved milestones
+   - Can exit after any stage if performance doesn't meet expectations
+   - Risk decreases with each stage as business proves itself
+   - Legal representative role ensures compliance and governance oversight
+   - Clear valuation step-ups reward early commitment
+
+3. **Business alignment:**
+   - Stages align with product phases (Phase 1 MVP → Phase 2 payment integration → Phase 3 prep)
+   - Capital deployment matches actual operational needs at each stage
+   - Forced discipline: must hit milestones to unlock next stage
+   - Co-founder provides legal foundation; Operating Founder provides execution
+
+4. **Japan-market fit:**
+   - Solves visa/legal representative problem (student cannot register company)
+   - Co-founder structure mirrors Japanese preference for long-term partnerships
+   - Operating Founder maintains operational control and "ownership face" which matters in merchant relationships
+   - Conservative equity structure (co-founder doesn't take majority)
+
+**Alternative scenario — early exit:**
+
+If co-founder chooses not to fund Stage 2 or Stage 3:
+- Operating Founder retains majority equity (90% or 75%)
+- Business can continue operating on transaction fee revenue
+- Operating Founder can seek alternative funding or bootstrap to profitability
+- No forced sale or control transfer
+- Co-founder may remain as minority shareholder or exit via buyback agreement
+
+---
+
+## 10. One-Sentence Pitch Summary
 
 > "Halava is a consumer-first halal commerce platform where transaction fees scale smoothly with sales, and merchants optionally subscribe to advanced tools — with subscriptions automatically waived in high-sales months."
 
 ---
 
-## 10. Why This Model Works
+## 11. Why This Model Works
 
 - Simple to explain
 - Fair to small and large merchants
@@ -194,7 +481,7 @@ This minimizes friction in group purchase flows.
 
 ---
 
-## 11. Competitive Benchmarking
+## 12. Competitive Benchmarking
 
 | Platform | Transaction Fee | Subscription Model | Notes |
 |----------|-----------------|-------------------|-------|

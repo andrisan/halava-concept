@@ -131,11 +131,14 @@ Capabilities are conceptually similar to *installable apps* (e.g., GCP API enabl
   - Invoicing and expense tracking
   - Tax-ready reporting exports
 
-- **Payments / Gateway (future)**
+- **Payments / Gateway (future — Phase 2)**
 
-  - Online payments for marketplace orders
+  - Integration with a licensed payment provider (e.g., Stripe Connect, PAY.JP) using a connected-accounts model
+  - Online payments for marketplace orders (card, konbini, bank transfer via provider)
   - In-store payment integrations (card/QR terminal integrations)
-  - Payouts and settlement to merchants
+  - Automated transaction fee deduction at source
+  - Payouts and settlement to merchants on provider settlement cycles
+  - Refund and dispute handling through the provider
 
 A merchant may enable **one, multiple, or all** capabilities.
 
@@ -195,7 +198,7 @@ A merchant may enable **one, multiple, or all** capabilities.
   - **Simplified Fulfillment:** The merchant receives and fulfills one single order. The Initiator is responsible for local distribution to participants.
   - **Transparency:** The Initiator receives a detailed breakdown (receipt) of "who ordered what" to facilitate offline collection.
 - **Accounting capability** (bookkeeping, invoicing, tax exports)
-- **Payments / Gateway capability** (online payments, in-store terminals, payouts)
+- **Payments / Gateway capability — Phase 2** (licensed provider integration, automated fee deduction, in-store terminals, payouts)
 ---
 
 ## 4) Core user journeys
@@ -260,7 +263,11 @@ A merchant may enable **one, multiple, or all** capabilities.
    - request clarification from the merchant,
    - hide or remove misleading content,
    - resolve or dismiss the report.
-5. Review optional halal evidence publication for basic validity (presence, readability), **without certifying halal status**.
+5. Review optional halal evidence publication for basic validity:
+   - Check for: presence of document, readability, obvious inconsistencies (e.g., expired date, different business name).
+   - Moderators do **not** verify halal authenticity or contact certifying bodies.
+   - If evidence appears fraudulent: flag for admin escalation, hide evidence pending review, notify merchant.
+   - Consumer-facing disclaimer: *"Halal status is declared by the merchant. Halava does not certify or guarantee halal compliance."*
 6. Record actions in the audit log and close the case.
 
 ### 4.9 Admin — operate and govern the platform
@@ -313,6 +320,11 @@ A merchant may enable **one, multiple, or all** capabilities.
 
 - Business listing with geo, hours, photos, tags
 - Halal status disclosure with optional evidence
+- **Search & discovery architecture:**
+  - Location-based search using geo-indexing (e.g., PostGIS or equivalent)
+  - Full-text search for products, merchants, and menu items
+  - "Trending" is based on recent order volume and view count (simple heuristic, not ML)
+  - "Recommendations" uses nearby + category-based matching for MVP; personalization deferred to post-MVP
 - **Merchant-owned public pages** (e.g. `/m/{merchant-name}`):
   - Merchant branding (logo, colors, cover image)
   - **Reduced Halava branding with a lightweight global topbar**:
@@ -342,6 +354,52 @@ A merchant may enable **one, multiple, or all** capabilities.
 - Order lifecycle management
 - Pickup and delivery flows
 
+#### 6.3.1 Payment Strategy (Phased)
+
+Halava's payment approach evolves across two phases to balance speed-to-market against revenue enforcement and consumer trust.
+
+**Phase 1 — MVP: Off-platform settlement (direct bank transfer)**
+
+Halava does **not** process payments in MVP. The platform facilitates ordering; payment is settled directly between consumer and merchant.
+
+- **Payment model:** Off-platform settlement (bank transfer or merchant-specified method).
+- **Checkout flow:**
+  1. Consumer places an order through the marketplace.
+  2. Consumer receives merchant payment details (bank account, transfer instructions).
+  3. Consumer completes the transfer outside Halava.
+  4. Merchant confirms receipt of payment in the order dashboard.
+  5. Order status moves to "confirmed" and fulfillment begins.
+- Halava tracks order status but does not track payment status beyond merchant confirmation.
+- **Transaction fee collection:** Honor-based. Halava invoices merchants monthly based on recorded order GMV. Merchants self-report; enforcement is limited.
+- **Known trade-offs:** Lower consumer trust (paying a stranger's bank account), no automated refund path, manual confirmation is error-prone.
+
+**Phase 2 — Post-traction: Licensed payment provider integration**
+
+Once product-market fit is validated, Halava integrates a licensed payment provider (e.g., Stripe Connect, PAY.JP, Komoju, or GMO Payment Gateway) to intermediate payments.
+
+- **Payment model:** Consumer pays through Halava's checkout. The payment provider splits the payment automatically — merchant receives their share, Halava's transaction fee is deducted at source.
+- **Checkout flow:**
+  1. Consumer places an order and completes payment in Halava's checkout (card, konbini payment, bank transfer via provider).
+  2. Payment is confirmed automatically; order status moves to "confirmed."
+  3. Merchant receives payout on a settlement cycle (e.g., T+3 to T+14 depending on provider and method).
+- **Benefits:** Automated fee collection, consumer purchase protection, refund/dispute handling, higher trust.
+- **Regulatory note:** Halava avoids the need for its own funds transfer license (資金移動業) by using a licensed provider's connected-accounts model. The provider holds the license; Halava operates as a platform.
+
+**Design principle — Checkout abstraction:**
+
+The checkout UI must be designed with a clear "payment step" placeholder from day one. The MVP shows merchant bank details in this step; Phase 2 replaces it with a payment form. This should be a UI-level swap, not an architecture change. The order model, cart, and fulfillment flow remain the same across both phases.
+
+#### 6.3.2 Group Purchase Flow
+
+Group purchases allow multiple consumers to contribute to a shared order for a single merchant.
+
+- **Initiation:** A consumer (the "Initiator") creates a group purchase and receives a shareable invite link.
+- **Participation:** Invited users open the link, join the group, and add items to the shared cart within a deadline set by the Initiator.
+- **Finalization:** The Initiator reviews the combined order and submits it to the merchant as a single order.
+- **Payment:** Single payer model — the Initiator pays the merchant. In MVP (Phase 1), this is a direct bank transfer; in Phase 2, the Initiator pays through Halava's checkout via the integrated payment provider. Participants reimburse the Initiator externally (outside Halava) in both phases.
+- **Breakdown:** Halava provides a per-participant breakdown so the Initiator can facilitate collection from participants.
+- **Thresholds (optional):** Merchants can set minimum order values for group purchases (e.g., free shipping above ¥10,000).
+
 ### 6.4 POS (MVP)
 
 - Web-based cashier UI (tablet-friendly)
@@ -350,6 +408,49 @@ A merchant may enable **one, multiple, or all** capabilities.
 - Receipt generation
 - Inventory deduction
 - Sync with unified purchase history
+
+#### 6.4.1 Consumer-to-POS Linking
+
+POS transactions can be linked to consumer accounts so they appear in unified purchase history.
+
+- **Primary method — QR code scan:** Consumer opens the Halava app and displays their personal QR code. The cashier scans it via the POS interface, linking the transaction to the consumer's account. The purchase then appears in the consumer's unified purchase history.
+- **Fallback — Receipt claim code:** The POS generates a short alphanumeric code printed on the receipt. The consumer enters this code in-app later to claim the transaction and add it to their history.
+- **Anonymous transactions:** If no linking occurs, the POS transaction is recorded for the merchant only (inventory tracking, sales reporting) but does not appear in any consumer's purchase history.
+
+#### 6.4.2 Offline Sync & Conflict Resolution
+
+The POS operates local-first to ensure usability under unstable network conditions.
+
+- Transactions are queued locally when the device is offline.
+- On reconnection, queued transactions sync to the server and inventory is adjusted accordingly.
+- **Conflict handling:** If an item was sold online while the POS was offline, and stock drops below zero after sync:
+  - The system flags the item as a **stock discrepancy**.
+  - The merchant receives an alert with details of the conflicting transactions.
+  - The merchant resolves the conflict manually (adjust stock count or cancel the conflicting order).
+- **Resolution strategy:** Last-write-wins for non-critical fields (e.g., product descriptions). Stock conflicts always require merchant review.
+
+#### 6.4.3 POS Transaction Quota & Top-ups
+
+POS transactions are quota-based per membership tier (Free: 300/month, Growth: 3,000/month, Pro: unlimited). Merchants can purchase top-up packs when approaching or exceeding their quota.
+
+**Quota enforcement:**
+- **Hard cap with grace buffer:** When quota is exhausted, a 5-transaction grace buffer allows the merchant to complete immediate sales. Grace transactions are auto-billed (¥200 for 5).
+- **No silent overages:** Transactions beyond quota + grace are blocked until the merchant tops up or upgrades.
+
+**UX for quota management:**
+
+- **No visible counter during normal operation.** Merchants should focus on serving customers, not watching a number.
+- **Warning at 80%:** In-POS banner and dashboard notification: "You've used 80% of your POS quota this month. [Top up] [Upgrade plan]"
+- **Warning at 100%:** Full-screen prompt before grace buffer is consumed, with clear options to top up or upgrade.
+- **Quick top-up from POS:** One-tap purchase without leaving the cashier screen. Merchant confirms via PIN or biometric.
+- **Auto top-up (opt-in):** Merchant can enable automatic top-up when quota reaches 80%. Configurable pack size (Small/Medium/Large).
+
+**Top-up packs:**
+- Small: 100 transactions / ¥300
+- Medium: 300 transactions / ¥750
+- Large: 500 transactions / ¥1,000
+
+Top-ups expire at month end (no rollover). See monetization doc section 4.1 for full pricing rationale.
 
 ### 6.5 Merchant console
 
@@ -423,6 +524,21 @@ The Merchant Dashboard is the **primary workspace** for merchants. All capabilit
 
 - Report handling
 - User and merchant management
+
+### 6.7 Notification System
+
+#### MVP notification channels
+
+- **In-app notifications:**
+  - Order status changes (placed, confirmed, ready for pickup, fulfilled)
+  - Group purchase invitations and updates (new participant joined, deadline approaching, order submitted)
+  - Low-stock alerts (merchant-facing)
+- **Email notifications:**
+  - Order confirmation (consumer and merchant)
+  - Group purchase summary (Initiator receives per-participant breakdown)
+  - Merchant action required (e.g., pending order confirmation, stock discrepancy alert)
+
+Push notifications (PWA push or native) are deferred to post-MVP.
 
 ---
 
@@ -588,6 +704,9 @@ This subsection serves as a **supporting reference** to Section 7 (Web app pages
 - **Payment Method Selector** (cash / card / QR / other)
 - **Receipt Generator**
 - **Sync Status Indicator** (e.g., Pending sync)
+- **Quota Warning Banner** (shown at 80% and 100% with top-up/upgrade CTA)
+- **Quick Top-up Modal** (one-tap purchase, pack selection, PIN/biometric confirm)
+- **Auto Top-up Settings** (opt-in toggle, pack size selection)
 
 ### 7.5.6 Social & trust components
 
@@ -667,6 +786,18 @@ This section defines **system-wide quality attributes** that are not tied to spe
 - **POSTransaction**(id, merchant\_id, items, total, payment\_method, created\_at)
 
 - **Place**, **Product**, **MenuItem** activated based on enabled capabilities
+
+### Additional core entities (MVP)
+
+- **User** (id, email, name, role, created\_at)
+- **Order** (id, consumer\_id, merchant\_id, items, status, total, type \[online | group\], payment\_method, created\_at)
+- **Cart** (id, consumer\_id, merchant\_id, items)
+- **GroupPurchase** (id, initiator\_id, merchant\_id, invite\_link, deadline, status, order\_id)
+- **Review** (id, consumer\_id, target\_type, target\_id, rating, text, created\_at)
+- **Report** (id, reporter\_id, target\_type, target\_id, reason, status, moderator\_id)
+- **Staff** (id, user\_id, merchant\_id, role)
+- **Notification** (id, user\_id, type, payload, read, created\_at)
+- **ConsumerPOSLink** (id, pos\_transaction\_id, consumer\_id, method \[qr | claim\_code\])
 
 ---
 
