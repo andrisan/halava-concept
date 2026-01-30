@@ -1,19 +1,24 @@
 # Halava Monetization & Pricing Strategy (Pitch & Spec Summary)
 
-> **Last updated:** January 2026  
+> **Last updated:** January 2026
 > **Target market:** Japan (currency: Japanese Yen ¥)
+>
+> **Related documents:**
+> - `halava_web_app_spec_canvas.md` — Detailed product specification
+> - `halava_pitch_deck_outline_10_12_slides.md` — Investor presentation (uses this document as source of truth for pricing)
 
 ## 1. Product & Market Context
 
 Halava is a **two-sided halal commerce platform** with a strong consumer-first approach:
 - **Consumers** use Halava to discover halal products, enjoy unique features (finance management relate to groceries and eating out, halal place discovery, halal trust, and convenience), and coordinate group purchases.
-- **Merchants** join Halava because consumer demand already exists and because Halava increases order value, repeat purchases, and operational efficiency.
+- **Merchants** join Halava to access a customer base attracted by Halava's rich feature set, while gaining powerful business management tools (inventory, sales analytics, staff management), enhanced online presence and digital storefront, and operational efficiency that drives higher order value and repeat purchases.
 
 Key characteristics:
-- Consumer-first, product-led growth
-- Strong offline–online loop via merchants (QR, in-store promotion)
-- Group purchase creates **forced sharing / organic distribution**
-- Merchant onboarding is assisted by an existing B2B halal supplier network
+- **Halal trust as foundation:** Halava provides verified halal information and certification visibility, solving the core trust problem Muslim consumers face when shopping and dining
+- **Consumer utility drives demand:** Valuable everyday tools (halal discovery, spending insights, dining-out budgeting) attract consumers organically—merchants join because customers are already there
+- **Merchant digital empowerment:** Beyond marketplace listings, Halava gives merchants a complete online presence, storefront, and business management suite (inventory, analytics, staff, POS)
+- **Fair, success-aligned pricing:** Transaction fees scale smoothly with GMV; subscriptions unlock operational tools and are waived when sales are strong—Halava only wins when merchants win
+- **Low-friction accessibility:** Email magic-link authentication, no passwords, streamlined onboarding for both consumers and merchants via existing B2B halal supplier networks
 
 ---
 
@@ -39,7 +44,28 @@ Transaction fees apply to **all merchants** for **online orders**, regardless of
 For POS transactions, there are no transaction fees—instead, POS access and capabilities depend on the merchant's membership plan.
 Fees decrease **smoothly as GMV increases**.
 
-Example curve (illustrative, adjustable):
+**Fee rates vary by phase** to reflect the value Halava provides:
+
+### Phase 1 — MVP (Manual Payment Verification)
+
+In MVP, merchants verify customer payments manually via bank transfer, requiring staff effort. Halava charges **lower fees** starting at 2% to reflect this merchant burden—similar to Shopify's external payment gateway fee:
+
+| Monthly GMV | Transaction Fee |
+|------------|-----------------|
+| ¥0 – ¥300k | 2.0% |
+| ¥300k – ¥1M | 1.8% |
+| ¥1M – ¥3M | 1.6% |
+| ¥3M+ | 1.4% (or negotiated) |
+
+**Why this structure:**
+- **Shopify precedent:** Shopify charges ~2% for merchants using external payment gateways where Shopify doesn't process payments
+- **Fair exchange:** Merchants do the payment verification work, so Halava takes less
+- **Gradual reward:** Higher volume still earns lower rates, encouraging growth
+- **Low barrier:** Encourages merchant adoption during early platform growth
+
+### Phase 2+ — Payment Provider Integration
+
+When Halava intermediates payments (automatic processing, no manual verification), Halava provides significantly more value. Fees increase accordingly:
 
 | Monthly GMV | Transaction Fee |
 |------------|-----------------|
@@ -49,9 +75,14 @@ Example curve (illustrative, adjustable):
 | ¥3M – ¥10M | 3.0% |
 | ¥10M+ | 2.5% (or negotiated) |
 
+**Why this structure:**
+- **Phase 1 discount:** Merchants do extra work (manual payment verification), so they pay less
+- **Phase 2 premium:** Halava handles payment processing, eliminates manual work, provides buyer protection—justifying higher fees
+- **Clear value exchange:** Fee increases are tied to tangible service improvements, making pricing easy to explain
+
 Key properties:
 - No free transactions
-- No hard cliffs
+- No hard cliffs (marginal rate system)
 - Merchants are never punished for growth
 - Platform revenue always scales with success
 
@@ -65,23 +96,43 @@ Key properties:
   - **Cash flow implication:** Merchants must reserve a buffer to cover monthly fee invoices, which will fluctuate with GMV. This is an accepted friction point for MVP speed but should be clearly communicated during onboarding.
 - **POS in-store transactions:** Not subject to transaction fees. POS transactions are not intermediated by Halava.
 - **Enforcement limitation:** Halava cannot automatically deduct fees from transactions it does not intermediate. Merchants could route orders off-platform (bypass Halava entirely). This is an accepted risk for MVP speed, mitigated by building trust and demonstrating platform value.
+- **Dispute resolution intermediary:** Although Halava does not control funds, Halava provides **mediation services** for order disputes:
+  - Halava acts as a neutral third party to facilitate communication between consumer and merchant
+  - Halava reviews order records, chat history, and delivery confirmation to assess claims
+  - Halava can issue non-binding recommendations (e.g., "merchant should issue partial refund")
+  - Halava can flag or suspend merchants with repeated unresolved disputes
+  - **Limitation:** Halava cannot force refunds or chargebacks—final resolution depends on merchant cooperation
+  - **Trust-building value:** This service differentiates Halava from direct peer-to-peer transactions and builds consumer confidence even without payment control
 
 **Phase 2 — Payment provider integration:**
 
-- **Online marketplace orders:** Transaction fees are **deducted automatically at source** using a **connected-accounts model** (e.g., Stripe Connect, PAY.JP). Here's how it works:
+- **Online marketplace orders:** Transaction fees are **deducted automatically at source** using a **connected-accounts model**. This is a proven pattern used by Uber, Airbnb, DoorDash, and Shopify. Here's how it works:
+  - **Supported providers in Japan:** Stripe Connect (recommended), PAY.JP Platform, GMO Payment Gateway
   - The payment provider maintains separate financial accounts for Halava and each merchant.
   - When a consumer pays for an order, the payment provider splits the received amount automatically:
     - Merchant's share is settled directly to the merchant's connected account
     - Halava's platform fee is settled to Halava's account
   - No invoicing or honor-based collection needed; fees are deducted at the point of payment.
   - This eliminates enforcement risk and ensures 100% fee collection for intermediated transactions.
+  - **Stripe Connect specifics:** Supports "destination charges" (charge customer, split to connected account) or "separate charges and transfers." Halava would use destination charges with application fees.
+  - **Payment provider fees (important):** The provider's processing fee (e.g., Stripe ~3.6% + ¥30 in Japan) is charged **in addition to** Halava's platform fee. Both are deducted before merchant settlement.
+    - Example: ¥10,000 order → Stripe takes ¥390, Halava takes ¥500 → Merchant receives ¥9,110
+    - These fees are shown as separate line items on merchant invoices (see Section 3.3)
+    - Total merchant cost in Phase 2: ~8.6% (Halava 5% + Stripe 3.6%) for small merchants
 - **POS transactions processed through the provider:** Subject to the standard transaction fee, deducted at source the same way.
 - **POS cash transactions:** Remain outside Halava's fee scope (no intermediation). Halava may introduce optional self-reported POS fee tiers in a later phase if cash-heavy merchants benefit significantly from the platform.
 
-**Phase 2.5 — In-city group delivery (Future feature post-v1.5):**
+**Phase 2.5 — Group delivery (Future feature post-v1.5):**
 
 - **What it is:** Halava enables groups of friends to coordinate a single bulk order from a merchant, with one person (Initiator) paying and handling offline reimbursement/distribution.
 - **Why future, not MVP:** MVP focuses on halal discovery and basic online + POS integration. Delivery coordination adds complexity without immediate revenue.
+- **Delivery model by distance:**
+  - **Out-of-city / regional delivery:** ✅ Feasible via regular shipping companies (Yamato, Sagawa, Japan Post, etc.). Group orders are consolidated into a single shipment to one address, leveraging standard B2C logistics. This is straightforward and can be implemented with existing courier integrations.
+  - **In-city / same-city delivery:** ⚠️ Requires further exploration. Last-mile logistics for same-city group orders present unique challenges:
+    - Multiple drop-off points vs. single address consolidation
+    - Coordination with on-demand courier services (Uber Direct, Wolt Drive, etc.) vs. scheduled delivery
+    - Cost efficiency: Is it cheaper for group members to pick up from a single point, or for Halava to coordinate multi-stop delivery?
+    - **Status:** Solution design in progress. Potential approaches include designated pickup points, time-window coordination, or partnership with local courier networks. This will be revisited before Phase 2.5 implementation.
 - **Delivery fees in Phase 2.5:**
   - Halava does NOT handle logistics/shipping itself (no delivery fleet, courier partnership required).
   - Merchants choose their own fulfillment (self-delivery, partner courier, or digital fulfillment like QR-based pickup).
@@ -131,6 +182,21 @@ Transaction fees above are Halava's platform take. Underlying payment gateway fe
 Membership plans **do not affect transaction fee rates** for online orders.
 They unlock **advanced features** and determine **POS transaction quota**.
 
+### Early Adopter Pricing Strategy
+
+Halava uses a **higher base price with early-phase discounts** to:
+- Establish appropriate market positioning (competitive with Shopify Japan ¥3,650–¥46,000/mo)
+- Reward early merchants who take a risk on a new platform
+- Avoid the friction of raising prices on existing customers later
+- Create urgency for early sign-ups
+
+**Early adopter discount structure:**
+- **Phase 1 (MVP):** 50% discount on all paid plans — locked in for merchants who join during this phase
+- **Phase 2 (Payment Integration):** 25% discount for new merchants joining during this phase
+- **Phase 3+:** Full pricing applies to new merchants; early adopters retain their locked-in discount
+
+Early adopter discounts are **lifetime benefits** for qualifying merchants as long as they maintain an active subscription (no lapses > 60 days).
+
 ### Free Plan (Default)
 - Monthly fee: ¥0
 - Unlimited product uploads
@@ -144,7 +210,9 @@ They unlock **advanced features** and determine **POS transaction quota**.
 Merchants can stay on this plan forever.
 
 ### Growth Plan
-- Monthly fee: ¥3,000 (waived when monthly transaction fees ≥ ¥3,000)
+- Monthly fee: **¥6,000** (waived when monthly transaction fees ≥ ¥6,000)
+  - *Phase 1 early adopter price: ¥3,000 (waiver threshold: ¥3,000)*
+  - *Phase 2 early adopter price: ¥4,500 (waiver threshold: ¥4,500)*
 - Everything in Free Plan, plus:
   - Advanced promotions (rules, limits)
   - Group purchase analytics
@@ -157,7 +225,9 @@ Merchants can stay on this plan forever.
 - Top-ups available
 
 ### Pro Plan
-- Monthly fee: ¥8,000 (waived when monthly transaction fees ≥ ¥8,000)
+- Monthly fee: **¥18,000** (waived when monthly transaction fees ≥ ¥18,000)
+  - *Phase 1 early adopter price: ¥9,000 (waiver threshold: ¥9,000)*
+  - *Phase 2 early adopter price: ¥13,500 (waiver threshold: ¥13,500)*
 - Everything in Growth Plan, plus:
   - Advanced analytics & trends
   - Inventory alerts & forecasting
@@ -227,16 +297,24 @@ Merchant pays = MAX(
 - If monthly sales are high, the membership fee is **waived for that month**
 - If monthly sales are low, the membership fee applies
 
-**Example (Growth Plan):**
-- Membership: ¥3,000
+**Example (Growth Plan — Full Price ¥6,000):**
+- Membership: ¥6,000
 - Assumed transaction fee rate: ~5% (for GMV under ¥300k)
-- Break-even GMV: ~¥60,000 (¥60,000 × 5% = ¥3,000)
-- At ¥300k–1M GMV tier (4.5% fee): membership is waived if transaction fees ≥ ¥3,000 (i.e., GMV ≥ ~¥67,000)
+- Break-even GMV: ~¥120,000 (¥120,000 × 5% = ¥6,000)
+- At ¥300k–1M GMV tier (4.5% fee): membership is waived if transaction fees ≥ ¥6,000 (i.e., GMV ≥ ~¥133,000)
 
-**Example (Pro Plan):**
-- Membership: ¥8,000
-- At 5% tier: break-even GMV ~¥160,000
-- At 4.5% tier: break-even GMV ~¥178,000
+**Example (Growth Plan — Phase 1 Early Adopter ¥3,000):**
+- Membership: ¥3,000
+- Break-even GMV: ~¥60,000 (¥60,000 × 5% = ¥3,000)
+
+**Example (Pro Plan — Full Price ¥18,000):**
+- Membership: ¥18,000
+- At 5% tier: break-even GMV ~¥360,000
+- At 4.5% tier: break-even GMV ~¥400,000
+
+**Example (Pro Plan — Phase 1 Early Adopter ¥9,000):**
+- Membership: ¥9,000
+- At 5% tier: break-even GMV ~¥180,000
 
 This ensures:
 - No revenue cap for Halava
@@ -250,7 +328,9 @@ To maintain trust and avoid confusion, the monthly merchant invoice should prese
 ```
 Monthly Invoice — January 2026
 ─────────────────────────────────
-Plan: Growth (¥3,000/mo)
+Plan: Growth (¥6,000/mo)
+Early Adopter Discount: Phase 1 (50% off, lifetime)
+Effective Plan Rate: ¥3,000/mo
 Online GMV: ¥450,000
 
 Transaction fees:
@@ -258,7 +338,7 @@ Transaction fees:
   ¥300k–¥450k @ 4.5%  = ¥6,750
   Total transaction fees: ¥21,750
 
-Membership fee: ¥3,000
+Membership fee: ¥3,000 (early adopter rate)
 Waiver applied: ✓ (transaction fees exceed membership fee)
 
 Amount due: ¥21,750
@@ -496,14 +576,14 @@ If co-founder chooses not to fund Stage 2 or Stage 3:
 
 | Platform | Transaction Fee | Subscription Model | Notes |
 |----------|-----------------|-------------------|-------|
-| **Halava** | 2.5–5% (GMV-based) | ¥0–¥8,000/mo (waivable) | Gradual pricing, no caps |
+| **Halava** | 2.5–5% (GMV-based) | ¥0–¥18,000/mo (waivable) | Gradual pricing, no caps, early adopter discounts |
 | **BASE (Japan)** | 3.6% + 40¥ | ¥0 (free plan) | Simple but flat fee |
 | **STORES.jp** | 5% | ¥0 (free), ¥2,178/mo (standard) | Higher flat rate |
 | **Shopify Japan** | 3.25–3.9% + gateway | ¥3,650–¥46,000/mo | Monthly fee always applies |
 | **Rakuten Ichiba** | 2–7% + monthly | ¥50,000+ setup | High barrier, complex fees |
 | **UberEats** | 30–35% | N/A | Delivery platforms take much more |
 
-Halava's model is competitive for Japan SMEs: lower take rate than delivery platforms, no high setup fees like Rakuten, and waivable subscriptions unlike Shopify.
+Halava's model is competitive for Japan SMEs: lower take rate than delivery platforms, no high setup fees like Rakuten, waivable subscriptions unlike Shopify, and lifetime early adopter discounts reward merchants who join early.
 
 ---
 

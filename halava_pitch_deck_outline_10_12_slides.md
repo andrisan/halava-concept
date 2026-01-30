@@ -1,7 +1,11 @@
 # Halava Pitch Deck Outline (10–15 Slides)
 
-> **Last updated:** January 2026  
+> **Last updated:** January 2026
 > **Purpose:** Investor-ready, partner-friendly presentation
+>
+> **Related documents:**
+> - `halava_web_app_spec_canvas.md` — Detailed product specification
+> - `halava_monetization_pricing_strategy_summary.md` — Full pricing rationale and investment staging
 
 This outline is designed to be **investor-ready**, **partner-friendly**, and directly aligned with the current Halava application specification and monetization strategy.
 
@@ -89,11 +93,11 @@ Key insight:
   
   **Combined SAM: $450B–680B** addressable market
 
-- **SOM (Initial Launch — Japan, Year 1–3):**
+- **SOM (Initial Launch — Japan):**
   - **Why Japan first:** Established B2B halal supplier network, regulatory clarity, halal trust is acute pain
-  - Phase 1 MVP: 10–50 merchants, ¥10M–100M GMV (Okayama, Nagoya, Fukuyama, Osaka)
-  - Phase 2: 50–100 merchants, ¥250M–¥1B GMV (expand nationally)
-  - Phase 3: 100+ merchants, ¥1B–¥2B+ GMV + multi-market expansion ready
+  - Stage 1 (Validation): 5–10 pilot merchants via B2B network
+  - Stage 2 (Traction): 15–25 active merchants, ¥5M+ monthly GMV
+  - Stage 3 (Commitment): 50+ merchants, ¥10M+ monthly GMV, national expansion ready
 
 **Strategic expansion roadmap:**
 1. **Prove model** (Year 1–2): Japan only — establish product-market fit, B2B network traction, regulatory pathway
@@ -325,10 +329,12 @@ Amount due: ¥21,750
   - "Group purchase feature is exactly what our community wanted" — Halal shop owner
   - "Low fees and integrated POS make this a no-brainer" — Merchant
 
-**MVP Roadmap:**
+**Product Roadmap (Payment Phases):**
 - Phase 1 (MVP): Discover + Shop + POS (off-platform settlement)
-- Phase 2 (Traction): Payment provider integration + Restaurant Ops
-- Phase 3 (Scale): Direct payment intermediation (license application)
+- Phase 2: Payment provider integration (Stripe/PAY.JP) + Restaurant Ops
+- Phase 3: Direct payment intermediation (資金移動業 license — 3–5+ years)
+
+*Note: Payment Phases are distinct from Funding Stages (see Slide 15). Stage 2 funding enables Phase 2 payment integration.*
 
 *Note: Update with actual metrics as available. Pre-launch, emphasize pilot conversations, LOIs, and beta user feedback.*
 
@@ -374,23 +380,21 @@ Amount due: ¥21,750
 
 **Use of funds:**
 - ¥1.5M: Operating Founder compensation (part-time contractor, 7 months)
-- ¥1M: Product development (MVP: Discover + Shop + POS) — **multi-language ready**
-- ¥400k: Merchant onboarding + promotion kits (Japan initial)
-- ¥200k: Legal setup & compliance (Japan 株式会社 + expansion planning)
+- ¥800k: Cloud infrastructure, development tools, SaaS subscriptions
+- ¥500k: In-store promotion kits (QR posters, counter displays)
+- ¥200k: Legal setup & compliance (Japan 株式会社 formation)
 
 **Milestones (7-month runway — Japan launch):**
 - MVP live (transaction flow: product discovery → order → POS/online fulfillment)
-- 50+ active merchants, ¥50M–100M GMV (Tokyo, Osaka, Kyoto)
-- Honor-based transaction fee collection proven
-- **Multi-language infrastructure validated** (EN/JP ready; ID/MS/AR prepared)
-- Clear path to Stage 2 (payment provider + SEA market prep)
+- 5–10 pilot merchants onboarded via B2B network
+- Honor-based transaction fee collection validated
+- Clear path to Stage 2 (payment provider integration)
 
-**Future stages:**
-- **Stage 2 (¥5M):** Japan scale + Singapore launch (200+ Japan merchants, 50+ Singapore, payment provider)
-- **Stage 3 (¥7M):** Multicultural expansion (Malaysia, UK pilots) + restaurant ops + Indonesia prep
-- **Stage 4+ (Institutional / Series A):** Muslim-majority scale (Indonesia, Pakistan, Bangladesh, UAE) + global coverage
+**Future stages (aligned with monetization strategy):**
+- **Stage 2 (¥5M):** 15–25 active merchants, ¥5M+ monthly GMV, payment provider integration prep
+- **Stage 3 (¥7M):** 50+ merchants, ¥10M+ monthly GMV, Phase 2 payment provider live
 
-**Total capital plan:** ¥15M ($100K) across 3 bootstrap stages → Series A for international expansion.
+**Total capital plan:** ¥15M (~$100K) across 3 bootstrap stages (see monetization doc section 9.1 for full staging details).
 
 ---
 
@@ -404,9 +408,9 @@ Amount due: ¥21,750
 - **Sustainability:** Profitable at modest GMV levels; scales indefinitely
 
 **Capital efficiency:**
-- Stage 1 (¥3M): 50+ merchants, proves model
-- Stage 2 (¥5M): 200+ merchants, cash flow positive
-- Stage 3 (¥7M): National scale or Series A ready
+- Stage 1 (¥3M): 5–10 pilot merchants, MVP proven
+- Stage 2 (¥5M): 15–25 merchants, ¥5M+ monthly GMV, traction proven
+- Stage 3 (¥7M): 50+ merchants, ¥10M+ monthly GMV, payment provider live
 
 **Profitability:** Operational break-even at ~¥500M annual GMV with current pricing, enabling sustainable growth.
 

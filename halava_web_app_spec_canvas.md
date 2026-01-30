@@ -1,7 +1,11 @@
 # Halava — Web App Spec (v1 → v1.5)
 
-> **Last updated:** January 2026  
+> **Last updated:** January 2026
 > **Status:** Active specification
+>
+> **Related documents:**
+> - `halava_monetization_pricing_strategy_summary.md` — Pricing, fees, and investment staging
+> - `halava_pitch_deck_outline_10_12_slides.md` — Investor presentation
 
 ---
 
@@ -199,6 +203,7 @@ A merchant may enable **one, multiple, or all** capabilities.
   - **Transparency:** The Initiator receives a detailed breakdown (receipt) of "who ordered what" to facilitate offline collection.
 - **Accounting capability** (bookkeeping, invoicing, tax exports)
 - **Payments / Gateway capability — Phase 2** (licensed provider integration, automated fee deduction, in-store terminals, payouts)
+
 ---
 
 ## 4) Core user journeys
