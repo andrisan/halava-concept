@@ -195,7 +195,7 @@ Halava uses a **higher base price with early-phase discounts** to:
 - **Phase 2 (Payment Integration):** 25% discount for new merchants joining during this phase
 - **Phase 3+:** Full pricing applies to new merchants; early adopters retain their locked-in discount
 
-Early adopter discounts are **lifetime benefits** for qualifying merchants as long as they maintain an active subscription (no lapses > 60 days).
+Early adopter discounts are locked in for **5 years** for qualifying merchants, as long as they maintain an active subscription (no lapses > 60 days). After 5 years, merchants transition to the then-current pricing (with advance notice).
 
 ### Free Plan (Default)
 - Monthly fee: ¥0
@@ -220,7 +220,7 @@ Merchants can stay on this plan forever.
   - Sales export (CSV)
   - **POS: 3,000 transactions/month** (advanced features: multi-register, shift management)
   - 2 staff roles & permissions
-  - 1 store location
+  - 2 store location
   - Priority onboarding/support
 - Top-ups available
 
@@ -231,8 +231,8 @@ Merchants can stay on this plan forever.
 - Everything in Growth Plan, plus:
   - Advanced analytics & trends
   - Inventory alerts & forecasting
-  - 5 store locations
-  - 10 staff roles & permissions
+  - 8 store locations
+  - 16 staff roles & permissions
   - Accounting export
   - **POS: Unlimited transactions**
   - Featured placement (non pay-to-win)
@@ -299,22 +299,24 @@ Merchant pays = MAX(
 
 **Example (Growth Plan — Full Price ¥6,000):**
 - Membership: ¥6,000
-- Assumed transaction fee rate: ~5% (for GMV under ¥300k)
-- Break-even GMV: ~¥120,000 (¥120,000 × 5% = ¥6,000)
-- At ¥300k–1M GMV tier (4.5% fee): membership is waived if transaction fees ≥ ¥6,000 (i.e., GMV ≥ ~¥133,000)
+- Assumed transaction fee rate: 5% (for GMV under ¥300k)
+- Break-even GMV: ¥120,000 (¥120,000 × 5% = ¥6,000)
+- Note: Because fees are marginal, once GMV ≥ ¥120,000 the membership is waived (higher tiers only increase fees).
 
 **Example (Growth Plan — Phase 1 Early Adopter ¥3,000):**
 - Membership: ¥3,000
-- Break-even GMV: ~¥60,000 (¥60,000 × 5% = ¥3,000)
+- Break-even GMV: ¥60,000 (¥60,000 × 5% = ¥3,000)
 
 **Example (Pro Plan — Full Price ¥18,000):**
 - Membership: ¥18,000
-- At 5% tier: break-even GMV ~¥360,000
-- At 4.5% tier: break-even GMV ~¥400,000
+- Break-even GMV (marginal tiers): ¥366,667
+  - ¥300,000 × 5% = ¥15,000
+  - ¥66,667 × 4.5% ≈ ¥3,000 (¥3,000.015)
+  - Total ≈ ¥18,000.015 → waiver applies at ¥366,667 GMV
 
 **Example (Pro Plan — Phase 1 Early Adopter ¥9,000):**
 - Membership: ¥9,000
-- At 5% tier: break-even GMV ~¥180,000
+- Break-even GMV: ¥180,000 (¥180,000 × 5% = ¥9,000)
 
 This ensures:
 - No revenue cap for Halava
@@ -329,7 +331,7 @@ To maintain trust and avoid confusion, the monthly merchant invoice should prese
 Monthly Invoice — January 2026
 ─────────────────────────────────
 Plan: Growth (¥6,000/mo)
-Early Adopter Discount: Phase 1 (50% off, lifetime)
+Early Adopter Discount: Phase 1 (50% off, 5-year lock-in)
 Effective Plan Rate: ¥3,000/mo
 Online GMV: ¥450,000
 
@@ -583,7 +585,7 @@ If co-founder chooses not to fund Stage 2 or Stage 3:
 | **Rakuten Ichiba** | 2–7% + monthly | ¥50,000+ setup | High barrier, complex fees |
 | **UberEats** | 30–35% | N/A | Delivery platforms take much more |
 
-Halava's model is competitive for Japan SMEs: lower take rate than delivery platforms, no high setup fees like Rakuten, waivable subscriptions unlike Shopify, and lifetime early adopter discounts reward merchants who join early.
+Halava's model is competitive for Japan SMEs: lower take rate than delivery platforms, no high setup fees like Rakuten, waivable subscriptions unlike Shopify, and 5-year early adopter discounts reward merchants who join early.
 
 ---
 

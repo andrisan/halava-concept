@@ -6,6 +6,8 @@
 > **Related documents:**
 > - `halava_web_app_spec_canvas.md` — Detailed product specification
 > - `halava_monetization_pricing_strategy_summary.md` — Full pricing rationale and investment staging
+> - `halava_market_validation.md` — Market research and validation metrics tracking
+> - `halava_risk_assessment.md` — Risk analysis and mitigation strategies
 
 This outline is designed to be **investor-ready**, **partner-friendly**, and directly aligned with the current Halava application specification and monetization strategy.
 
@@ -320,9 +322,14 @@ Amount due: ¥21,750
 ## Slide 13 — Traction & Validation
 **Early signals of product-market fit**
 
+> **Data source:** See `halava_market_validation.md` for detailed metrics tracking and research methodology.
+
 - **Merchants:** [X] pilot merchants, [Y] LOIs from B2B halal supplier network
+  - *Track in: Market Validation doc → Section 3.1 (Pilot Merchant Tracking)*
 - **Consumers:** [Z] registered users in beta, [W] group purchases initiated
+  - *Track in: Market Validation doc → Section 3.2 (Consumer Beta Metrics)*
 - **GMV:** [Amount] in test transactions (Phase 1: honor-based settlement)
+  - *Track in: Market Validation doc → Section 3.3 (GMV Tracking Methodology)*
 - **Key partnerships:** Established B2B halal supplier network relationships
 - **Feedback highlights:**
   - "Finally, a platform that understands halal needs" — Muslim consumer
@@ -336,7 +343,7 @@ Amount due: ¥21,750
 
 *Note: Payment Phases are distinct from Funding Stages (see Slide 15). Stage 2 funding enables Phase 2 payment integration.*
 
-*Note: Update with actual metrics as available. Pre-launch, emphasize pilot conversations, LOIs, and beta user feedback.*
+*Note: Update placeholder metrics [X], [Y], [Z], [W], [Amount] with actual data from `halava_market_validation.md` as validation progresses.*
 
 ---
 

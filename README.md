@@ -25,11 +25,35 @@ The platform uses a **capability-based model** where merchants progressively ena
 
 ## Documentation
 
+### Core Documents
+
 | Document | Description |
 |----------|-------------|
 | [Web App Spec](halava_web_app_spec_canvas.md) | Full product specification (v1 → v1.5), including user journeys, capabilities, and UI architecture |
 | [Monetization Strategy](halava_monetization_pricing_strategy_summary.md) | Pricing model, transaction fees, membership plans, and waiver logic |
 | [Pitch Deck Outline](halava_pitch_deck_outline_10_12_slides.md) | Investor-ready presentation structure (10–12 slides) |
+
+### Business Documents
+
+| Document | Description |
+|----------|-------------|
+| [Market Validation](halava_market_validation.md) | Market research, consumer/merchant pain points, validation metrics tracking |
+| [Risk Assessment](halava_risk_assessment.md) | Business, regulatory, operational, and financial risk analysis with mitigations |
+
+### Technical Documents
+
+| Document | Description |
+|----------|-------------|
+| [Technical Architecture](halava_technical_architecture.md) | System design, component responsibilities, tech stack, deployment architecture |
+| [Data Model](halava_data_model.md) | Database schema, entity definitions, relationships, indexing strategy |
+| [API Specification](halava_api_spec.md) | API contracts, authentication, endpoints, request/response examples |
+
+### Design Documents
+
+| Document | Description |
+|----------|-------------|
+| [Wireframes](halava_wireframes.md) | Screen inventory and low-fidelity wireframe specifications |
+| [Design System](halava_design_system.md) | Color palette, typography, spacing, component states, accessibility |
 
 ---
 
