@@ -180,9 +180,8 @@ Halava is a Progressive Web App (PWA) with a monolithic API backend, designed fo
 |-------------|------------|------------|
 | **Full-stack** | Next.js API Routes | Simpler deployment, but tighter coupling; suitable for small team |
 | **Backend** | Elixir/Phoenix | Better concurrency, but smaller talent pool |
-| **Mobile** | React Native | Native apps instead of PWA; higher development cost, better UX |
 
-**Decision:** Start with PWA + separate API server for clean separation. Reassess native apps post-MVP based on user feedback.
+**Decision:** PWA + separate API server for clean separation.
 
 ---
 

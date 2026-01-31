@@ -6,6 +6,7 @@
 > **Related documents:**
 > - `halava_monetization_pricing_strategy_summary.md` — Pricing, fees, and investment staging
 > - `halava_pitch_deck_outline_10_12_slides.md` — Investor presentation
+> - `halava_pages_navigation_ux.md` — Detailed pages, URL paths, and UI/UX specification
 
 ---
 
@@ -249,127 +250,28 @@ A merchant may enable **one, multiple, or all** capabilities.
 
 ### 4.2 Consumer — order food at a restaurant
 
-This journey covers consumers ordering food at restaurants. The ordering flow is **unified across dine-in/takeaway and online/in-store** — the only difference is **how they choose to pay** at checkout.
+This journey covers consumers ordering food at restaurants. The ordering flow is **unified** for all order types: dine-in/takeaway, online/on-site — customers browse the menu, add items to cart, and choose their payment method at checkout, which determines how the order is processed.
 
-**Payment method determines order type:**
-
-| Payment Choice | Order Type | Where it Goes (Merchant Side) |
-|----------------|------------|-------------------------------|
-| **Pay online** (bank transfer) | Online order | Order Inbox (regular orders) |
-| **Pay at counter** (cash/card) | On-site order | POS queue (Prepared Orders) |
-
-**Why this is simpler:**
-- **One ordering flow** — customer browses, adds to cart, checks out
-- **No location detection needed** — no "on-site mode" vs "online mode"
-- **Customer decides at checkout** — payment choice is intuitive
-- **Location-agnostic** — customer at restaurant can still pay online if they prefer
-
-**Cart as central ordering mechanism:**
-
-The **Cart** is the unified container for all order types — shop products, restaurant items, dine-in, takeaway. Customers can:
-- Browse and add items to cart at their own pace
-- Review and modify cart before checkout
-- Choose fulfillment type (dine-in or takeaway)
-- Choose payment method at checkout
-
----
-
-**THE UNIFIED ORDERING FLOW**
+**Overview:**
 
 1. **Access menu:** Via QR code, storefront webpage, or Halava app.
-2. **Browse and add to cart:** Select menu items, customizations, quantities. Take your time.
-3. **Review cart:** Modify items and quantities as needed.
-4. **Select fulfillment:** Choose **Dine-in** or **Takeaway**.
-5. **Checkout — choose payment method:**
-   - **"Pay online"** → Bank transfer (Phase 1) or in-app payment (Phase 2)
-   - **"Pay at counter"** → Creates Prepared Order for POS
+2. **Browse and add to cart:** Select menu items, customizations, quantities.
+3. **Select fulfillment:** Choose **Dine-in** or **Takeaway**.
+4. **Checkout — choose payment method:**
+   - **"Pay online"** → Bank transfer → Online order (goes to merchant's Order Inbox)
+   - **"Pay at counter"** → Cash/card → On-site order (goes to POS queue as Prepared Order)
+5. **Track preparation:** See real-time status updates (Confirmed → Preparing → Ready).
+6. **Receive notification:** When food is ready for pickup or serving.
+7. **Collect or receive food:** Pick up at counter (takeaway) or served at table (dine-in).
+8. **Transaction recorded:** Appears in unified purchase history.
 
----
+**Key features:**
+- **Unified flow:** One ordering experience regardless of payment method or location.
+- **Flexible payment:** Customer decides at checkout whether to pay online or at counter.
+- **Real-time tracking:** Visual progress indicator and notifications.
+- **Time selection (online dine-in only):** When paying online for dine-in, customers select when they want food ready, ensuring hot meals on arrival.
 
-**PATH A: Pay Online (Bank Transfer)**
-
-Becomes an **Online Order** — goes to merchant's Order Inbox.
-
-**A1. Online → Takeaway:**
-
-1. Complete checkout with "Pay online".
-2. Receive merchant bank details; complete bank transfer.
-3. **Order placed (awaiting payment):** Status = "Pending Payment".
-4. **Merchant verifies payment:** Status → "Confirmed".
-5. **Kitchen starts cooking:** Immediately after payment verification.
-6. **Track status:** See real-time progress (Preparing → Ready).
-7. **Notification:** *"Your order #1234 is ready for pickup!"*
-8. **Collect food:** Arrive at restaurant, show order number/QR, pick up packed food.
-9. **Transaction recorded:** Appears in purchase history.
-
-**A2. Online → Dine-in (customer selects desired ready time):**
-
-1. Complete checkout with "Pay online".
-2. **Select desired ready time:** Pick when food should be ready (e.g., "Ready at 6:15 PM").
-3. Complete bank transfer.
-4. **Payment verified:** Status → "Confirmed (Paid, Ready at 6:15 PM)".
-5. **Kitchen sees order with time target:** Prepares food to be ready exactly at selected time.
-6. **Travel to restaurant** (customer arrives by desired time).
-7. **Notification reminder:** *"Your order will be ready at 6:15 PM!"* (5 min before)
-8. **Order becomes ready:** Kitchen marks order ready at target time; customer notified.
-9. **Notification:** *"Your order #1234 is ready!"*
-10. **Food served fresh:** Staff delivers hot food to table immediately.
-11. **Transaction recorded:** Appears in purchase history.
-
-**Why time-selection for online dine-in:**
-- Kitchen has visibility into prep timing — can plan backwards from target ready time
-- Prevents cold food — customer knows exactly when to arrive
-- Payment verified first — no food waste from unpaid orders
-- No active customer confirmation needed — simpler UX
-
----
-
-**PATH B: Pay at Counter (Cash/Card)**
-
-Becomes an **On-site Order** — goes to merchant's POS queue as a Prepared Order.
-
-**B1. At Counter → Dine-in:**
-
-1. Complete checkout with "Pay at counter" → creates **Prepared Order**.
-2. **Go to cashier:** Show order on phone (or cashier finds it in POS).
-3. **Order review:** Cashier reviews items. Can modify or add items if needed.
-4. **Complete payment:** Pay via cash, card, or any accepted method.
-5. **Receipt preference:** Choose digital only or digital + paper.
-6. **Order confirmed → Preparing:** Kitchen receives order immediately.
-7. **Return to table:** See preparation status on phone.
-8. **Notification:** *"Your order #1234 is ready!"*
-9. **Food served:** Staff delivers to table or consumer collects from counter.
-10. **Transaction recorded:** Appears in purchase history.
-
-**B2. At Counter → Takeaway:**
-
-1. Complete checkout with "Pay at counter" → creates Prepared Order.
-2. **Go to cashier:** Cashier pulls up prepared order.
-3. **Order review:** Cashier reviews and can modify if needed.
-4. **Complete payment:** Pay via cash, card, or any accepted method.
-5. **Receipt preference:** Choose digital only or digital + paper.
-6. **Order confirmed → Preparing:** Kitchen prepares for packing.
-7. **Wait nearby:** See preparation status on phone.
-8. **Notification:** *"Your order #1234 is ready for pickup!"*
-9. **Collect food:** Pick up packed food at counter.
-10. **Transaction recorded:** Appears in purchase history.
-
-**Why "Pay at counter" is useful:**
-- **Supports cash** — common in halal restaurants
-- **Instant payment** — no waiting for bank transfer confirmation
-- **Flexible modifications** — cashier can adjust order at checkout
-- **Kitchen starts immediately** — customer is present, no cold food risk
-
----
-
-**Comparison with shop ordering:**
-
-| Capability | Pay Online | Pay at Counter |
-|------------|------------|----------------|
-| **Restaurant** | ✅ Online order (Order Inbox) | ✅ On-site order (POS queue) |
-| **Shop/Grocery** | ✅ Online order (Order Inbox) | ❌ Not applicable (cashier must scan physical items) |
-
-Shops cannot have "Pay at counter" digital ordering because the cashier must scan physical items. Restaurants can because food is prepared *after* the order.
+> **See Section 6.3.4 for detailed flows, order lifecycle, kitchen workflow, and merchant configuration.**
 
 ### 4.3 Consumer — track expenses and compare prices
 
@@ -1146,206 +1048,20 @@ Push notifications (PWA push or native) are deferred to post-MVP.
 
 ## 7) Web app pages & navigation map
 
-This section enumerates the **actual pages that exist in the Halava web app**, organized by user role, and maps them to the **core user journeys** to ensure completeness. Pages are described by **purpose**, not fixed URLs, to avoid over‑constraining implementation.
-
-### 7.1 Consumer-facing pages
-
-- **Home / Explore (multi-merchant catalog)**
-
-  - Primary marketplace view showing many items across shops and restaurants (trending items, categories, deals, nearby recommendations).
-  - Global search and filters across merchants; users can discover items first, then choose a merchant.
-  - Supports journeys: *4.1 Buy at a shop*, *4.2 Order food at a restaurant*.
-
-- **Place page (shop or restaurant)**
-
-  - Displays business details, photos, tags, halal status disclosure.
-  - Entry to shopfront or menu.
-  - Supports journeys: *4.1*, *4.2*.
-
-- **Merchant-owned shopfront**
-
-  - Merchant-branded public page (products, pickup options, policies).
-  - Default search scope = this shop.
-  - Supports journeys: *4.1 Buy at a shop*.
-
-- **Product detail page**
-
-  - Product information, price, merchant context, add-to-cart.
-  - Supports journeys: *4.1 Buy at a shop*.
-
-- **Cart & Checkout**
-
-  - Single-merchant cart, delivery or pickup selection.
-  - Fulfillment type selection for food orders (dine-in / takeaway).
-  - Payment method selection: "Pay online" or "Pay at counter" (restaurant only).
-  - Supports journeys: *4.1 Buy at a shop*, *4.2 Order food at a restaurant*.
-
-- **Order Tracking page**
-
-  - Real-time preparation status with visual progress indicator (Confirmed → Preparing → Ready).
-  - Estimated wait time and countdown timer.
-  - Order details (items, order number, pickup instructions).
-  - Order modifications shown (if cashier edited at checkout): crossed-out items, quantity changes, additions.
-  - "Ready for pickup" prominent alert when food is complete.
-  - Supports journeys: *4.2 Order food at a restaurant*.
-
-- **Purchase History**
-
-  - Unified view of all orders: groceries, restaurant, dine-in, takeaway, pay online, pay at counter.
-  - Includes online orders and POS-linked in-store purchases.
-  - **Expense tracking:** Filter by date range, merchant, category; see spending totals.
-  - Historical price comparison across merchants.
-  - Supports journeys: *4.3 Compare prices*, personal budgeting.
-
-- **Profile & Saved items**
-
-  - Saved shops/products, preferences, receipts.
-  - Supports journeys: *4.1*, *4.2*, *4.3*.
-
-### 7.2 Merchant-facing pages
-
-- **Merchant Dashboard (Overview)**
-
-  - Business summary, alerts, quick actions.
-  - Supports journeys: *4.4 Initial registration*.
-
-- **Capabilities page**
-
-  - Enable/disable merchant capabilities (POS, Shop, Restaurant Ops).
-  - Supports journeys: *4.4*, *4.5*, *4.6*, *4.7*.
-
-- **POS screen**
-
-  - Cashier interface for in-store sales and receipt generation.
-  - Supports journeys: *4.5 Operate shop with POS*.
-
-- **Products & Menu management**
-
-  - Manage product catalog and menus (capability-dependent).
-  - Supports journeys: *4.5*, *4.6*, *4.7*.
-
-- **Orders & Transactions**
-
-  - Online orders and POS transactions.
-  - Supports journeys: *4.5*, *4.6*.
-
-- **Kitchen Order Queue (KOQ)**
-
-  - Real-time queue of incoming food orders for kitchen staff.
-  - Order cards with items, modifiers, order type (takeaway/dine-in), and elapsed time.
-  - Quick action buttons: Accept, Start Preparing, Mark Ready, Fulfilled.
-  - Audio/visual alerts for new orders and overdue orders.
-  - Supports journeys: *4.7 Manage online food orders*.
-
-- **Inventory management**
-
-  - Stock levels, adjustments, alerts.
-  - Supports journeys: *4.5*, *4.6*.
-
-- **Merchant settings & staff**
-
-  - Business configuration, staff roles.
-  - Supports journeys: *4.4*, *4.5*.
-
-### 7.3 Moderator pages
-
-- **Moderator Dashboard**
-
-  - Reports queue and case overview.
-  - Supports journeys: *4.8 Moderator*.
-
-- **Content review page**
-
-  - Review reported places, products, reviews, or media.
-  - Supports journeys: *4.8 Moderator*.
-
-### 7.4 Admin pages
-
-- **Admin Dashboard**
-
-  - Platform health, metrics, backlog monitoring.
-  - Supports journeys: *4.9 Admin*.
-
-- **User & Merchant management**
-
-  - Account lifecycle actions and role assignment.
-  - Supports journeys: *4.9 Admin*.
-
-- **Platform configuration**
-
-  - Categories, tags, capability defaults.
-  - Supports journeys: *4.9 Admin*.
-
-- **Audit log viewer**
-
-  - Trace sensitive actions and escalations.
-  - Supports journeys: *4.9 Admin*.
-
-### 7.5 UI components inventory (for UI generation)
-
-This subsection serves as a **supporting reference** to Section 7 (Web app pages & navigation map). It enumerates the **reusable UI building blocks** required to implement the pages and user journeys defined earlier. The intent is not to introduce new scope, but to standardize components so UI generation tools (e.g., Manus AI) can compose consistent interfaces across consumer, merchant, moderator, and admin experiences. Components are grouped by functional role rather than by page.
-
-### 7.5.1 Navigation & layout components
-
-- **Global Topbar**
-  - Variants: default marketplace, merchant-owned (breadcrumb: *Halava / {merchant}*).
-  - Includes search bar with scope selector.
-- **Sidebar / Tab Navigation** (merchant, moderator, admin dashboards)
-- **Breadcrumbs** (contextual navigation)
-- **Footer** (standard + "Powered by Halava" variant)
-
-### 7.5.2 Discovery & catalog components
-
-- **Search Bar** (with scope selector: This shop / All of Halava)
-- **Filter Panel** (distance, category, cuisine, amenities)
-- **Sort Selector** (trending, newest, nearby, price)
-- **Product Card** (image, name, price, merchant, quick add)
-- **Merchant Card / Place Card** (logo, tags, distance, status)
-- **Category Grid / Carousel**
-
-### 7.5.3 Commerce components
-
-- **Add-to-Cart Button** (single-merchant enforcement logic)
-- **Cart Drawer / Cart Page**
-- **Checkout Stepper** (address → pickup/delivery → confirmation)
-- **Order Summary Panel**
-- **Receipt View** (online order or in-store POS receipt)
-
-### 7.5.4 Merchant management components
-
-- **Capability Card** (Disabled / Needs setup / Active / Suspended)
-- **Setup Wizard** (multi-step, requirement-driven)
-- **Product Editor Form**
-- **Menu Editor Form**
-- **Inventory Table** (stock, alerts, adjustments)
-- **Order / Transaction Table**
-
-### 7.5.5 POS components (MVP)
-
-- **POS Item Grid / Search**
-- **POS Cart Panel**
-- **Payment Method Selector** (cash / card / QR / other)
-- **Receipt Generator**
-- **Sync Status Indicator** (e.g., Pending sync)
-- **Quota Warning Banner** (shown at 80% and 100% with top-up/upgrade CTA)
-- **Quick Top-up Modal** (one-tap purchase, pack selection, PIN/biometric confirm)
-- **Auto Top-up Settings** (opt-in toggle, pack size selection)
-
-### 7.5.6 Social & trust components
-
-- **Halal Disclosure Panel** (merchant-declared text)
-- **Evidence Attachment Viewer** (read-only, optional)
-- **Review Card**
-- **Rating Input**
-- **Report Content Modal**
-
-### 7.5.7 Feedback & state components
-
-- **Empty State** (no products, no orders, no history)
-- **Loading Skeletons**
-- **Toast / Snackbar Notifications**
-- **Confirmation & Warning Modals** (e.g., switch merchant cart)
-- **Error State Panels**
+> **📄 This section has been moved to a dedicated document for detailed UI/UX implementation.**
+>
+> See: **`halava_pages_navigation_ux.md`**
+
+The dedicated document provides:
+
+- **Complete URL routing map** with explicit paths for all pages
+- **Detailed page layouts** with ASCII wireframes for every screen
+- **Component specifications** for UI implementation
+- **User flow mappings** connecting pages to user journeys
+- **Responsive design guidelines** for mobile, tablet, and desktop
+- **Authentication flows** and state management
+
+This separation allows the pages specification to serve as a standalone reference for AI agents and frontend developers implementing the Halava web application.
 
 ---
 
@@ -1392,11 +1108,10 @@ This section defines **system-wide quality attributes** that are not tied to spe
   - Clear consent flows for data collection.
   - Right to data export and deletion upon user request.
 
-- **Mobile strategy: Progressive Web App (PWA) first**
+- **Mobile strategy: Progressive Web App (PWA)**
 
   - Responsive web app optimized for mobile browsers.
   - Installable as PWA on iOS/Android for app-like experience.
-  - Native apps considered post-MVP based on user feedback and platform requirements.
 
 ---
 
