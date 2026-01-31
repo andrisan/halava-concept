@@ -1,0 +1,373 @@
+# Onboarding (Registration & Setup)
+
+> **Feature Type:** Consumer & Merchant
+> **Version:** MVP (v1)
+> **Status:** Active
+>
+> **Related:** [[directory]] · [[marketplace]] · [[pos]] · [[web-app-spec]]
+
+---
+
+## Definition
+
+**Onboarding** is the registration and initial setup flow for both consumers and merchants. It's designed to be minimal-friction, getting users to value quickly without unnecessary barriers.
+
+**Core principles:**
+- **Consumers:** Sign up → Browse immediately
+- **Merchants:** Sign up → Dashboard → Enable features gradually
+- **No business type selection** — Capability model means merchants choose features, not categories
+
+---
+
+## How It Works
+
+### Consumer Registration
+
+1. **Sign up** with email (passwordless: OTP or magic link)
+2. **Minimal profile:** Name only (phone optional)
+3. **Ready to use:** Browse, save, and purchase
+
+### Merchant Registration
+
+1. **Sign up** as merchant (separate flow from consumer)
+2. **Basic profile only:** Business name, contact email
+3. **Land on dashboard** with suggested capabilities
+4. **Enable features** incrementally (Directory, POS, Shop, etc.)
+5. **No upfront classification** — No "Are you a restaurant or shop?" question
+
+---
+
+## User Journey
+
+### Consumer: Register
+
+```
+Home → [Sign Up]
+  → Enter email
+  → Receive OTP / Magic link
+  → Verify
+  → Enter name (phone optional)
+  → ✅ Account created
+  → Redirect to Home (can browse, save, purchase)
+```
+
+### Consumer: First Purchase
+
+```
+After registration:
+  → Browse products/places
+  → Add to cart
+  → Checkout prompts:
+    - Delivery: Enter address (saved for future)
+    - Payment: Follow payment flow
+  → Complete first purchase
+  → "Welcome! Your receipt is in Purchase History"
+```
+
+### Merchant: Register
+
+```
+Home → [Become a Merchant] or Register → [I'm a Merchant]
+  → Enter email
+  → Receive OTP / Magic link
+  → Verify
+  → Business profile:
+    - Business name
+    - Contact email
+    - (No business type selection!)
+  → ✅ Account created
+  → Redirect to Merchant Dashboard
+```
+
+### Merchant: First-Time Dashboard
+
+```
+Dashboard (first login):
+  → Welcome message: "Let's set up your business"
+  → Suggested capabilities:
+    ┌─────────────────────────────────────────┐
+    │ Get Started                             │
+    │                                         │
+    │ Enable features for your business:      │
+    │                                         │
+    │ ┌─────────────┐ ┌─────────────┐         │
+    │ │ 📍 Directory│ │ 🛒 Shop     │         │
+    │ │ Get found   │ │ Sell online │         │
+    │ │ [Enable]    │ │ [Enable]    │         │
+    │ └─────────────┘ └─────────────┘         │
+    │                                         │
+    │ ┌─────────────┐ ┌─────────────┐         │
+    │ │ 💳 POS      │ │ 🍽️ Restaurant│        │
+    │ │ In-store   │ │ Food service│         │
+    │ │ [Enable]    │ │ [Enable]    │         │
+    │ └─────────────┘ └─────────────┘         │
+    └─────────────────────────────────────────┘
+  → Click [Enable] on any capability
+  → Enter setup wizard for that capability
+  → Complete setup → Capability active
+```
+
+### Merchant: Enable First Capability
+
+Example: Enabling Directory
+
+```
+Dashboard → Capabilities → Directory → [Enable]
+  → Setup Wizard:
+    Step 1: Business name & category (restaurant, shop, service)
+    Step 2: Address (map pin)
+    Step 3: Operating hours
+    Step 4: Photos (cover + gallery)
+    Step 5: Halal status declaration
+    Step 6: Optional: Upload certificate
+  → [Publish]
+  → ✅ Directory Listing Active
+  → "Your business is now visible on Halava!"
+```
+
+---
+
+## UI/UX Specification
+
+### Screens
+
+| Screen | Path | Purpose |
+|--------|------|---------|
+| **Sign Up** | `/signup` | Consumer registration |
+| **Merchant Sign Up** | `/merchant/signup` | Merchant registration |
+| **Verify Email** | `/verify` | OTP/magic link entry |
+| **Profile Setup** | `/profile/setup` | Initial profile |
+| **Merchant Dashboard** | `/merchant` | First-time dashboard |
+
+### Consumer Sign Up
+
+```
+┌──────────────────────────────────────────┐
+│ Create Account                           │
+├──────────────────────────────────────────┤
+│                                          │
+│ Join Halava and discover halal           │
+│ products and places.                     │
+│                                          │
+│ ┌──────────────────────────────────────┐ │
+│ │ Email                                │ │
+│ └──────────────────────────────────────┘ │
+│                                          │
+│ [ Continue with Email ]                  │
+│                                          │
+│ ─────────── or ───────────               │
+│                                          │
+│ [ Continue with Google ]                 │
+│ [ Continue with Apple ]                  │
+│                                          │
+│ Already have an account? [Sign In]       │
+│                                          │
+│ ─────────────────────────────────────── │
+│ Are you a merchant? [Register Business]  │
+└──────────────────────────────────────────┘
+```
+
+### Email Verification
+
+```
+┌──────────────────────────────────────────┐
+│ Check Your Email                         │
+├──────────────────────────────────────────┤
+│                                          │
+│ We sent a verification code to:          │
+│ user@example.com                         │
+│                                          │
+│ ┌────┐ ┌────┐ ┌────┐ ┌────┐ ┌────┐ ┌────┐│
+│ │    │ │    │ │    │ │    │ │    │ │    ││
+│ └────┘ └────┘ └────┘ └────┘ └────┘ └────┘│
+│                                          │
+│ Didn't receive it? [Resend]              │
+│                                          │
+│ [← Back]                                 │
+└──────────────────────────────────────────┘
+```
+
+### Merchant Registration
+
+```
+┌──────────────────────────────────────────┐
+│ Register Your Business                   │
+├──────────────────────────────────────────┤
+│                                          │
+│ Join Halava to reach customers           │
+│ seeking halal products and services.     │
+│                                          │
+│ ┌──────────────────────────────────────┐ │
+│ │ Your Email                           │ │
+│ └──────────────────────────────────────┘ │
+│                                          │
+│ [ Continue ]                             │
+│                                          │
+│ ─────────────────────────────────────── │
+│                                          │
+│ ✓ No business type selection required    │
+│ ✓ Enable features as you need them       │
+│ ✓ Free to start, pay as you grow         │
+│                                          │
+│ Already registered? [Sign In]            │
+└──────────────────────────────────────────┘
+```
+
+### Merchant Profile Setup
+
+```
+┌──────────────────────────────────────────┐
+│ Business Profile                         │
+├──────────────────────────────────────────┤
+│                                          │
+│ Tell us about your business.             │
+│ You can change this later.               │
+│                                          │
+│ ┌──────────────────────────────────────┐ │
+│ │ Business Name *                      │ │
+│ └──────────────────────────────────────┘ │
+│                                          │
+│ ┌──────────────────────────────────────┐ │
+│ │ Contact Email *                      │ │
+│ └──────────────────────────────────────┘ │
+│                                          │
+│ ┌──────────────────────────────────────┐ │
+│ │ Phone (optional)                     │ │
+│ └──────────────────────────────────────┘ │
+│                                          │
+│ [ Complete Setup ]                       │
+│                                          │
+│ Note: You'll choose features in the      │
+│ next step — no business type needed.     │
+└──────────────────────────────────────────┘
+```
+
+### First-Time Dashboard
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│ 👋 Welcome to Halava, [Business Name]!                          │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│ Get started by enabling features for your business:             │
+│                                                                 │
+│ ┌─────────────────────────────────────────────────────────────┐ │
+│ │ 📍 Directory Listing                                [Enable]│ │
+│ │ Get discovered by customers searching for halal places.     │ │
+│ │ Perfect for: Any halal business                             │ │
+│ └─────────────────────────────────────────────────────────────┘ │
+│                                                                 │
+│ ┌─────────────────────────────────────────────────────────────┐ │
+│ │ 🛒 Online Shop                                      [Enable]│ │
+│ │ Sell products online with delivery or pickup.               │ │
+│ │ Perfect for: Grocery stores, specialty shops               │ │
+│ └─────────────────────────────────────────────────────────────┘ │
+│                                                                 │
+│ ┌─────────────────────────────────────────────────────────────┐ │
+│ │ 💳 Point of Sale (POS)                              [Enable]│ │
+│ │ Register in-store sales and manage inventory.               │ │
+│ │ Perfect for: Any retail business                            │ │
+│ └─────────────────────────────────────────────────────────────┘ │
+│                                                                 │
+│ ┌─────────────────────────────────────────────────────────────┐ │
+│ │ 🍽️ Restaurant Operations                           [Enable]│ │
+│ │ Manage menus, orders, and kitchen workflow.                 │ │
+│ │ Perfect for: Restaurants, cafes, food stalls               │ │
+│ └─────────────────────────────────────────────────────────────┘ │
+│                                                                 │
+│ Not sure? Start with Directory Listing — it's free!            │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Data Model
+
+```
+User
+├── id: UUID
+├── email: string (unique)
+├── name: string
+├── phone: string (nullable)
+├── role: enum (consumer, merchant_owner, staff, moderator, admin)
+├── email_verified_at: timestamp
+├── created_at: timestamp
+
+Merchant
+├── id: UUID
+├── owner_id: FK → User
+├── name: string (business name)
+├── contact_email: string
+├── contact_phone: string (nullable)
+├── onboarding_completed_at: timestamp (nullable)
+├── created_at: timestamp
+
+MerchantCapability
+├── id: UUID
+├── merchant_id: FK → Merchant
+├── capability_type: enum (directory, shop, pos, restaurant)
+├── status: enum (disabled, enabled, needs_setup, active, suspended)
+├── enabled_at: timestamp (nullable)
+├── setup_completed_at: timestamp (nullable)
+├── activated_at: timestamp (nullable)
+```
+
+---
+
+## API Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `POST` | `/api/v1/auth/register` | Register user |
+| `POST` | `/api/v1/auth/verify` | Verify OTP/magic link |
+| `POST` | `/api/v1/auth/login` | Login (passwordless) |
+| `GET` | `/api/v1/profile` | Get user profile |
+| `PUT` | `/api/v1/profile` | Update profile |
+| `POST` | `/api/v1/merchant/register` | Register merchant |
+| `GET` | `/api/v1/merchant/profile` | Get merchant profile |
+| `PUT` | `/api/v1/merchant/profile` | Update merchant profile |
+| `GET` | `/api/v1/merchant/capabilities` | List capabilities |
+| `POST` | `/api/v1/merchant/capabilities/{type}/enable` | Enable capability |
+
+---
+
+## Why No Business Type Selection
+
+Traditional platforms ask: "Are you a restaurant or a shop?"
+
+**Problems with this approach:**
+- Many halal businesses are **hybrid** (e.g., restaurant with grocery corner)
+- Early classification creates **onboarding friction**
+- Users often don't know which category fits
+- Changing type later requires data migration
+
+**Halava's approach:**
+- Skip the question entirely
+- Let merchants **enable features** as needed
+- A restaurant can add Shop later without re-registering
+- Lower drop-off, higher activation
+
+---
+
+## Success Metrics
+
+| Metric | Target (MVP) |
+|--------|--------------|
+| Consumer sign-up completion | > 80% |
+| Merchant registration completion | > 70% |
+| Time to first capability enabled | < 10 min |
+| First capability activation (setup complete) | > 60% within 24h |
+
+---
+
+## Dependencies
+
+- [[web-app-spec#Accounts & Authentication]] — Auth flow details
+- [[directory]] — First capability many merchants enable
+- [[pos]] — Common first capability for retail
+- [[marketplace]] — Online selling capability
+
+---
+
+#halava #feature #onboarding #registration #consumer #merchant

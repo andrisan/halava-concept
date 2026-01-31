@@ -17,12 +17,41 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```
 halava-concept/
-├── README.md                                    # Project overview and vision
-├── halava_web_app_spec_canvas.md               # Detailed product specification
-├── halava_monetization_pricing_strategy_summary.md  # Business model & pricing
-├── halava_pitch_deck_outline_10_12_slides.md   # Investor presentation outline
-└── logo/logo.svg                               # Brand logo
+├── kms/                    # Source of truth (Obsidian vault with wikilinks)
+│   ├── index.md            # Map of Content
+│   ├── spec/               # Product specifications
+│   │   ├── web-app-spec.md
+│   │   ├── pages-navigation-ux.md
+│   │   └── api-spec.md
+│   ├── business/           # Business documents
+│   │   ├── monetization.md
+│   │   ├── pitch-deck.md
+│   │   ├── market-validation.md
+│   │   └── risk-assessment.md
+│   ├── technical/          # Technical architecture
+│   │   ├── architecture.md
+│   │   └── data-model.md
+│   └── design/             # Design documentation
+│       ├── wireframes.md
+│       └── design-system.md
+├── flat/                   # AI-readable originals (full detail, no wikilinks)
+│   └── halava_*.md         # Original specification files
+├── logo/logo.svg           # Brand logo
+├── sync.sh                 # KMS → Flat sync script
+└── README.md               # Project overview
 ```
+
+### Two Documentation Formats
+
+**kms/ (Obsidian vault):**
+- Condensed, interlinked notes with `[[wikilinks]]`
+- Best for human navigation and knowledge exploration
+- Open in Obsidian for graph view and backlinks
+
+**flat/ (Original specs):**
+- Full-detail specification files
+- Standard markdown (no wikilinks)
+- Best for AI context and comprehensive reference
 
 ## Key Architectural Concepts
 
@@ -49,10 +78,11 @@ Build value for consumers first through discovery and group purchase features, l
 ## Documentation Priority
 
 When working with this repository:
-1. **README.md** — Start here for project overview
-2. **halava_web_app_spec_canvas.md** — Detailed feature specifications and user journeys
-3. **halava_monetization_pricing_strategy_summary.md** — Revenue model and pricing logic
-4. **halava_pitch_deck_outline_10_12_slides.md** — Market positioning and investor context
+1. **kms/index.md** — Map of Content for navigation
+2. **kms/spec/web-app-spec.md** — Product specification summary
+3. **flat/halava_web_app_spec_canvas.md** — Full detailed specification
+4. **flat/halava_monetization_pricing_strategy_summary.md** — Complete revenue model
+5. **kms/technical/architecture.md** — System architecture overview
 
 ## Key Terms
 

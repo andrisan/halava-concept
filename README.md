@@ -1,114 +1,81 @@
 # Halava Concept
 
-<p align="center">
-  <img src="logo/logo.svg" alt="Halava Logo" width="200">
-</p>
-
-<p align="center">
-  <strong>Halal, Available Anywhere</strong><br>
-  A consumer-first halal commerce platform for discovery, shopping, and coordination.
-</p>
+A halal-first commerce platform for Indonesia, combining a directory of halal businesses, online marketplace, and point-of-sale system.
 
 ---
 
-## Overview
+## 📁 Repository Structure
 
-**Halava** is a two-sided halal commerce platform designed to be the default destination for anything halal:
+```
+halava-concept/
+├── kms/                  # 🔗 Source of truth (Obsidian vault)
+│   ├── index.md          # Map of Content
+│   ├── spec/             # Product specifications
+│   ├── business/         # Business documents
+│   ├── technical/        # Technical architecture
+│   └── design/           # Design documentation
+├── flat/                 # 🤖 AI-readable exports (auto-generated)
+├── logo/                 # Brand assets
+├── sync.sh               # KMS → Flat sync script
+└── README.md
+```
 
-- **Buy** halal groceries, ingredients, and products (B2C marketplace)
-- **Find** halal restaurants and places while traveling (directory + discovery)
-- **Operate** halal businesses through modular merchant capabilities (online + in-store)
+### Working with the Documentation
 
-The platform uses a **capability-based model** where merchants progressively enable features (POS, online selling, restaurant operations) as their business grows—no forced business type selection upfront.
+**For humans (Obsidian):**
+- Open `kms/` as an Obsidian vault
+- Use `[[wikilinks]]` for internal navigation
+- Start from `kms/index.md` as the Map of Content
+
+**For AI / automation:**
+- Use `flat/` folder for LLM context
+- Standard markdown links (no wikilinks)
+- Run `./sync.sh` to regenerate from kms/
 
 ---
 
-## Documentation
-
-### Core Documents
+## 🗺️ Documentation Map
 
 | Document | Description |
 |----------|-------------|
-| [Web App Spec](halava_web_app_spec_canvas.md) | Full product specification (v1 → v1.5), including user journeys, capabilities, and UI architecture |
-| [Monetization Strategy](halava_monetization_pricing_strategy_summary.md) | Pricing model, transaction fees, membership plans, and waiver logic |
-| [Pitch Deck Outline](halava_pitch_deck_outline_10_12_slides.md) | Investor-ready presentation structure (10–12 slides) |
-
-### Business Documents
-
-| Document | Description |
-|----------|-------------|
-| [Market Validation](halava_market_validation.md) | Market research, consumer/merchant pain points, validation metrics tracking |
-| [Risk Assessment](halava_risk_assessment.md) | Business, regulatory, operational, and financial risk analysis with mitigations |
-
-### Technical Documents
-
-| Document | Description |
-|----------|-------------|
-| [Technical Architecture](halava_technical_architecture.md) | System design, component responsibilities, tech stack, deployment architecture |
-| [Data Model](halava_data_model.md) | Database schema, entity definitions, relationships, indexing strategy |
-| [API Specification](halava_api_spec.md) | API contracts, authentication, endpoints, request/response examples |
-
-### Design Documents
-
-| Document | Description |
-|----------|-------------|
-| [Wireframes](halava_wireframes.md) | Screen inventory and low-fidelity wireframe specifications |
-| [Design System](halava_design_system.md) | Color palette, typography, spacing, component states, accessibility |
+| **[Web App Spec](kms/spec/web-app-spec.md)** | Core product specification |
+| **[Pages & Navigation](kms/spec/pages-navigation-ux.md)** | UI/UX specifications |
+| **[API Spec](kms/spec/api-spec.md)** | API contracts |
+| **[Architecture](kms/technical/architecture.md)** | Technical architecture |
+| **[Data Model](kms/technical/data-model.md)** | Database schema |
+| **[Monetization](kms/business/monetization.md)** | Pricing & revenue model |
+| **[Pitch Deck](kms/business/pitch-deck.md)** | Investor presentation outline |
+| **[Market Validation](kms/business/market-validation.md)** | Validation tracking |
+| **[Risk Assessment](kms/business/risk-assessment.md)** | Risk analysis |
 
 ---
 
-## Key Differentiators
+## 🚀 Getting Started
 
-- **Group purchase as a first-class feature** — forced sharing drives organic growth
-- **Capability-based merchant model** — start simple, enable features as needed
-- **Unified purchase history** — online orders + in-store POS receipts in one place
-- **Consumer-first approach** — build value for consumers; merchants follow demand
-- **Offline–online bridge** — QR codes and in-store promotion kits connect physical to digital
+```bash
+# Clone the repository
+git clone https://github.com/andrisan/halava-concept.git
+cd halava-concept
 
----
+# Open kms/ in Obsidian for linked navigation
+# Or read flat/ for AI-friendly markdown
 
-## Target Market
-
-- **Primary:** Japan (halal-conscious consumers and SME merchants)
-- **Languages:** EN + JP + ID (multi-language support in v1.5)
-- **Currency:** Japanese Yen (¥)
-
----
-
-## Project Status
-
-| Phase | Status | Description |
-|-------|--------|-------------|
-| Concept | ✅ Complete | Vision, user journeys, and business model defined |
-| Specification | ✅ Complete | Web app spec v1 → v1.5 documented |
-| MVP Development | 🔄 In Progress | Discover + Shop + POS |
-| v1.5 | 📋 Planned | Restaurant operations, advanced POS |
+# Sync kms → flat (after editing in Obsidian)
+chmod +x sync.sh
+./sync.sh
+```
 
 ---
 
-## Glossary
+## 📝 Contributing
 
-| Term | Definition |
-|------|------------|
-| **GMV** | Gross Merchandise Value — total value of goods sold through the platform |
-| **CAC** | Customer Acquisition Cost — cost to acquire a new customer |
-| **POS** | Point of Sale — in-store cashier interface for registering sales |
-| **BOPU** | Buy Online, Pick Up — consumer orders online and collects in-store |
-| **B2B** | Business-to-Business — transactions between businesses |
-| **B2C** | Business-to-Consumer — transactions between business and end consumer |
+1. Edit documents in `kms/` using Obsidian or any markdown editor
+2. Use `[[wikilinks]]` for internal references
+3. Run `./sync.sh` before committing to update `flat/`
+4. Both `kms/` and `flat/` should be committed
 
 ---
 
-## Contributing
+## 📄 License
 
-This repository contains concept documentation. For development contributions, please refer to the main application repository (when available).
-
----
-
-## License
-
-© 2026 Halava. All rights reserved.
-
----
-
-*Last updated: January 2026*
+MIT License - See [LICENSE](LICENSE) for details.
