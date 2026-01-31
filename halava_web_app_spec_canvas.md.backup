@@ -105,7 +105,7 @@ Each capability has an explicit lifecycle so “enabled” does not automaticall
 
 Capabilities are conceptually similar to *installable apps* (e.g., feature enablement), but implemented as **first-party modules** that affect UI, data models, and business workflows.
 
-- **Directory Listing**
+- **Directory Listing (default - cannot be disabled)**
 
   - Business profile, location, photos, tags
   - Operating hours and contact information
@@ -191,22 +191,21 @@ A merchant may enable **one, multiple, or all** capabilities.
 
 - Merchant onboarding (business profile only)
 - Enable **Directory Listing** capability
-- Merchant can enable **Shop / Marketplace Selling** capability
-- Merchant can enable **POS capability** for in-store sales
-- Manage products
+- Optional enable **Shop / Marketplace Selling** capability
+- Enable **POS capability** for in-store sales
+- Manage products (shared between online shop and POS)
 - Orders dashboard (online orders + POS transactions)
 - Inventory basics + low-stock alerts (online + in-store sales)
-- Merchant can enable **Basic promotions (coupon codes) capability**
+- Basic promotions (coupon codes)
 
-### 3.2 v1.1 — “Restaurant Ops”
+### 3.2 v1.5 — “Restaurant Ops”
 
 - Enable **Restaurant Operations** capability
-- Restaurant Menu management
+- Menu management
 - Reservations **or** QR menu (choose one initially)
 - Advanced POS flows (tables, split bills, modifiers)
 - Multi-language support (EN + JP + ID)
-
-### 3.3 v1.3 - “Advanced Order & Accounting”
+### 3.3 Future Scope (Post-v1.5)
 
 - **In-city group delivery**
   - **Collaborative Shopping List:** Multiple users add items to a shared cart hosted by an "Initiator" (a regular user).
@@ -216,40 +215,30 @@ A merchant may enable **one, multiple, or all** capabilities.
     - Otherwise, the Initiator pays the standard shipping fee.
   - **Simplified Fulfillment:** The merchant receives and fulfills one single order. The Initiator is responsible for local distribution to participants.
   - **Transparency:** The Initiator receives a detailed breakdown (receipt) of "who ordered what" to facilitate offline collection.
-- **Advanced accounting capability** (bookkeeping, invoicing, tax exports)
+- **Accounting capability** (bookkeeping, invoicing, tax exports)
 
 ---
 
 ## 4) Core user journeys
 
-### 4.1 Consumer — buy at a shop online
+### 4.1 Consumer — buy at a shop (online or in-store)
 
 1. Discover a halal shop via search, map, or recommendations.
-2. Browse product catalog online.
-3. Add items to cart and proceed to checkout.
-4. Choose fulfillment method: delivery or pickup (BOPU).
-5. Complete payment (Phase 1: bank transfer, Phase 2: in-app payment).
-6. Receive order confirmation and tracking information.
-7. Track order status until ready for delivery/pickup.
-8. Receive products and digital receipt.
-9. Transaction recorded in purchase history for expense tracking.
+2. Browse products or scan items at the cashier (POS-assisted).
+3. Complete purchase either:
+   - **Online** (checkout with delivery or pickup), or
+   - **In-store** (in-store purchase registered by the cashier via POS).
+4. Receive a digital receipt and see the transaction recorded in purchase history.
 
-### 4.1.1 Consumer — buy at a shop in-store
+### 4.2 Consumer — dine at a restaurant
 
-1. Visit a halal shop physically.
-2. Browse and select products in-store.
-3. Bring items to cashier for checkout.
-4. Cashier scans items via POS.
-5. **Digital receipt option:** Cashier asks if customer wants to save receipt digitally.
-   - **If yes:** Customer opens Halava app and displays personal QR code → cashier scans it → transaction linked to customer's account.
-   - **If no:** Transaction recorded for merchant only (not linked to customer account).
-6. **Receipt printing preference:** Customer chooses whether to print paper receipt or digital only.
-7. Complete payment (cash, card, or other accepted methods).
-8. **If digitally linked:** Transaction appears in customer's unified purchase history for expense tracking.
+1. Discover a halal restaurant via the directory.
+2. Review menu, photos, tags, and halal status disclosure.
+3. Visit the restaurant and place an order (in-store) or order online for pickup (if enabled).
+4. Offline dining transactions may be recorded by the merchant via POS and linked to the consumer’s history (optional).
+### 4.2.1 Consumer — order food at a restaurant
 
-### 4.2 Consumer — order food at a restaurant
-
-This journey covers consumers ordering food at restaurants. The ordering flow is **unified across dine-in/takeaway and online/in-store** — the only difference is **how they choose to pay** at checkout.
+This journey covers consumers ordering food at restaurants. The customer experience is **unified** — the only difference is **how they choose to pay** at checkout.
 
 **Payment method determines order type:**
 
@@ -302,25 +291,23 @@ Becomes an **Online Order** — goes to merchant's Order Inbox.
 8. **Collect food:** Arrive at restaurant, show order number/QR, pick up packed food.
 9. **Transaction recorded:** Appears in purchase history.
 
-**A2. Online → Dine-in (customer selects desired ready time):**
+**A2. Online → Dine-in (arrival-triggered):**
 
 1. Complete checkout with "Pay online".
-2. **Select desired ready time:** Pick when food should be ready (e.g., "Ready at 6:15 PM").
-3. Complete bank transfer.
-4. **Payment verified:** Status → "Confirmed (Paid, Ready at 6:15 PM)".
-5. **Kitchen sees order with time target:** Prepares food to be ready exactly at selected time.
-6. **Travel to restaurant** (customer arrives by desired time).
-7. **Notification reminder:** *"Your order will be ready at 6:15 PM!"* (5 min before)
-8. **Order becomes ready:** Kitchen marks order ready at target time; customer notified.
+2. Complete bank transfer.
+3. **Payment verified:** Status → "Confirmed (Paid, Awaiting Arrival)".
+4. **Order held (not cooking):** *"Payment received! We'll start cooking when you arrive."*
+5. **Travel to restaurant.**
+6. **Confirm arrival:** Tap **"I've arrived"** button OR scan QR at entrance/table.
+7. **Kitchen starts cooking:** Status → "Preparing". Food cooked fresh.
+8. **Wait at table:** See real-time progress.
 9. **Notification:** *"Your order #1234 is ready!"*
-10. **Food served fresh:** Staff delivers hot food to table immediately.
+10. **Food served fresh:** Staff delivers hot food to table.
 11. **Transaction recorded:** Appears in purchase history.
 
-**Why time-selection for online dine-in:**
-- Kitchen has visibility into prep timing — can plan backwards from target ready time
-- Prevents cold food — customer knows exactly when to arrive
+**Why arrival-triggered for online dine-in:**
+- Prevents cold food — kitchen waits until customer arrives
 - Payment verified first — no food waste from unpaid orders
-- No active customer confirmation needed — simpler UX
 
 ---
 
@@ -568,6 +555,7 @@ Group purchases allow multiple consumers to contribute to a shared order for a s
 - **Finalization:** The Initiator reviews the combined order and submits it to the merchant as a single order.
 - **Payment:** Single payer model — the Initiator pays the merchant. In MVP (Phase 1), this is a direct bank transfer; in Phase 2, the Initiator pays through Halava's checkout via the integrated payment provider. Participants reimburse the Initiator externally (outside Halava) in both phases.
 - **Breakdown:** Halava provides a per-participant breakdown so the Initiator can facilitate collection from participants.
+- **Thresholds (optional):** Merchants can set minimum order values for group purchases (e.g., free shipping above ¥10,000).
 
 #### 6.3.3 Unified Item Model (Products & Menu Items)
 
@@ -674,25 +662,22 @@ Goes to merchant's **Order Inbox** as an online order.
 4. Customer tracks status: Preparing → Ready
 5. Customer arrives, shows order number/QR, picks up packed food
 
-**Online → Dine-in (customer selects desired ready time):**
+**Online → Dine-in (arrival-triggered):**
 1. Customer submits order with "Pay online"
-2. **Selects desired ready time:** Picks when food should be ready (e.g., "Ready at 6:15 PM")
-3. Customer completes bank transfer
-4. **Payment verified:** Status → "Confirmed (Paid, Ready at 6:15 PM)"
-5. **Kitchen sees order with time target:** Prepares food to be ready exactly at selected time
-6. Customer travels to restaurant and arrives by desired time
-7. **Notification reminder:** *"Your order will be ready at 6:15 PM!"* (5 min before)
-8. **Order becomes ready:** Kitchen marks order ready at target time; customer notified
-9. **Food served fresh:** Staff delivers hot food to table immediately
+2. Customer completes bank transfer
+3. Merchant verifies payment → order held (not cooking yet)
+4. Customer sees: *"Payment received! We'll start cooking when you arrive."*
+5. Customer travels to restaurant
+6. Customer confirms arrival: taps **"I've arrived"** or scans QR
+7. Kitchen starts cooking fresh → customer is seated
+8. Food served hot to table
 
-**Why time-selection for online dine-in:**
+**Why arrival-triggered for online dine-in:**
 
-| Advantage | Benefit |
-|-----------|----------|
-| Kitchen visibility | Knows exact time customer will arrive |
-| Fresh food | Prep timed to prevent cold meals |
-| Payment verified first | No food waste from unpaid orders |
-| Simple UX | No manual arrival confirmation needed |
+| Fulfillment | Cold Food Risk | Solution |
+|-------------|----------------|----------|
+| Takeaway | Accepted (packed) | Cook after payment |
+| Dine-in | High (customer not there yet) | Cook after payment + arrival |
 
 ---
 
@@ -733,40 +718,39 @@ Goes to merchant's **POS queue** as a Prepared Order. **Restaurant-specific** �
 | **Shop/Grocery** | ✅ Online order (Order Inbox) | ❌ Not applicable (cashier must scan items) |
 
 ```
-ONLINE DINE-IN FLOW (time-selected):
+ONLINE DINE-IN FLOW (arrival-triggered):
 
-┌─────────────┐    ┌─────────────┐    ┌─────────────┐    ┌─────────────┐    ┌─────────────┐
-│   Placed    │───▶│  Confirmed  │───▶│  Preparing  │───▶│    Ready    │───▶│  Fulfilled  │
-│  (Payment   │    │   (Paid,    │    │             │    │   (Ready    │    │             │
-│   + Time)   │    │  Ready@6:15)│    │             │    │   @6:15)    │    │             │
-└─────────────┘    └─────────────┘    └─────────────┘    └─────────────┘    └─────────────┘
-     │                   │                  │                  │                  │
-     ▼                   ▼                  ▼                  ▼                  ▼
-  Consumer           Kitchen has        Kitchen            Food ready         Food served
-  selects ready      timing target      starts cooking     on schedule        fresh at table
-  time               and preps          to hit target
+┌─────────────┐    ┌─────────────┐    ┌─────────────┐    ┌─────────────┐    ┌─────────────┐    ┌─────────────┐
+│   Placed    │───▶│  Confirmed  │───▶│   Arrived   │───▶│  Preparing  │───▶│    Ready    │───▶│  Fulfilled  │
+└─────────────┘    └─────────────┘    └─────────────┘    └─────────────┘    └─────────────┘    └─────────────┘
+     │                   │                  │                  │                  │                  │
+     ▼                   ▼                  ▼                  ▼                  ▼                  ▼
+  Consumer           Order held         Consumer           Kitchen            Food served        Complete
+  orders             (not cooking)      confirms           starts             at table
+  remotely                              arrival            cooking
 ```
 
-**Time selection at checkout:**
+**Arrival confirmation methods:**
 
-At checkout step, customer sees time picker with suggested options:
-- Current time + 15 min (default, "ready soon")
-- Current time + 30 min
-- Current time + 45 min
-- Current time + 60 min
-- Custom time selection
+| Method | How it works | Pros | Cons |
+|--------|--------------|------|------|
+| **"I've arrived" button** | Consumer taps button in order tracking page | Simple, no hardware needed | Relies on consumer honesty |
+| **QR scan at entrance** | Consumer scans QR code when entering restaurant | Verified presence | Requires QR signage |
+| **Table QR scan** | Consumer scans QR at their table | Confirms exact table for delivery | Requires per-table QR |
+| **Geofencing (post-MVP)** | Auto-detect when consumer is near restaurant | Frictionless | Battery drain, accuracy issues |
 
-Restaurant uses selected time to plan kitchen workflow backwards.
+**Recommended MVP approach:**
+- Primary: **"I've arrived" button** (simple, zero merchant setup)
+- Optional: **Table QR scan** (if restaurant uses QR menus, reuse same codes)
 
 **Edge cases:**
 
 | Situation | Handling |
 |-----------|----------|
-| Customer arrives before ready time | Food is held in kitchen; served when customer arrives |
-| Customer runs late and misses ready time | Kitchen holds food warm for 10 min, then notifies merchant. Order can be remade if requested. |
-| Customer wants to change ready time | Before checkout: change time picker. After order placed: contact merchant or reschedule. |
-| High-traffic period: kitchen can't meet target time | Merchant adjusts prep time estimates before accepting order (system prevents over-booking). |
-| Customer no-show | Order marked unfulfilled after 30 min grace period. Merchant notes for refund/cancellation handling. |
+| Consumer doesn't confirm arrival within X minutes | Send reminder notification: "Tap 'I've arrived' to start your order" |
+| Consumer confirms but doesn't show up | Order auto-cancels after configurable timeout (e.g., 30 min). Merchant can extend. |
+| Consumer arrives before expected time | They simply confirm arrival early; kitchen prioritizes accordingly |
+| Restaurant prefers to start early anyway | Merchant setting: "Prepare online dine-in immediately" (disables arrival trigger) |
 
 **Order lifecycle & statuses:**
 
@@ -847,7 +831,7 @@ This prevents:
 | Order placed/confirmed | ✓ | — | ✓ (confirmation) |
 | Pending payment reminder (Phase 1) | ✓ | ✓ | ✓ |
 | Payment verified | ✓ | — | — |
-| Ready time reminder (5 min before) | ✓ | ✓ | — |
+| Arrival reminder (online dine-in) | ✓ | ✓ | — |
 | Preparing | ✓ | — | — |
 | **Ready for pickup/serving** | ✓ | ✓ | ✓ (with order #) |
 | Fulfilled | ✓ | — | — |
@@ -882,13 +866,13 @@ This prevents:
   4. Shows order number/QR; staff hands over packed food.
   5. Staff marks order as "Fulfilled."
 
-- **Online → Dine-in (time-selected):**
-  1. Consumer browses → adds to cart → selects "Pay online" → selects desired ready time.
-  2. Consumer completes bank transfer.
-  3. Payment confirmed → kitchen sees target ready time and preps accordingly.
-  4. Consumer travels to restaurant and arrives by desired time.
-  5. Order becomes ready at scheduled time; consumer is notified.
-  6. Staff delivers hot food to table immediately.
+- **Online → Dine-in (arrival-triggered):**
+  1. Consumer browses → adds to cart → selects "Pay online" → completes bank transfer.
+  2. Payment confirmed → order held (not cooking).
+  3. Consumer travels to restaurant.
+  4. Consumer confirms arrival ("I've arrived" button or QR scan).
+  5. Kitchen starts cooking fresh; consumer is seated.
+  6. Staff delivers hot food to table.
   7. Staff marks order as "Fulfilled."
 
 **Merchant kitchen interface:**
@@ -912,10 +896,9 @@ This prevents:
 - **Operating hours for online orders:** May differ from walk-in hours.
 - **Order capacity:** Optional limit on concurrent orders to prevent kitchen overload.
 - **Online dine-in settings:**
-  - **Prep time buffer:** Time added to customer's selected ready time for kitchen prep (default: 0 min, can be negative if kitchen prepares early).
-  - **Default suggested time:** Recommended time-from-now for new orders (default: 15 min).
-  - **Max advance booking:** How far ahead customers can select ready time (default: 2 hours).
-  - **Hold time:** How long kitchen will keep food warm after ready time before notifying merchant (default: 10 min).
+  - **Require arrival confirmation:** (default: ON) Kitchen waits for consumer to confirm arrival before cooking.
+  - **Arrival timeout:** Auto-cancel if consumer doesn't arrive within X minutes (default: 60 min).
+  - **Arrival confirmation method:** "I've arrived" button, entrance QR, or table QR.
 
 ### 6.4 POS (MVP)
 
@@ -1154,7 +1137,7 @@ This section enumerates the **actual pages that exist in the Halava web app**, o
 
   - Primary marketplace view showing many items across shops and restaurants (trending items, categories, deals, nearby recommendations).
   - Global search and filters across merchants; users can discover items first, then choose a merchant.
-  - Supports journeys: *4.1 Buy at a shop*, *4.2 Order food at a restaurant*.
+  - Supports journeys: *4.1 Buy at a shop*, *4.2 Dine at a restaurant*.
 
 - **Place page (shop or restaurant)**
 
@@ -1178,7 +1161,7 @@ This section enumerates the **actual pages that exist in the Halava web app**, o
   - Single-merchant cart, delivery or pickup selection.
   - Fulfillment type selection for food orders (dine-in / takeaway).
   - Payment method selection: "Pay online" or "Pay at counter" (restaurant only).
-  - Supports journeys: *4.1 Buy at a shop*, *4.2 Order food at a restaurant*.
+  - Supports journeys: *4.1 Buy at a shop*, *4.2.1 Order food at a restaurant*.
 
 - **Order Tracking page**
 
@@ -1187,7 +1170,7 @@ This section enumerates the **actual pages that exist in the Halava web app**, o
   - Order details (items, order number, pickup instructions).
   - Order modifications shown (if cashier edited at checkout): crossed-out items, quantity changes, additions.
   - "Ready for pickup" prominent alert when food is complete.
-  - Supports journeys: *4.2 Order food at a restaurant*.
+  - Supports journeys: *4.2.1 Order food at a restaurant*.
 
 - **Purchase History**
 
@@ -1235,7 +1218,7 @@ This section enumerates the **actual pages that exist in the Halava web app**, o
   - Order cards with items, modifiers, order type (takeaway/dine-in), and elapsed time.
   - Quick action buttons: Accept, Start Preparing, Mark Ready, Fulfilled.
   - Audio/visual alerts for new orders and overdue orders.
-  - Supports journeys: *4.7 Manage online food orders*.
+  - Supports journeys: *4.7.1 Manage online food orders*.
 
 - **Inventory management**
 

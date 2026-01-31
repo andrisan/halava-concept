@@ -37,7 +37,7 @@ This outline is designed to be **investor-ready**, **partner-friendly**, and dir
   - Existing e-commerce platforms are generic (don't understand halal needs)
 
 - Merchants:
-  - Miss out on diaspora demand (no online presence to reach price-sensitive diaspora customers looking for halal)
+  - Miss out on diaspora demand (limited online presence to reach price-sensitive diaspora customers looking for halal)
   - Fragmented logistics workflow (manage shipments manually via Kuroneko/Yubin; OR use delivery platforms and pay 30-35% commission)
   - Can't coordinate group purchases or bulk orders — shipping is per-order, no incentive structure for larger orders
   - No unified order + inventory + POS system (orders managed offline via email/phone, shipments via courier, in-store sales via cash; no shared visibility)
@@ -70,30 +70,26 @@ Key insight:
 **A massive, globally underserved market**
 
 - **TAM (Total Addressable Market — Global):**
-  - Global halal market: **$2.5 trillion+** (food, cosmetics, lifestyle)
-  - Growing 6–8% annually (outpacing general retail)
+  - Global halal market: **multi-trillion dollar** industry (food, cosmetics, lifestyle)
+  - One of the fastest-growing consumer segments globally
   - **1.8+ billion Muslims worldwide** + health-conscious consumers
-  - Halal e-commerce penetration: <2% globally (massive opportunity)
+  - Halal e-commerce penetration remains very low (massive opportunity)
 
 - **SAM (Serviceable Available Market — Multi-tier approach):**
   
   **Tier 1 — Muslim-minority markets (halal trust is primary pain):**
-  - **East Asia:** Japan (~¥200–300B / $1.5–2B), South Korea, Taiwan
-  - **Europe:** UK, France, Germany (large Muslim populations)
-  - **North America:** USA, Canada (diaspora + halal-curious consumers)
+  - **East Asia:** Japan, South Korea, Taiwan — growing Muslim tourism + diaspora
   - **Singapore:** Multicultural, wealthy, English-speaking hub
-  - Subtotal: **$50B–80B** (high willingness to pay for halal trust)
+  - **Europe:** UK, France, Germany — large established Muslim populations
+  - **North America:** USA, Canada — diaspora + halal-curious consumers
+  - Combined: **tens of billions** in halal commerce (high willingness to pay for trust)
   
   **Tier 2 — Muslim-majority markets (merchant tools + group purchase primary value):**
-  - **Indonesia:** 273M people, 87% Muslim — $180B+ halal market, <4% e-commerce penetration
-  - **Pakistan:** 231M people, 96% Muslim — $40B+ halal market, <2% e-commerce penetration
-  - **Bangladesh:** 169M people, 91% Muslim — $30B+ halal market
-  - **Malaysia:** 33M people, 61% Muslim — $65B halal market, high GDP/capita
-  - **Egypt, Turkey, Iran:** 100M+ Muslims each — combined $80B+
-  - **GCC (UAE, Saudi Arabia):** Wealthy, tech-savvy, cross-border commerce
-  - Subtotal: **$400B–600B** (massive volume, lower fees acceptable)
-  
-  **Combined SAM: $450B–680B** addressable market
+  - **Indonesia, Pakistan, Bangladesh:** 600M+ Muslims, rapidly growing e-commerce
+  - **Malaysia:** High GDP/capita, halal hub for SEA
+  - **Egypt, Turkey, Middle East:** Large populations, cross-border commerce
+  - **GCC (UAE, Saudi Arabia):** Wealthy, tech-savvy consumers
+  - Combined: **hundreds of billions** in halal commerce (massive volume, lower fees acceptable)
 
 - **SOM (Initial Launch — Japan):**
   - **Why Japan first:** Established B2B halal supplier network, regulatory clarity, halal trust is acute pain
@@ -102,11 +98,11 @@ Key insight:
   - Stage 3 (Commitment): 50+ merchants, ¥10M+ monthly GMV, national expansion ready
 
 **Strategic expansion roadmap:**
-1. **Prove model** (Year 1–2): Japan only — establish product-market fit, B2B network traction, regulatory pathway
-2. **Tier 1 expansion** (Year 2–3): Singapore, Taiwan — multicultural, English-speaking markets validate halal discovery model
-3. **Multicultural markets** (Year 3–4): Malaysia, UK — bridge positioning between Tier 1 and Tier 2
-4. **Tier 2 expansion** (Year 4–6): Indonesia, Pakistan, Bangladesh, UAE — Muslim-majority markets (from SAM definition); adapt to group purchase + merchant tools, massive volume
-5. **Global coverage** (Year 6+): Turkey, Egypt, North America — platform effects at scale
+1. **Prove model** (Year 1–3): Japan only — establish product-market fit, B2B network traction, regulatory pathway
+2. **Tier 1 expansion** (Year 4–7): Taiwan, South Korea — geographic proximity, large Southeast Asian worker populations, similar regulatory environment
+3. **Remaining Tier 1 markets** (Year 7–9): Singapore, UK, France, Germany, USA, Canada — bridge positioning; strong halal infrastructure and diaspora communities
+4. **Tier 2 expansion** (Year 9–12): Indonesia, Malaysia, Pakistan, Bangladesh, UAE — Muslim-majority markets; adapt to group purchase + merchant tools, massive volume
+5. **Global coverage** (Year 12+): Turkey, Egypt, rest of Middle East — platform effects at scale
 
 ---
 
@@ -227,8 +223,10 @@ Two cleanly separated revenue streams:
 
 **Online marketplace orders** (all merchants, regardless of plan):
 
+*Phase 1 (MVP):* Lower rates (2.0%–1.4%) — merchants verify payments manually via bank transfer.
+*Phase 2+:* Rates below — Halava intermediates payments, providing more value.
+
 | Monthly GMV | Transaction Fee |
-|-------------|-----------------|
 | ¥0–300k | 5.0% |
 | ¥300k–1M | 4.5% |
 | ¥1M–3M | 4.0% |
@@ -259,11 +257,11 @@ Two cleanly separated revenue streams:
 | Plan | Monthly Fee | POS Quota | Key Features |
 |------|-------------|-----------|--------------|
 | **Free** | ¥0 | 300 txns | Unlimited products, online selling, basic dashboard |
-| **Growth** | ¥3,000* | 3,000 txns | Advanced promotions, group rules, customer insights, priority support |
-| **Pro** | ¥8,000* | Unlimited | Analytics & trends, inventory tools, multi-staff, free promo kits |
+| **Growth** | ¥6,000 (¥3,000)* | 3,000 txns | Advanced promotions, group rules, customer insights, priority support |
+| **Pro** | ¥18,000 (¥9,000)* | Unlimited | Analytics & trends, inventory tools, multi-staff, free promo kits |
 | **Enterprise** | Negotiated | Unlimited | Custom features, integrations, dedicated account manager |
 
-*Waived if monthly transaction fees ≥ plan fee (no wasted subscriptions)
+*Phase 1 early adopter price in parentheses (50% off, locked in for 5 years). Waived if monthly transaction fees ≥ plan fee.
 
 **POS transaction top-ups** (when quota exhausted):
 - Small: 100 txns / ¥300
@@ -430,15 +428,15 @@ Amount due: ¥21,750
 
 **Expansion sequencing** (detailed rationale in Slide 4):
 
-**Year 1–2 — Prove model (Japan):** Establish product-market fit, B2B network traction, regulatory clarity
+**Year 1–3 — Prove model (Japan):** Establish product-market fit, B2B network traction, regulatory clarity
 
-**Year 2–3 — Tier 1 expansion (Singapore, Taiwan):** Multicultural, English-speaking markets validate halal discovery
+**Year 4–7 — Tier 1 expansion (Taiwan, South Korea):** Geographic proximity, large Southeast Asian worker populations, similar regulatory environment
 
-**Year 3–4 — Multicultural bridge (Malaysia, UK):** Test positioning adaptability; large Muslim populations, diaspora communities
+**Year 7–9 — Remaining Tier 1 (Singapore, UK, France, Germany, USA, Canada):** Strong halal infrastructure, diaspora communities, bridge to Tier 2
 
-**Year 4–6 — Tier 2 scale (Indonesia, Pakistan, Bangladesh, UAE):** Muslim-majority markets, massive volume; adapted pitch emphasizes group buying + merchant tools over halal discovery
+**Year 9–12 — Tier 2 scale (Indonesia, Malaysia, Pakistan, Bangladesh, UAE):** Muslim-majority markets, massive volume; adapted pitch emphasizes group buying + merchant tools over halal discovery
 
-**Year 6+ — Global coverage (Turkey, Egypt, North America):** Platform effects at scale; cross-border coordination, global merchant network
+**Year 12+ — Global coverage (Turkey, Egypt, rest of Middle East):** Platform effects at scale; cross-border coordination, global merchant network
 
 **Capital-efficient model:** Same platform, different market emphasis.
 
