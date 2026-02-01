@@ -92,7 +92,25 @@
 
 ---
 
+## Upcoming Versions
+
+> 📝 **Template for future releases.** Copy the structure below when defining new versions.
+
+```markdown
+## vX.X — "Brief Summary"
+
+**Goal:** One-sentence description of the release goal.
+
+| Feature | Description |
+|---------|-------------|
+| Feature name | What it does |
+```
+
+---
+
 ## Future Considerations
+
+> ⚠️ **Note:** Items below are preliminary ideas and have not been fully scoped or validated. Details subject to change based on user feedback and market conditions.
 
 | Feature | Description | Timeline |
 |---------|-------------|----------|

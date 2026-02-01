@@ -1,12 +1,12 @@
 # Halava Market Validation
 
-> **Last updated:** January 2026
+> **Last updated:** February 2026
 > **Status:** Active tracking document
 >
 > **Related documents:**
-> - `halava_web_app_spec_canvas.md` — Detailed product specification
-> - `halava_monetization_pricing_strategy_summary.md` — Pricing, fees, and investment staging
-> - `halava_pitch_deck_outline_10_12_slides.md` — Investor presentation
+> - [halava_web_app_spec_canvas.md](halava_web_app_spec_canvas.md) — Detailed product specification
+> - [halava_monetization_pricing_strategy_summary.md](halava_monetization_pricing_strategy_summary.md) — Pricing, fees, and investment staging
+> - [halava_pitch_deck_outline_10_12_slides.md](halava_pitch_deck_outline_10_12_slides.md) — Investor presentation
 
 ---
 
@@ -314,4 +314,4 @@ Daily GMV = Sum of all completed order values (excluding cancelled/refunded)
 
 *This document should be updated monthly with actual validation data as it becomes available.*
 
-*Last updated: January 2026*
+*Last updated: February 2026*

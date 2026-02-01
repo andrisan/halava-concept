@@ -1,12 +1,12 @@
 # Halava Risk Assessment
 
-> **Last updated:** January 2026
+> **Last updated:** February 2026
 > **Status:** Active risk tracking document
 >
 > **Related documents:**
-> - `halava_web_app_spec_canvas.md` — Detailed product specification
-> - `halava_monetization_pricing_strategy_summary.md` — Pricing, fees, and investment staging
-> - `halava_market_validation.md` — Market research and validation tracking
+> - [halava_web_app_spec_canvas.md](halava_web_app_spec_canvas.md) — Detailed product specification
+> - [halava_monetization_pricing_strategy_summary.md](halava_monetization_pricing_strategy_summary.md) — Pricing, fees, and investment staging
+> - [halava_market_validation.md](halava_market_validation.md) — Market research and validation tracking
 
 ---
 
@@ -234,4 +234,4 @@
 
 *This document should be reviewed and updated monthly. All new risks should be logged immediately upon identification.*
 
-*Last updated: January 2026*
+*Last updated: February 2026*

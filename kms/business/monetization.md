@@ -105,7 +105,7 @@ Membership plans **do not affect transaction fee rates** for online orders.
 - Monthly fee: **¥6,000** (waived when monthly transaction fees ≥ ¥6,000)
   - *Phase 1 early adopter price: ¥3,000*
 - **POS: 3,000 transactions/month**
-- Advanced promotions, analytics, 2 staff roles
+- Advanced promotions, analytics, 5 staff accounts
 
 ### Pro Plan
 - Monthly fee: **¥18,000** (waived when monthly transaction fees ≥ ¥18,000)

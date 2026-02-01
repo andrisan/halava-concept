@@ -1,13 +1,13 @@
 # Halava Pitch Deck Outline (10–15 Slides)
 
-> **Last updated:** January 2026
+> **Last updated:** February 2026
 > **Purpose:** Investor-ready, partner-friendly presentation
 >
 > **Related documents:**
-> - `halava_web_app_spec_canvas.md` — Detailed product specification
-> - `halava_monetization_pricing_strategy_summary.md` — Full pricing rationale and investment staging
-> - `halava_market_validation.md` — Market research and validation metrics tracking
-> - `halava_risk_assessment.md` — Risk analysis and mitigation strategies
+> - [halava_web_app_spec_canvas.md](halava_web_app_spec_canvas.md) — Detailed product specification
+> - [halava_monetization_pricing_strategy_summary.md](halava_monetization_pricing_strategy_summary.md) — Full pricing rationale and investment staging
+> - [halava_market_validation.md](halava_market_validation.md) — Market research and validation metrics tracking
+> - [halava_risk_assessment.md](halava_risk_assessment.md) — Risk analysis and mitigation strategies
 
 This outline is designed to be **investor-ready**, **partner-friendly**, and directly aligned with the current Halava application specification and monetization strategy.
 

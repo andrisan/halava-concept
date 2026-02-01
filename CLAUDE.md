@@ -53,6 +53,15 @@ halava-concept/
 - Standard markdown (no wikilinks)
 - Best for AI context and comprehensive reference
 
+### Converting KMS to Flat
+
+When syncing or converting KMS documents to flat format:
+1. **Remove all wikilinks** — Convert `[[document]]` to standard Markdown links `[document](document.md)`
+2. **Remove Obsidian tags** — Strip `#halava #business` style tags
+3. **No KMS references** — The flat version must be completely standalone with zero visibility into the KMS structure. Do not mention `/kms/`, wikilinks, or Obsidian
+4. **Self-contained** — Each flat file should work independently without referencing the KMS folder
+5. **Use flat file naming** — Reference other flat files by their `halava_*.md` names, not KMS paths
+
 ## Key Architectural Concepts
 
 ### Capability-Based Merchant Model

@@ -1,13 +1,13 @@
 # Halava API Specification
 
-> **Last updated:** January 2026
+> **Last updated:** February 2026
 > **Status:** Active specification
 > **API Version:** v1
 >
 > **Related documents:**
-> - `halava_web_app_spec_canvas.md` — Detailed product specification
-> - `halava_technical_architecture.md` — System design overview
-> - `halava_data_model.md` — Database schema documentation
+> - [halava_web_app_spec_canvas.md](halava_web_app_spec_canvas.md) — Detailed product specification
+> - [halava_technical_architecture.md](halava_technical_architecture.md) — System design overview
+> - [halava_pages_navigation_ux.md](halava_pages_navigation_ux.md) — Pages & Navigation UX
 
 ---
 
@@ -1380,4 +1380,4 @@ Retry-After: 30
 
 *This document should be updated when API changes are made. Full OpenAPI specification to be generated from code.*
 
-*Last updated: January 2026*
+*Last updated: February 2026*

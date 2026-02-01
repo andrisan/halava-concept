@@ -1,11 +1,12 @@
 # Halava Monetization & Pricing Strategy (Pitch & Spec Summary)
 
-> **Last updated:** January 2026
+> **Last updated:** February 2026
 > **Target market:** Japan (currency: Japanese Yen ¥)
 >
 > **Related documents:**
-> - `halava_web_app_spec_canvas.md` — Detailed product specification
-> - `halava_pitch_deck_outline_10_12_slides.md` — Investor presentation (uses this document as source of truth for pricing)
+> - [halava_web_app_spec_canvas.md](halava_web_app_spec_canvas.md) — Detailed product specification
+> - [halava_pitch_deck_outline_10_12_slides.md](halava_pitch_deck_outline_10_12_slides.md) — Investor presentation (uses this document as source of truth for pricing)
+> - [halava_risk_assessment.md](halava_risk_assessment.md) — Risk analysis and financial scenarios
 
 ## 1. Product & Market Context
 
@@ -328,7 +329,7 @@ This ensures:
 To maintain trust and avoid confusion, the monthly merchant invoice should present charges transparently:
 
 ```
-Monthly Invoice — January 2026
+Monthly Invoice — February 2026
 ─────────────────────────────────
 Plan: Growth (¥6,000/mo)
 Early Adopter Discount: Phase 1 (50% off, 5-year lock-in)
@@ -597,5 +598,5 @@ This document can be directly reused for:
 
 ---
 
-*Last updated: January 2026*
+*Last updated: February 2026*
 

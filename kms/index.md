@@ -1,67 +1,69 @@
 # Halava Knowledge Base
 
 > **Halal, Available Anywhere**
-> A consumer-first halal commerce platform for discovery, shopping, and coordination.
 
 ---
 
-## 🎯 Features
+## Vision
 
-Containerized feature specifications — each contains definition, user journeys, UI/UX, and data model.
+**Halava** is an abbreviation for "HALal, AVailable Anywhere." It is a **two-sided halal commerce platform** designed to serve both consumers and merchants with purpose-built features.
 
-### Consumer Features
-- [[directory]] — Halal place discovery
-- [[marketplace]] — Online shopping and checkout
-- [[purchase-history]] — Expense tracking & price comparison
-- [[price-comparison]] — Personal price history
-- [[group-purchase]] — Collaborative group purchasing
-- [[reviews-ratings]] — Rate and review places/products
-- [[saved-items]] — Bookmark favorites
+**For Consumers:**
+One trusted platform to discover, shop, and manage halal purchases.
 
-### Merchant Features
-- [[pos]] — Point of Sale for in-store transactions
-- [[restaurant-ops]] — Restaurant operations and food ordering (v1.1)
-- [[onboarding]] — Registration & setup flow
-- [[promotions]] — Coupons and featured listings
-- [[accounting]] — Bookkeeping and invoicing (Future)
+**For Merchants:**
+All-in-one tools to reach halal-conscious customers and grow the business.
 
-### Platform Operations
-- [[order-management]] — Order inbox and fulfillment
-- [[admin-moderation]] — Admin & moderation tools
-- [[notifications]] — Alerts & communications
-- [[roles-permissions]] — Access control (RBAC)
+---
+
+## Platform Pillars
+
+- **Consumer Convenience:** One trusted place to discover, shop, and coordinate halal purchases
+- **Merchant Empowerment:** Modular tools to manage operations and grow online presence
+- **Unified Commerce:** Seamless experience across discovery, shopping, dining, and payments
+- **Halal Trust:** Transparent merchant-declared status; no gatekeeping
 
 ---
 
 ## 📋 Specifications
 
-- [[web-app-spec]] — Full product specification (v1 → v1.5)
-- [[roadmap]] — Release plan and version features
-- [[pages-navigation-ux]] — UI/UX specification for all pages and navigation flows
-- [[api-spec]] — API contracts, authentication, endpoints
+[[web-app-spec]] · [[roadmap]] · [[pages-navigation-ux]] · [[api-spec]]
+
+---
+
+## 🎯 Features
+
+> **Full feature tables:** [[web-app-spec#Platform Features]]
+
+### Consumer
+[[consumer/directory]] · [[consumer/marketplace]] · [[consumer/group-purchase]] · [[consumer/purchase-history]] · [[consumer/price-comparison]] · [[consumer/reviews-ratings]] · [[consumer/saved-items]]
+
+### Merchant
+[[merchant/order-management]] · [[merchant/restaurant-ops]] · [[merchant/pos]] · [[merchant/promotions]] · [[merchant/accounting]]
+
+### Platform
+[[platform/admin-moderation]] · [[platform/roles-permissions]]
+
+### Shared
+[[shared/onboarding]] · [[shared/notifications]]
 
 ---
 
 ## 💼 Business
 
-- [[monetization]] — Pricing model, transaction fees, membership plans
-- [[pitch-deck]] — Investor-ready presentation structure (10–12 slides)
-- [[market-validation]] — Market research, consumer/merchant pain points
-- [[risk-assessment]] — Business, regulatory, operational, and financial risks
+[[monetization]] · [[pitch-deck]] · [[market-validation]] · [[risk-assessment]]
 
 ---
 
 ## 🔧 Technical
 
-- [[architecture]] — System design, tech stack, deployment
-- [[data-model]] — Database schema, entities, relationships
+[[architecture]] · [[data-model]]
 
 ---
 
 ## 🎨 Design
 
-- [[wireframes]] — Screen inventory and wireframe specifications
-- [[design-system]] — Colors, typography, components, accessibility
+[[wireframes]] · [[design-system]]
 
 ---
 

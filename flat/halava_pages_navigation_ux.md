@@ -2,7 +2,7 @@
 
 > **Last updated:** February 2026
 > **Status:** Active specification
-> **Parent document:** `halava_web_app_spec_canvas.md`
+> **Parent document:** [halava_web_app_spec_canvas.md](halava_web_app_spec_canvas.md)
 >
 > This document provides the comprehensive UI/UX specification for all pages and navigation flows in the Halava web application. It is designed as a standalone reference for AI agents and developers to implement every page with precise URL paths, layouts, components, and user interactions.
 

@@ -1,23 +1,12 @@
-# Halava — Web App Spec (v1 → v1.5)
+# Halava — Web App Spec
 
-> **Last updated:** January 2026
+> **Last updated:** February 2026
 > **Status:** Active specification
 >
 > **Related documents:**
-> - `halava_monetization_pricing_strategy_summary.md` — Pricing, fees, and investment staging
-> - `halava_pitch_deck_outline_10_12_slides.md` — Investor presentation
-> - `halava_pages_navigation_ux.md` — Detailed pages, URL paths, and UI/UX specification
-
----
-
-## Version History
-
-| Version | Date | Changes |
-|---------|------|--------|
-| v1.5 | Jan 2026 | Restaurant operations, advanced POS, multi-language |
-| v1.0 | Dec 2025 | MVP: Discover + Shop + POS, capability-based merchant model |
-
----
+> - [halava_monetization_pricing_strategy_summary.md](halava_monetization_pricing_strategy_summary.md) — Pricing, fees, and investment staging
+> - [halava_pitch_deck_outline_10_12_slides.md](halava_pitch_deck_outline_10_12_slides.md) — Investor presentation
+> - [halava_pages_navigation_ux.md](halava_pages_navigation_ux.md) — Detailed pages, URL paths, and UI/UX specification
 
 ## 1) Product definition
 
@@ -57,13 +46,10 @@
 
 ### 1.3 Platform pillars
 
-- **Unified Commerce Model:** Single platform encompassing discovery, shopping, dining, and payments across all halal options. Unified item model (products and menu items) and purchase history enable expense tracking and price comparison.
-
-- **Capability-First Approach:** Merchants activate features on their own timeline; no upfront business type classification. Prevents early friction and supports hybrid businesses (e.g., restaurant + grocery corner).
-
-- **Halal Trust Infrastructure:** Merchant-declared halal status by default with optional evidence publication (e.g., certificates, documents). Transparent disclosure to consumers without artificial gatekeeping.
-
-- **Integrated Merchant Operations:** Unified dashboard, inventory, order management, and analytics across all capabilities (online shopping, POS, restaurant operations).
+- **Consumer-First Growth:** Discovery, expense tracking, and group coordination drive organic adoption
+- **Unified Commerce:** One platform for discovery, shopping, dining, and payments
+- **Capability-Based Merchants:** Enable features incrementally; no business type lock-in
+- **Halal Trust:** Merchant-declared status with optional evidence; transparent, no gatekeeping
 
 ---
 

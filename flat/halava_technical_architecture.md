@@ -1,12 +1,11 @@
 # Halava Technical Architecture
 
-> **Last updated:** January 2026
+> **Last updated:** February 2026
 > **Status:** Active specification
 >
 > **Related documents:**
-> - `halava_web_app_spec_canvas.md` — Detailed product specification
-> - `halava_data_model.md` — Database schema documentation
-> - `halava_api_spec.md` — API contracts and examples
+> - [halava_web_app_spec_canvas.md](halava_web_app_spec_canvas.md) — Detailed product specification
+> - [halava_api_spec.md](halava_api_spec.md) — API contracts and examples
 
 ---
 
@@ -420,4 +419,4 @@ Halava is a Progressive Web App (PWA) with a monolithic API backend, designed fo
 
 *This document should be updated as architectural decisions are made and validated.*
 
-*Last updated: January 2026*
+*Last updated: February 2026*
