@@ -1,0 +1,247 @@
+{
+  "main": {
+    "id": "52b9148aa098b70c",
+    "type": "split",
+    "children": [
+      {
+        "id": "76c9bbaf85c0cc9e",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "bff72eb79bb02d10",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "kms/features/shared/multi-language.md",
+                "mode": "preview",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "multi-language"
+            }
+          },
+          {
+            "id": "37095749395d759d",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "kms/spec/web-app-spec.md",
+                "mode": "preview",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "web-app-spec"
+            }
+          }
+        ],
+        "currentTab": 1
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "5f55d901b646d8fd",
+    "type": "split",
+    "children": [
+      {
+        "id": "062ba7537da5edea",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "377f3cd09dabe9ce",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "4bb79872fdb9c26e",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "aa0f705185da9f05",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "8727a65cf587c5f7",
+    "type": "split",
+    "children": [
+      {
+        "id": "bbc4951d53382ac4",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "c16833581abbcad2",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "kms/spec/web-app-spec.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for web-app-spec"
+            }
+          },
+          {
+            "id": "ddc371da222b21a0",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "kms/spec/web-app-spec.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from web-app-spec"
+            }
+          },
+          {
+            "id": "3f2b269d4c61ffee",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "26d13d3352422f78",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "aceb853f2ec2d076",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "kms/spec/web-app-spec.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of web-app-spec"
+            }
+          },
+          {
+            "id": "23636da11891a255",
+            "type": "leaf",
+            "state": {
+              "type": "git-view",
+              "state": {},
+              "icon": "git-pull-request",
+              "title": "Source Control"
+            }
+          }
+        ],
+        "currentTab": 4
+      }
+    ],
+    "direction": "horizontal",
+    "width": 395.5
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false,
+      "obsidian-git:Open Git source control": false
+    }
+  },
+  "active": "37095749395d759d",
+  "lastOpenFiles": [
+    "kms/features/merchant/restaurant-ops.md",
+    "kms/spec/web-app-spec.md",
+    "kms/features/shared/onboarding.md",
+    "kms/features/shared/authentication.md",
+    "kms/features/shared/multi-language.md",
+    "kms/features/shared/marketplace.md",
+    "kms/features/shared/directory.md",
+    "kms/features/shared/notifications.md",
+    "kms/features/platform/roles-permissions.md",
+    "kms/index.md",
+    "kms/spec/roadmap.md",
+    "kms/features/merchant/accounting.md",
+    "kms/features/consumer/group-purchase.md",
+    "kms/spec/roadmap.md.tmp.5064.1770090194154",
+    "kms/features/consumer/group-purchase.md.tmp.5064.1770090184120",
+    "kms/features/consumer/group-purchase.md.tmp.5064.1770090136054",
+    "kms/spec/roadmap.md.tmp.5064.1770090052012",
+    "kms/features/shared/multi-language.md.tmp.5064.1770090034196",
+    "kms/features/merchant/pos.md.tmp.5064.1770089986073",
+    "kms/features/merchant/pos.md.tmp.5064.1770089957953",
+    "kms/features/merchant/restaurant-ops.md.tmp.5064.1770089933677",
+    "kms/features/merchant/restaurant-ops.md.tmp.5064.1770089922869",
+    "kms/features/merchant/restaurant-ops.md.tmp.5064.1770089883713",
+    "kms/features/merchant/inventory.md",
+    "kms/features/merchant/products.md",
+    "kms/features/consumer/search-filters.md",
+    "kms/features/consumer/bopu.md",
+    "kms/features/consumer/place-pages.md",
+    "kms/features/consumer/marketplace.md",
+    "kms/features/consumer/directory.md",
+    "kms/technical/data-model.md",
+    "README.md"
+  ]
+}

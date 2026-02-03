@@ -1,7 +1,7 @@
 # Accounting
 
 > **Capability:** Accounting & Bookkeeping
-> **Version:** Future (v1.3+)
+> **Version:** Future (v1.2+)
 > **Status:** Planned
 >
 > **Related:** [[marketplace]] · [[pos]] · [[order-management]] · [[monetization]]
@@ -18,7 +18,7 @@
 - Export-ready tax reports for accountants
 - Real-time revenue and expense tracking
 
-> **Note:** This is a **future capability** planned for v1.3+. This document outlines the intended scope and design.
+> **Note:** This is a **future capability** planned for v1.2+. This document outlines the intended scope and design.
 
 ---
 

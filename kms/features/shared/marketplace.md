@@ -1,10 +1,11 @@
 # Marketplace (Online Shopping)
 
+> **Feature Type:** Shared (Consumer & Merchant)
 > **Capability:** Shop / Marketplace Selling
 > **Version:** MVP (v1)
 > **Status:** Active
 >
-> **Related:** [[directory]] · [[pos]] · [[group-purchase]] · [[capabilities]]
+> **Related:** [[directory]] · [[pos]] · [[group-purchase]] · [[onboarding]]
 
 ---
 
@@ -277,4 +278,4 @@ Marketplace shares inventory with [[pos]]:
 
 ---
 
-#halava #feature #marketplace #consumer #merchant
+#halava #feature #marketplace #shared

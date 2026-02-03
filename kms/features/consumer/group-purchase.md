@@ -4,7 +4,10 @@
 > **Version:** MVP (v1)
 > **Status:** Active
 >
-> **Related:** [[marketplace]] · [[web-app-spec]] · [[order-management]]
+> **Related:** [[marketplace]] · [[web-app-spec]] · [[order-management]] · [[notifications]]
+
+**v1.2 Enhancement:**
+- **In-city Group Delivery** — Collaborative cart with dynamic shipping and distribution support
 
 ---
 
@@ -236,10 +239,179 @@ Example thresholds:
 
 ---
 
+## In-city Group Delivery
+
+> **Version:** v1.2
+
+In-city Group Delivery enhances Group Purchase for urban communities where participants are geographically close and can coordinate pickup/distribution.
+
+### Key Enhancements
+
+| Feature | MVP | v1.2 |
+|---------|-----|------|
+| Collaborative cart | ✓ | ✓ |
+| Single payer | ✓ | ✓ |
+| Free shipping threshold | ✓ | Enhanced |
+| Delivery to initiator | ✓ | ✓ |
+| Distribution tracking | — | ✓ New |
+| Participant addresses | — | ✓ New |
+| Route optimization | — | ✓ New |
+
+### Use Case
+
+A group of friends/neighbors in the same area want to order halal groceries together:
+- Combine orders to reach free delivery threshold
+- Initiator receives all items
+- Initiator distributes to participants nearby
+- Clear breakdown for reimbursement
+
+### Enhanced Flow
+
+```
+Initiator creates group
+  → Participants join and add items
+  → Each participant adds their address (optional)
+  → System shows:
+    - Combined order total
+    - Distance between participants
+    - Suggested distribution route
+  → Initiator submits order
+  → Order delivered to Initiator
+  → Initiator marks items as "Distributed" per participant
+  → Participants notified to reimburse
+```
+
+### Dynamic Shipping Thresholds
+
+```
+┌──────────────────────────────────────────┐
+│ Shipping                                 │
+├──────────────────────────────────────────┤
+│                                          │
+│ Order Total: ¥8,500                      │
+│                                          │
+│ ████████████████████░░░░ ¥8,500/¥10,000 │
+│                                          │
+│ 🚚 Standard Delivery: ¥500              │
+│                                          │
+│ Add ¥1,500 more for FREE delivery!      │
+│ Add ¥3,500 more for FREE priority!      │
+│                                          │
+│ [Invite More Friends]                    │
+│                                          │
+└──────────────────────────────────────────┘
+```
+
+### Participant Addresses
+
+Optional feature for distribution planning:
+
+```
+┌──────────────────────────────────────────┐
+│ Group Members                            │
+├──────────────────────────────────────────┤
+│                                          │
+│ 👤 Ahmad (Initiator) — Shibuya          │
+│    Delivery address: 〒150-0001...       │
+│                                          │
+│ 👤 Fatima — 0.8 km away                  │
+│    📍 Add pickup address                 │
+│                                          │
+│ 👤 Yusuf — 1.2 km away                   │
+│    📍 Shinjuku-ku, Nishi-Shinjuku...     │
+│                                          │
+│ Distribution Route:                      │
+│ Ahmad → Yusuf (1.2 km) → Fatima (0.5 km) │
+│ Total: ~15 min by bicycle                │
+│                                          │
+└──────────────────────────────────────────┘
+```
+
+### Distribution Tracking
+
+After order is delivered to Initiator:
+
+```
+┌──────────────────────────────────────────┐
+│ Distribute Items                         │
+├──────────────────────────────────────────┤
+│                                          │
+│ Order delivered to you! Time to          │
+│ distribute to your group members.        │
+│                                          │
+│ ☑ Ahmad (you) — ¥3,600                  │
+│   Items collected                        │
+│                                          │
+│ ☐ Fatima — ¥2,940                       │
+│   [Mark as Distributed]                  │
+│   → Sends notification + payment request │
+│                                          │
+│ ☐ Yusuf — ¥1,300                        │
+│   [Mark as Distributed]                  │
+│                                          │
+│ Suggested route: You → Yusuf → Fatima    │
+│ [Open in Maps]                           │
+│                                          │
+└──────────────────────────────────────────┘
+```
+
+### Reimbursement Request
+
+When Initiator marks "Distributed":
+
+```
+Notification to Participant:
+┌──────────────────────────────────────────┐
+│ 📦 Your items are ready!                 │
+├──────────────────────────────────────────┤
+│                                          │
+│ Ahmad has your items from the group      │
+│ order at Halal Mart.                     │
+│                                          │
+│ Your items:                              │
+│ • Lamb Chops 300g × 3         ¥2,940    │
+│                                          │
+│ Please reimburse Ahmad:                  │
+│ Amount: ¥2,940                           │
+│                                          │
+│ [Copy Amount] [Open PayPay] [Open LINE]  │
+│                                          │
+│ Already paid? [Mark as Paid]             │
+│                                          │
+└──────────────────────────────────────────┘
+```
+
+### Data Model Additions
+
+```
+GroupPurchase (v1.2 additions)
+├── delivery_type: enum (standard, group_delivery)
+├── distribution_status: enum (pending, in_progress, completed)
+
+GroupPurchaseParticipant (v1.2 additions)
+├── address: string (nullable)
+├── location: PostGIS Point (nullable)
+├── distribution_status: enum (pending, distributed, confirmed)
+├── distributed_at: timestamp (nullable)
+├── reimbursement_status: enum (pending, paid)
+```
+
+### Success Metrics (v1.2)
+
+| Metric | Target |
+|--------|--------|
+| Groups using addresses | > 40% |
+| Distribution completion rate | > 90% |
+| Avg. order value (group delivery) | +30% vs standard |
+| Reimbursement confirmation rate | > 70% |
+
+---
+
 ## Dependencies
 
 - [[marketplace]] — Cart and checkout flow
 - [[monetization]] — Transaction fees apply to total
+- [[notifications]] — Distribution and reimbursement alerts
 
 ---
 

@@ -13,7 +13,7 @@
 |---------|----------|--------|--------|
 | v1.0 | Discover + Shop + POS | MVP | In Progress |
 | v1.1 | Restaurant Ops | Post-MVP | Planned |
-| v1.3 | Advanced Order & Accounting | Future | Planned |
+| v1.2 | Advanced Order & Accounting | Future | Planned |
 
 ---
 
@@ -21,34 +21,39 @@
 
 **Goal:** Launch with a complete consumer-to-merchant transaction flow covering both online and in-store purchases.
 
+### Shared Features
+
+| Feature | Description |
+|---------|-------------|
+| [[authentication]] | Email/OTP passwordless login (consumers & merchants) |
+| [[onboarding]] | Profile setup for consumers and merchants |
+| [[roles-permissions]] | Role-based access (Owner, Staff: Cashier/Inventory/Part-time) |
+| [[notifications]] | Order updates, alerts, low-stock warnings |
+| [[directory]] | Consumers discover places; merchants manage listings |
+| [[marketplace]] | Consumers shop; merchants sell products |
+
 ### Consumer Features
 
 | Feature | Description |
 |---------|-------------|
-| Authentication | Email/OTP passwordless login |
-| [[directory]] | Location-based discovery (map + list) |
-| Place Pages | Hours, photos, tags, halal status disclosure |
-| Search & Filters | Distance, open now, cuisine, amenities |
-| [[marketplace]] | Product catalog, cart, checkout, order tracking |
+| [[directory#Place Pages\|Place Pages]] | Hours, photos, tags, halal status disclosure *(→ [[directory]])* |
+| [[directory#Search & Filters\|Search & Filters]] | Distance, open now, cuisine, amenities *(→ [[directory]])* |
 | [[group-purchase]] | Multiple users contribute to shared order |
-| Purchase History | Unified expense tracking across all orders |
-| Price Comparison | Historical price tracking across merchants |
-| BOPU | Buy-online-pick-up options |
-| Reviews & Ratings | Rate places and products |
-| Saved Items | Bookmark places and products |
+| [[purchase-history]] | Unified expense tracking across all orders |
+| [[price-comparison]] | Historical price tracking across merchants |
+| [[bopu]] | Buy-online-pick-up options |
+| [[reviews-ratings]] | Rate places and products |
+| [[saved-items]] | Bookmark places and products |
 
 ### Merchant Features
 
 | Feature | Description |
 |---------|-------------|
-| Onboarding | Business profile only (no type selection) |
-| [[directory]] | Business listing capability |
-| [[marketplace]] | Shop / Marketplace Selling capability |
 | [[pos]] | POS capability for in-store sales |
-| Products | Manage products with prices and stock |
-| Orders Dashboard | Online orders + POS transactions |
-| Inventory | Low-stock alerts (online + in-store) |
-| Promotions | Basic coupon codes |
+| [[products]] | Manage products with prices and stock |
+| [[order-management]] | Online orders + POS transactions |
+| [[inventory]] | Low-stock alerts (online + in-store) |
+| [[promotions]] | Basic coupon codes |
 
 ---
 
@@ -56,39 +61,40 @@
 
 **Goal:** Enable food service businesses with dine-in, takeaway, and kitchen operations.
 
+### Shared Features
+
+| Feature | Description |
+|---------|-------------|
+| [[multi-language]] | EN + JP + ID support across platform |
+
+### Merchant Features
+
 | Feature | Description |
 |---------|-------------|
 | [[restaurant-ops]] | Restaurant Operations capability |
-| Menu Management | Menu items with modifiers |
-| QR Menu | Contactless ordering |
-| Reservations | Table booking (or QR menu — choose one) |
-| Advanced POS | Tables, split bills, modifiers |
-| Kitchen Queue | Order preparation workflow |
-| Multi-language | EN + JP + ID support |
+| [[restaurant-ops#Menu Management\|Menu Management]] | Menu items with modifiers *(→ [[restaurant-ops]])* |
+| [[restaurant-ops#QR Menu\|QR Menu]] | Contactless ordering *(→ [[restaurant-ops]])* |
+| [[restaurant-ops#Kitchen Queue\|Kitchen Queue]] | Order preparation workflow *(→ [[restaurant-ops]])* |
+| [[restaurant-ops#Reservations\|Reservations]] | Table booking system *(→ [[restaurant-ops]])* |
+| [[pos#Advanced POS\|Advanced POS]] | Tables, split bills, modifiers *(→ [[pos]])* |
 
 ---
 
-## v1.3 — "Advanced Order & Accounting"
+## v1.2 — "Advanced Order & Accounting"
 
 **Goal:** Enhanced group ordering and merchant financial tools.
 
-### In-city Group Delivery
-
-| Aspect | Description |
-|--------|-------------|
-| Collaborative Cart | Multiple users add items to shared cart |
-| Single Payer | Initiator pays full amount (items + shipping) |
-| Dynamic Shipping | Free delivery if order exceeds threshold (e.g., ¥10,000) |
-| Simplified Fulfillment | Merchant fulfills one order; Initiator distributes |
-| Transparency | Detailed per-participant breakdown for reimbursement |
-
-### Accounting Capability
+### Consumer Features
 
 | Feature | Description |
 |---------|-------------|
-| Bookkeeping | Ledger, chart of accounts |
-| Invoicing | Invoice generation |
-| Tax Exports | Tax-ready reporting |
+| [[group-purchase#In-city Group Delivery\|In-city Group Delivery]] | Collaborative cart, dynamic shipping, distribution tracking *(→ [[group-purchase]])* |
+
+### Merchant Features
+
+| Feature | Description |
+|---------|-------------|
+| [[accounting]] | Bookkeeping, invoicing, tax exports |
 
 ---
 

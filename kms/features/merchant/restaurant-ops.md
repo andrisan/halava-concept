@@ -4,7 +4,13 @@
 > **Version:** v1.1
 > **Status:** Planned
 >
-> **Related:** [[pos]] · [[marketplace]] · [[capabilities]] · [[directory]]
+> **Related:** [[pos]] · [[marketplace]] · [[directory]] · [[onboarding]]
+
+**Sub-features:**
+- **Menu Management** — Menu items with modifiers, categories, pricing
+- **QR Menu** — Contactless ordering via table QR codes
+- **Kitchen Queue** — Order preparation workflow
+- **Reservations** — Table booking system
 
 ---
 
@@ -277,20 +283,186 @@ prepared → (payment at POS) → confirmed → preparing → ready → fulfille
 
 ---
 
-## QR Menu System
+## Menu Management
+
+Menu Management enables merchants to create and organize their food offerings with rich details.
+
+### Menu Item Structure
+
+| Field | Description |
+|-------|-------------|
+| Name | Item name (e.g., "Beef Rendang") |
+| Description | Detailed description |
+| Price | Base price |
+| Photo | Item image |
+| Category | Mains, Sides, Drinks, Dessert |
+| Modifiers | Customization options (spice level, size, add-ons) |
+| Prep time | Estimated preparation time |
+| Availability | Available times (breakfast, lunch, dinner) |
+| Dietary tags | Vegetarian, vegan, gluten-free |
+
+### Modifiers System
+
+```
+Modifier Group: "Spice Level"
+├── Required: Yes
+├── Options:
+│   ├── Mild (default)
+│   ├── Medium
+│   └── Hot (+¥100)
+```
+
+### Menu Organization
+
+```
+Dashboard → Menu Management
+  → Categories (drag to reorder):
+    ├── Mains (8 items)
+    ├── Sides (5 items)
+    ├── Drinks (6 items)
+    └── Desserts (3 items)
+  → [+ Add Item] [+ Add Category]
+```
+
+---
+
+## QR Menu
+
+QR Menu enables contactless ordering where customers scan a code to view the menu and place orders from their phone.
+
+### QR Code Types
+
+| Type | URL | Use Case |
+|------|-----|----------|
+| General menu | `/m/{merchant}/menu` | Counter display, flyers |
+| Table-specific | `/m/{merchant}/menu?table=5` | Table tents, stickers |
+
+### Table Detection Flow
+
+1. Customer scans table QR code
+2. Table number auto-fills in checkout
+3. "Dine-in at Table 5" shown in cart
+4. Order tagged with table for kitchen
 
 ### QR Code Generation
 
-Merchants get unique QR codes for:
-- General menu: `/m/{merchant}/menu`
-- Table-specific: `/m/{merchant}/menu?table=5`
+```
+Dashboard → QR Codes
+  → [Generate General QR]
+  → [Generate Table QRs]
+    - Enter number of tables: 10
+    - [Download All] → ZIP with labeled QRs
+    - [Print Layout] → Printable sheet
+```
 
-### Table Detection
+### QR Code Design
 
-When customer scans table QR:
-1. Table number auto-fills in checkout
-2. "Dine-in at Table 5" shown in cart
-3. Order tagged with table for kitchen
+```
+┌─────────────────────────┐
+│ ┌─────────────────────┐ │
+│ │                     │ │
+│ │     [QR CODE]       │ │
+│ │                     │ │
+│ └─────────────────────┘ │
+│                         │
+│    Scan to Order        │
+│    Table 5              │
+│                         │
+│    🍽️ Halal Bistro      │
+└─────────────────────────┘
+```
+
+---
+
+## Kitchen Queue
+
+Kitchen Queue is the order management interface for kitchen staff to receive, prepare, and complete orders.
+
+### Queue Columns
+
+| Column | Orders | Actions |
+|--------|--------|---------|
+| **New** | Just received | [Accept] |
+| **Preparing** | Being cooked | [Ready] |
+| **Ready** | Waiting for pickup/serve | [Fulfilled] |
+
+### Order Card Details
+
+```
+┌──────────────────────────┐
+│ #0087 · 2 min ago        │
+│ Table 5 · Dine-in        │
+├──────────────────────────┤
+│ • Beef Rendang × 1       │
+│   → Spice: Hot           │
+│ • Nasi Goreng × 2        │
+│ • Mango Lassi × 2        │
+├──────────────────────────┤
+│ Notes: No peanuts please │
+├──────────────────────────┤
+│ [Start Preparing]        │
+└──────────────────────────┘
+```
+
+### Kitchen Display Mode
+
+Full-screen mode optimized for kitchen monitors:
+- Large text for visibility
+- Auto-refresh every 5 seconds
+- Audio alerts for new orders
+- Color-coded priority (oldest = red)
+
+---
+
+## Reservations
+
+Reservations enables customers to book tables in advance.
+
+> **Note:** This is a v1.1 feature. Implementation details subject to refinement.
+
+### Reservation Flow (Consumer)
+
+```
+Place Page → [Reserve a Table]
+  → Select date: [Jan 30, 2026]
+  → Select time: [19:00]
+  → Party size: [4 people]
+  → Special requests: "Birthday celebration"
+  → [Confirm Reservation]
+  → Confirmation sent via email/notification
+```
+
+### Reservation Management (Merchant)
+
+```
+Dashboard → Reservations
+  → Calendar view:
+    ┌─────────────────────────────────────┐
+    │ January 30, 2026                    │
+    ├─────────────────────────────────────┤
+    │ 18:00  │ Ahmad K. · 2 pax · Table 3 │
+    │ 18:30  │ Fatima S. · 4 pax · Table 5│
+    │ 19:00  │ Yusuf M. · 6 pax · Table 7 │
+    │ 19:30  │ (Available)                │
+    └─────────────────────────────────────┘
+  → [+ Manual Booking] [Settings]
+```
+
+### Reservation Settings
+
+| Setting | Options |
+|---------|---------|
+| Time slots | 30 min / 1 hour intervals |
+| Max party size | Per table configuration |
+| Booking window | How far ahead (e.g., 30 days) |
+| Auto-confirm | Yes / Requires approval |
+| Cancellation policy | Hours before, penalties |
+
+### No-Show Handling
+
+- Reminder notification 2 hours before
+- Table held for 15 minutes past reservation
+- No-show marked, affects future bookings (future feature)
 
 ---
 
@@ -307,11 +479,11 @@ When customer scans table QR:
 
 ## Future Enhancements (v1.2+)
 
-- **Reservations:** Table booking system
 - **Split bills:** Divide check among diners
-- **Modifiers pricing:** Complex modifier combinations
+- **Complex modifiers:** Nested modifier groups, conditional pricing
 - **Scheduled orders:** Order ahead for specific time
-- **Kitchen display system:** Dedicated kitchen screen mode
+- **Waitlist:** Walk-in queue management
+- **Table management:** Visual floor plan, table status
 
 ---
 

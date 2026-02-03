@@ -1,6 +1,6 @@
 # Notifications
 
-> **Feature Type:** Platform (Consumer & Merchant)
+> **Feature Type:** Shared (Consumer & Merchant)
 > **Version:** MVP (v1)
 > **Status:** Active
 >

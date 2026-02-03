@@ -23,33 +23,50 @@
 
 ## Platform Features
 
+### Shared Features
+
+| Feature | Description | Version |
+|---------|-------------|---------|
+| [[authentication\|Authentication]] | Email/OTP passwordless login (consumers & merchants) | MVP |
+| [[onboarding\|Onboarding (Registration & Setup)]] | Profile setup for consumers and merchants | MVP |
+| [[roles-permissions\|Roles & Permissions]] | Role-based access (Owner, Staff: Cashier/Inventory/Part-time) | MVP |
+| [[notifications\|Notifications]] | Order updates, alerts, low-stock warnings | MVP |
+| [[directory\|Directory (Halal Place Discovery)]] | Consumers discover places; merchants manage listings | MVP |
+| [[marketplace\|Marketplace (Online Shopping)]] | Consumers shop; merchants sell products | MVP |
+| [[multi-language\|Multi-language Support]] | EN + JP + ID support across platform | v1.1 |
+
 ### Consumer Features
 
 | Feature | Description | Version |
 |---------|-------------|---------|
-| [[directory]] | Discover halal places via search, map, filters | MVP |
-| [[marketplace]] | Browse products, cart, checkout, order tracking | MVP |
-| [[group-purchase]] | Coordinate group orders with friends | MVP |
-| [[purchase-history]] | Unified expense tracking across all orders | MVP |
-| [[price-comparison]] | Personal price history for repurchase decisions | MVP |
-| [[reviews-ratings]] | Rate places and products | MVP |
-| [[saved-items]] | Bookmark places and products | MVP |
-| [[notifications]] | Order updates and alerts | MVP |
+| [[directory#Place Pages\|Directory: Place Pages]] | Hours, photos, tags, halal status disclosure | MVP |
+| [[directory#Search & Filters\|Directory: Search & Filters]] | Distance, open now, cuisine, amenities | MVP |
+| [[group-purchase\|Group Purchase]] | Multiple users contribute to shared order | MVP |
+| [[purchase-history\|Purchase History (Expense Tracking)]] | Unified expense tracking across all orders | MVP |
+| [[price-comparison\|Personal Price History]] | Historical price tracking across merchants | MVP |
+| [[bopu\|BOPU (Buy Online, Pick Up)]] | Buy-online-pick-up options | MVP |
+| [[reviews-ratings\|Reviews & Ratings]] | Rate places and products | MVP |
+| [[saved-items\|Saved Items (Bookmarks)]] | Bookmark places and products | MVP |
+| [[group-purchase#In-city Group Delivery\|Group Purchase: In-city Group Delivery]] | Collaborative cart, dynamic shipping, distribution tracking | v1.2 |
 
-### Merchant Features (Capability Model)
+### Merchant Features
 
 Merchants **do not choose** a business type during registration. Instead, they progressively **enable capabilities** as their business grows.
 
 | Feature | Description | Version |
 |---------|-------------|---------|
-| [[directory]] | Business profile, location, halal status | MVP |
-| [[marketplace]] | Product catalog, inventory, online orders | MVP |
-| [[pos]] | Cashier interface, receipts, offline mode | MVP |
-| [[restaurant-ops]] | Menu items, QR menu, kitchen queue | v1.1 |
-| [[order-management]] | Order inbox, status updates | MVP |
-| [[promotions]] | Coupons, featured listings | MVP |
-| [[notifications]] | Order alerts, low stock warnings | MVP |
-| [[accounting]] | Bookkeeping, invoicing, tax exports | Future |
+| [[pos\|POS (Point of Sale)]] | POS capability for in-store sales | MVP |
+| [[products\|Products (Catalog Management)]] | Manage products with prices and stock | MVP |
+| [[order-management\|Order Management]] | Online orders + POS transactions | MVP |
+| [[inventory\|Inventory (Stock Management)]] | Low-stock alerts (online + in-store) | MVP |
+| [[promotions\|Promotions]] | Basic coupon codes | MVP |
+| [[restaurant-ops\|Restaurant Operations]] | Restaurant Operations capability | v1.1 |
+| [[restaurant-ops#Menu Management\|Restaurant Operations: Menu Management]] | Menu items with modifiers | v1.1 |
+| [[restaurant-ops#QR Menu\|Restaurant Operations: QR Menu]] | Contactless ordering | v1.1 |
+| [[restaurant-ops#Kitchen Queue\|Restaurant Operations: Kitchen Queue]] | Order preparation workflow | v1.1 |
+| [[restaurant-ops#Reservations\|Restaurant Operations: Reservations]] | Table booking system | v1.1 |
+| [[pos#Advanced POS\|POS: Advanced POS]] | Tables, split bills, modifiers | v1.1 |
+| [[accounting\|Accounting]] | Bookkeeping, invoicing, tax exports | v1.2 |
 
 ---
 
@@ -89,7 +106,7 @@ Each merchant feature has an explicit lifecycle:
 | ------- | --------------------------- | ------------------------------------------------ | ------- |
 | v1.0    | Discover + Shop + POS       | Directory, Marketplace, POS, Group Purchase      | MVP     |
 | v1.1    | Restaurant Ops              | Menu, QR ordering, Kitchen queue, Multi-language | Planned |
-| v1.3    | Advanced Order & Accounting | In-city group delivery, Bookkeeping, Invoicing   | Future  |
+| v1.2    | Advanced Order & Accounting | In-city group delivery, Bookkeeping, Invoicing   | Future  |
 
 ---
 
@@ -97,10 +114,16 @@ Each merchant feature has an explicit lifecycle:
 
 > **Full schema:** [[data-model]]
 
-- **MerchantCapability** — merchant_id, capability_type, status, enabled_at, activated_at
-- **POSTransaction** — id, merchant_id, items, total, payment_method, created_at
-- **Place**, **Product**, **MenuItem** — activated based on enabled capabilities
-- **User**, **Order**, **Cart**, **GroupPurchase**, **Review**, **Notification**
+| Domain | Key Entities | Purpose |
+|--------|--------------|---------|
+| Users | User, Staff | Authentication, roles, merchant staff |
+| Merchants | Merchant, MerchantCapability | Business profiles, capability lifecycle |
+| Directory | Place | Halal place listings with location/hours |
+| Catalog | Item, Category | Unified product/menu items with extensions |
+| Commerce | Cart, Order, GroupPurchase | Shopping, checkout, group coordination |
+| POS | POSTransaction | In-store sales, claim codes |
+| Engagement | Review, SavedItem, Notification | Ratings, bookmarks, alerts |
+| Moderation | Report, AuditLog | Content reports, audit trail |
 
 ---
 
