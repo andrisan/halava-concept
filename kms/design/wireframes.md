@@ -4,7 +4,7 @@
 > **Status:** Pending
 >
 > **Related documents:**
-> - [[pages-navigation-ux]] — Page specifications
+> - [[pages-navigation-ux-spec]] — Page specifications
 > - [[design-system]] — Component library
 > - [[web-app-spec]] — Product specification
 
@@ -24,8 +24,12 @@
 | Cart | P0 | Pending |
 | Checkout Flow | P0 | Pending |
 | Order Tracking | P0 | Pending |
-| Purchase History | P1 | Pending |
+| Expense Tracker | P0 | Pending |
+| Spending Insights | P0 | Pending |
+| Personal Price History | P0 | Pending |
 | Group Purchase | P1 | Pending |
+| Saved Items | P1 | Pending |
+| Reviews & Ratings | P1 | Pending |
 | Profile / Settings | P2 | Pending |
 
 ### Merchant Screens
@@ -39,6 +43,7 @@
 | POS Main Screen | P0 | Pending |
 | Kitchen Queue | P1 | Pending |
 | Inventory | P1 | Pending |
+| Promotions | P1 | Pending |
 | Staff Management | P2 | Pending |
 
 ### Admin Screens
@@ -49,12 +54,14 @@
 | Moderation Queue | P1 | Pending |
 | User Management | P2 | Pending |
 
+> **Note:** BOPU options are integrated into the Checkout Flow.
+
 ---
 
 ## 2. Wireframe Specifications
 
 > Wireframes will be added as design progresses.
-> See [[pages-navigation-ux]] for ASCII layout specifications.
+> See [[pages-navigation-ux-spec]] for ASCII layout specifications.
 
 ---
 

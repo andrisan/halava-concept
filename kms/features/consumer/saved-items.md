@@ -4,7 +4,7 @@
 > **Version:** MVP (v1)
 > **Status:** Active
 >
-> **Related:** [[directory]] · [[marketplace]] · [[purchase-history]]
+> **Related:** [[directory]] · [[marketplace]] · [[expense-tracker]]
 
 ---
 
@@ -232,72 +232,230 @@ Collection → [Share]
 
 ## Data Model
 
-```
-SavedItem
-├── id: UUID
-├── user_id: FK → User
-├── item_type: enum (place, product, menu_item)
-├── item_id: UUID (FK to Place, Product, or MenuItem)
-├── collection_id: UUID (nullable, FK → Collection)
-├── notes: text (nullable)
-├── created_at: timestamp
+### Entities
 
-Collection
-├── id: UUID
-├── user_id: FK → User
-├── name: string
-├── icon: string (emoji, nullable)
-├── description: text (nullable)
-├── is_public: boolean (default: false)
-├── share_token: string (nullable, for sharing)
-├── item_count: int (computed)
-├── created_at: timestamp
-├── updated_at: timestamp
-
-CollectionShare (for collaborative collections - future)
-├── id: UUID
-├── collection_id: FK → Collection
-├── shared_with_user_id: FK → User
-├── permission: enum (view, edit)
-├── created_at: timestamp
 ```
+┌─────────────────────────────────────────────────────────────────┐
+│                       SavedItem                                  │
+├─────────────────────────────────────────────────────────────────┤
+│  id              UUID PRIMARY KEY                               │
+│  user_id         UUID FK → User                                 │
+│  item_type       ENUM(place, product, menu_item)                │
+│  item_id         UUID NOT NULL                                  │
+│  collection_id   UUID FK → Collection (nullable)                │
+│  notes           TEXT                                           │
+│  created_at      TIMESTAMP NOT NULL                             │
+│  UNIQUE(user_id, item_type, item_id)                            │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│                       Collection                                 │
+├─────────────────────────────────────────────────────────────────┤
+│  id              UUID PRIMARY KEY                               │
+│  user_id         UUID FK → User                                 │
+│  name            VARCHAR(100) NOT NULL                          │
+│  icon            VARCHAR(10)                                    │
+│  description     TEXT                                           │
+│  is_public       BOOLEAN DEFAULT false                          │
+│  share_token     VARCHAR(32) UNIQUE                             │
+│  item_count      INT DEFAULT 0                                  │
+│  created_at      TIMESTAMP NOT NULL                             │
+│  updated_at      TIMESTAMP                                      │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Indexes
+
+| Table | Index | Purpose |
+|-------|-------|---------|
+| `saved_item` | `user_id, item_type, item_id` (unique) | Prevent duplicates |
+| `saved_item` | `user_id, created_at DESC` | Recent saves |
+| `saved_item` | `user_id, collection_id` | Collection contents |
+| `collection` | `user_id` | User's collections |
+| `collection` | `share_token` (unique) | Public sharing |
 
 ---
 
 ## API Endpoints
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/api/v1/saved` | List all saved items |
-| `GET` | `/api/v1/saved/places` | List saved places |
-| `GET` | `/api/v1/saved/products` | List saved products |
-| `POST` | `/api/v1/saved` | Save an item |
-| `DELETE` | `/api/v1/saved/{id}` | Remove saved item |
-| `GET` | `/api/v1/collections` | List collections |
-| `POST` | `/api/v1/collections` | Create collection |
-| `PUT` | `/api/v1/collections/{id}` | Update collection |
-| `DELETE` | `/api/v1/collections/{id}` | Delete collection |
-| `POST` | `/api/v1/collections/{id}/items` | Add item to collection |
-| `DELETE` | `/api/v1/collections/{id}/items/{item_id}` | Remove from collection |
-| `GET` | `/api/v1/shared/{share_token}` | View shared collection |
+> Full API index: [[api-spec#5.2 Saved Items]]
 
-### Request Examples
+### GET /v1/consumer/saved
+
+List all saved items.
+
+```
+Query Parameters:
+  type        string    Filter: place, product (optional)
+  limit       int       Results per page (default: 20)
+  offset      int       Pagination offset
+```
 
 ```json
-// Save a place
-POST /api/v1/saved
+// Response
+{
+  "items": [
+    { "id": "uuid", "item_type": "place", "item": {...}, "saved_at": "..." }
+  ],
+  "total": 24
+}
+```
+
+### GET /v1/consumer/saved/places
+
+List saved places only.
+
+```json
+// Response
+{
+  "places": [...],
+  "total": 12
+}
+```
+
+### GET /v1/consumer/saved/products
+
+List saved products only.
+
+```json
+// Response
+{
+  "products": [...],
+  "total": 12
+}
+```
+
+### POST /v1/consumer/saved
+
+Save an item.
+
+```json
+// Request
 {
   "item_type": "place",
   "item_id": "uuid-of-place",
-  "collection_id": "uuid-of-collection" // optional
+  "collection_id": "uuid-of-collection"  // optional
 }
 
-// Create collection
-POST /api/v1/collections
+// Response
+{
+  "id": "uuid",
+  "item_type": "place",
+  "saved_at": "2026-01-28T10:00:00Z"
+}
+```
+
+### DELETE /v1/consumer/saved/{id}
+
+Remove saved item.
+
+```json
+// Response
+{
+  "message": "Item removed"
+}
+```
+
+### GET /v1/consumer/collections
+
+List user's collections.
+
+```json
+// Response
+{
+  "collections": [
+    { "id": "uuid", "name": "Weekly Groceries", "icon": "🛒", "item_count": 12 }
+  ]
+}
+```
+
+### POST /v1/consumer/collections
+
+Create a new collection.
+
+```json
+// Request
 {
   "name": "Weekly Groceries",
   "icon": "🛒",
   "is_public": false
+}
+
+// Response
+{
+  "id": "uuid",
+  "name": "Weekly Groceries",
+  "share_token": null
+}
+```
+
+### PUT /v1/consumer/collections/{id}
+
+Update collection details.
+
+```json
+// Request
+{
+  "name": "Updated Name",
+  "is_public": true
+}
+
+// Response
+{
+  "id": "uuid",
+  "share_token": "abc123"  // generated when is_public=true
+}
+```
+
+### DELETE /v1/consumer/collections/{id}
+
+Delete a collection (items are not deleted, just unassigned).
+
+```json
+// Response
+{
+  "message": "Collection deleted"
+}
+```
+
+### POST /v1/consumer/collections/{id}/items
+
+Add saved item to collection.
+
+```json
+// Request
+{
+  "saved_item_id": "uuid"
+}
+
+// Response
+{
+  "message": "Item added to collection"
+}
+```
+
+### DELETE /v1/consumer/collections/{id}/items/{item_id}
+
+Remove item from collection.
+
+```json
+// Response
+{
+  "message": "Item removed from collection"
+}
+```
+
+### GET /v1/consumer/shared/{share_token}
+
+View a shared collection (public, no auth required).
+
+```json
+// Response
+{
+  "name": "Weekly Groceries",
+  "owner": "Ahmad K.",
+  "items": [...],
+  "item_count": 12
 }
 ```
 

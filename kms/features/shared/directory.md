@@ -376,76 +376,142 @@ When focused:
 
 ## Data Model
 
+### Entities
+
 ```
-Place
-├── id: UUID
-├── merchant_id: FK → Merchant
-├── name: string
-├── slug: string (unique)
-├── description: text
-├── category: enum (restaurant, shop, service)
-├── cuisine_tags: string[]
-├── amenities: string[]
-│
-├── address: string
-├── location: PostGIS Point (lat, lng)
-├── operating_hours: JSONB
-│   └── { mon: [{open: "09:00", close: "21:00"}], ... }
-│
-├── halal_status: enum (declared, certified, muslim_owned)
-├── halal_evidence_url: string (nullable)
-│
-├── cover_photo_url: string
-├── photos: PlacePhoto[]
-│
-├── contact_phone: string (nullable)
-├── website_url: string (nullable)
-│
-├── rating_avg: decimal (computed)
-├── review_count: int (computed)
-│
-├── is_published: boolean
-├── created_at, updated_at: timestamp
+┌─────────────────────────────────────────────────────────────────┐
+│                         Place                                    │
+├─────────────────────────────────────────────────────────────────┤
+│  id              UUID PRIMARY KEY                               │
+│  merchant_id     UUID FK → Merchant UNIQUE                      │
+│  name            VARCHAR(255) NOT NULL                          │
+│  slug            VARCHAR(100) UNIQUE NOT NULL                   │
+│  description     TEXT                                           │
+│  category        ENUM(restaurant, shop, service)                │
+│  address         TEXT NOT NULL                                  │
+│  location        GEOGRAPHY(POINT, 4326) NOT NULL (PostGIS)      │
+│  halal_status    ENUM(declared, certified, muslim_owned)        │
+│  halal_evidence_url  VARCHAR(500)                               │
+│  halal_cert_number   VARCHAR(100)                               │
+│  halal_cert_expiry   DATE                                       │
+│  opening_hours   JSONB (day → {open, close})                    │
+│  price_range     ENUM($, $$, $$$)                               │
+│  amenities       TEXT[] (prayer_space, parking, etc.)           │
+│  tags            TEXT[] (cuisine types, keywords)               │
+│  is_published    BOOLEAN DEFAULT false                          │
+│  rating_avg      DECIMAL(2,1)                                   │
+│  rating_count    INT DEFAULT 0                                  │
+│  created_at      TIMESTAMP NOT NULL                             │
+│  updated_at      TIMESTAMP                                      │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│                       PlacePhoto                                 │
+├─────────────────────────────────────────────────────────────────┤
+│  id              UUID PRIMARY KEY                               │
+│  place_id        UUID FK → Place                                │
+│  url             VARCHAR(500) NOT NULL                          │
+│  is_cover        BOOLEAN DEFAULT false                          │
+│  sort_order      INT DEFAULT 0                                  │
+│  alt_text        VARCHAR(255)                                   │
+│  created_at      TIMESTAMP NOT NULL                             │
+└─────────────────────────────────────────────────────────────────┘
 ```
+
+### Opening Hours JSONB Structure
+
+```json
+{
+  "monday":    { "open": "09:00", "close": "21:00" },
+  "tuesday":   { "open": "09:00", "close": "21:00" },
+  "wednesday": { "open": "09:00", "close": "21:00" },
+  "thursday":  { "open": "09:00", "close": "21:00" },
+  "friday":    { "open": "09:00", "close": "22:00" },
+  "saturday":  { "open": "10:00", "close": "22:00" },
+  "sunday":    null
+}
+```
+
+### Indexes
+
+| Table | Index | Purpose |
+|-------|-------|---------|
+| `place` | `location` (GiST) | Geo-search |
+| `place` | `slug` (unique) | URL lookup |
+| `place` | `merchant_id` (unique) | Merchant → Place |
+| `place` | `category, is_published` | Category filtering |
+| `place` | `halal_status` | Halal status filtering |
+| `place` | `name, description` (GIN tsvector) | Full-text search |
+| `place_photo` | `place_id, sort_order` | Photo gallery |
 
 ---
 
 ## API Endpoints
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/api/v1/search` | Universal search |
-| `GET` | `/api/v1/search/suggestions` | Autocomplete |
-| `GET` | `/api/v1/places` | Search/list places |
-| `GET` | `/api/v1/places/{slug}` | Get place details |
-| `GET` | `/api/v1/places/{id}/photos` | Get photo gallery |
-| `GET` | `/api/v1/places/{id}/reviews` | List reviews |
-| `POST` | `/api/v1/places/{id}/reviews` | Add review |
-| `POST` | `/api/v1/saved/places/{id}` | Save place |
-| `DELETE` | `/api/v1/saved/places/{id}` | Unsave place |
-| `POST` | `/api/v1/merchant/places` | Create place (merchant) |
-| `PUT` | `/api/v1/merchant/places/{id}` | Update place |
+> Full API index: [[api-spec#3. Directory Module]]
 
-### Search Query Parameters
+### GET /v1/directory/search
+
+Universal search across places and products.
 
 ```
-GET /api/v1/places?
-  q=halal+ramen
-  &lat=35.6762
-  &lng=139.6503
-  &radius=2000
-  &open_now=true
-  &cuisine=japanese
-  &halal_status=certified
-  &rating_min=4
-  &sort=distance
-  &limit=20
-  &offset=0
+Query Parameters:
+  q         string    Search query
+  type      string    Filter: places, products, all (default: all)
+  limit     int       Results per type (default: 10)
 ```
-
-### Response Format
 
 ```json
+// Response
+{
+  "places": [...],
+  "products": [...],
+  "total": { "places": 8, "products": 24 }
+}
+```
+
+### GET /v1/directory/search/suggestions
+
+Autocomplete suggestions for search.
+
+```
+Query Parameters:
+  q         string    Partial search query
+  limit     int       Max suggestions (default: 5)
+```
+
+```json
+// Response
+{
+  "suggestions": [
+    { "text": "halal ramen", "type": "query" },
+    { "text": "Halal Ramen Tokyo", "type": "place" }
+  ]
+}
+```
+
+### GET /v1/directory/places
+
+Search and list places with geo-filter.
+
+```
+Query Parameters:
+  q             string    Search query
+  lat           float     Latitude for geo-search
+  lng           float     Longitude for geo-search
+  radius        int       Search radius in meters (default: 5000)
+  category      string    Filter by category
+  cuisine       string    Filter by cuisine type
+  halal_status  string    Filter: certified, declared, muslim_owned
+  open_now      boolean   Filter to currently open places
+  rating_min    int       Minimum rating (1-5)
+  sort          string    Sort: distance, rating, newest
+  limit         int       Results per page (default: 20)
+  offset        int       Pagination offset
+```
+
+```json
+// Response
 {
   "results": [...],
   "total": 42,
@@ -463,6 +529,84 @@ GET /api/v1/places?
       {"value": "declared", "count": 7}
     ]
   }
+}
+```
+
+### GET /v1/directory/places/{slug}
+
+Get place details by slug.
+
+```json
+// Response
+{
+  "id": "uuid",
+  "slug": "halal-ramen-tokyo",
+  "name": "Halal Ramen Tokyo",
+  "description": "Authentic halal Japanese ramen...",
+  "category": "restaurant",
+  "address": "〒150-0001 Tokyo, Shibuya-ku...",
+  "location": { "lat": 35.6762, "lng": 139.6503 },
+  "halal_status": "certified",
+  "opening_hours": { ... },
+  "rating_avg": 4.5,
+  "rating_count": 128,
+  "photos": [...],
+  "amenities": ["prayer_space", "parking"]
+}
+```
+
+### GET /v1/directory/places/{slug}/photos
+
+Get place photo gallery.
+
+```json
+// Response
+{
+  "photos": [
+    { "url": "...", "is_cover": true, "alt_text": "Storefront" },
+    { "url": "...", "is_cover": false, "alt_text": "Interior" }
+  ]
+}
+```
+
+### POST /v1/merchant/places
+
+Create place listing (merchant only).
+
+```json
+// Request
+{
+  "name": "Halal Ramen Tokyo",
+  "category": "restaurant",
+  "address": "〒150-0001 Tokyo, Shibuya-ku...",
+  "location": { "lat": 35.6762, "lng": 139.6503 },
+  "halal_status": "certified",
+  "opening_hours": { ... }
+}
+
+// Response
+{
+  "id": "uuid",
+  "slug": "halal-ramen-tokyo",
+  "status": "enabled_needs_setup"
+}
+```
+
+### PUT /v1/merchant/places/{id}
+
+Update place listing (merchant only).
+
+```json
+// Request
+{
+  "description": "Updated description...",
+  "opening_hours": { ... }
+}
+
+// Response
+{
+  "id": "uuid",
+  "updated_at": "2026-01-28T10:00:00Z"
 }
 ```
 

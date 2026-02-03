@@ -233,74 +233,288 @@ Order Details → [Cancel Order]
 
 ## Data Model
 
-```
-Order (extended from [[marketplace]])
-├── id: UUID
-├── order_number: string (HLV-XXXXXX)
-├── merchant_id: FK → Merchant
-├── consumer_id: FK → User
-├── source: enum (marketplace, group_purchase, restaurant)
-│
-├── status: enum
-│   └── placed, pending_payment, confirmed, preparing, 
-│       ready, shipped, fulfilled, cancelled, refunded
-├── status_history: JSONB
-│   └── [{ status, timestamp, actor_id, note }]
-│
-├── items: OrderItem[]
-├── subtotal, discount_amount, shipping_fee, total: decimal
-│
-├── fulfillment_type: enum (delivery, pickup, dine_in, takeout)
-├── shipping_address: JSONB (nullable)
-├── pickup_location_id: FK (nullable)
-├── scheduled_at: timestamp (nullable)
-│
-├── payment_method: enum (bank_transfer, card, cash)
-├── payment_status: enum (pending, confirmed, failed, refunded)
-├── payment_confirmed_at: timestamp (nullable)
-│
-├── tracking_number: string (nullable)
-├── courier: string (nullable)
-│
-├── notes: text (customer notes)
-├── internal_notes: text (merchant notes)
-│
-├── created_at, updated_at: timestamp
+### Entities
 
-OrderStatusHistory
-├── order_id: FK → Order
-├── from_status: enum
-├── to_status: enum
-├── changed_by: FK → User (staff/system)
-├── note: text (nullable)
-├── created_at: timestamp
 ```
+┌─────────────────────────────────────────────────────────────────┐
+│                         Order                                    │
+├─────────────────────────────────────────────────────────────────┤
+│  id              UUID PRIMARY KEY                               │
+│  consumer_id     UUID FK → User                                 │
+│  merchant_id     UUID FK → Merchant                             │
+│  order_number    VARCHAR(20) UNIQUE NOT NULL                    │
+│  status          ENUM(placed, pending_payment, confirmed,       │
+│                       preparing, ready, shipped, fulfilled,     │
+│                       cancelled)                                │
+│  order_type      ENUM(online, group, pos)                       │
+│  subtotal        DECIMAL(10,2) NOT NULL                         │
+│  discount_amount DECIMAL(10,2) DEFAULT 0                        │
+│  shipping_fee    DECIMAL(10,2) DEFAULT 0                        │
+│  tax_amount      DECIMAL(10,2) DEFAULT 0                        │
+│  total           DECIMAL(10,2) NOT NULL                         │
+│  payment_method  VARCHAR(50)                                    │
+│  payment_status  ENUM(pending, paid, refunded, failed)          │
+│  fulfillment_type ENUM(delivery, pickup, dine_in)               │
+│  shipping_address JSONB                                         │
+│  notes           TEXT                                           │
+│  created_at      TIMESTAMP NOT NULL                             │
+│  updated_at      TIMESTAMP                                      │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│                       OrderItem                                  │
+├─────────────────────────────────────────────────────────────────┤
+│  id              UUID PRIMARY KEY                               │
+│  order_id        UUID FK → Order                                │
+│  item_id         UUID FK → Item                                 │
+│  name            VARCHAR(255) NOT NULL (snapshot)               │
+│  quantity        INT NOT NULL                                   │
+│  unit_price      DECIMAL(10,2) NOT NULL                         │
+│  total_price     DECIMAL(10,2) NOT NULL                         │
+│  modifiers       JSONB                                          │
+│  created_at      TIMESTAMP NOT NULL                             │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│                    OrderStatusHistory                            │
+├─────────────────────────────────────────────────────────────────┤
+│  id              UUID PRIMARY KEY                               │
+│  order_id        UUID FK → Order                                │
+│  from_status     VARCHAR(50)                                    │
+│  to_status       VARCHAR(50) NOT NULL                           │
+│  changed_by      UUID FK → User                                 │
+│  note            TEXT                                           │
+│  created_at      TIMESTAMP NOT NULL                             │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Order Status Flow
+
+```
+placed → pending_payment → confirmed → preparing → ready/shipped → fulfilled
+                ↓                          ↓
+            cancelled                  cancelled
+```
+
+| Status | Consumer Sees | Merchant Action |
+|--------|---------------|-----------------|
+| `placed` | "Order Placed" | Review order |
+| `pending_payment` | "Awaiting Payment" | Wait for transfer |
+| `confirmed` | "Payment Confirmed" | Confirm, start prep |
+| `preparing` | "Preparing" | Pack items |
+| `shipped` | "Shipped" | Provide tracking |
+| `ready` | "Ready for Pickup" | Wait for customer |
+| `fulfilled` | "Completed" | Done |
+
+### Indexes
+
+| Table | Index | Purpose |
+|-------|-------|---------|
+| `order` | `consumer_id, created_at DESC` | Purchase history |
+| `order` | `merchant_id, status, created_at` | Dashboard filtering |
+| `order` | `order_number` (unique) | Order lookup |
+| `order_item` | `order_id` | Order items |
+| `order_status_history` | `order_id, created_at` | Status timeline |
 
 ---
 
 ## API Endpoints
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/api/v1/merchant/orders` | List orders (with filters) |
-| `GET` | `/api/v1/merchant/orders/{id}` | Get order details |
-| `PUT` | `/api/v1/merchant/orders/{id}/status` | Update order status |
-| `POST` | `/api/v1/merchant/orders/{id}/confirm-payment` | Confirm payment received |
-| `POST` | `/api/v1/merchant/orders/{id}/cancel` | Cancel order |
-| `POST` | `/api/v1/merchant/orders/{id}/refund` | Initiate refund |
-| `PUT` | `/api/v1/merchant/orders/{id}/tracking` | Add tracking info |
-| `GET` | `/api/v1/merchant/orders/stats` | Order statistics |
+> Full API index: [[api-spec#6.5 Orders]]
 
-### Query Parameters
+### GET /v1/merchant/orders
+
+List orders with filters.
 
 ```
-GET /api/v1/merchant/orders?
-  status=preparing,ready
-  &fulfillment=delivery
-  &from=2026-01-01
-  &to=2026-01-31
-  &sort=created_at_desc
-  &limit=20
+Query Parameters:
+  status        string    Filter: placed, pending_payment, confirmed, preparing, ready, shipped, fulfilled, cancelled
+  fulfillment   string    Filter: delivery, pickup, dine_in
+  from          date      Start date (YYYY-MM-DD)
+  to            date      End date (YYYY-MM-DD)
+  sort          string    created_at_desc, created_at_asc
+  limit         int       Results per page (default: 20)
+  offset        int       Pagination offset
+```
+
+```json
+// Response
+{
+  "orders": [
+    {
+      "id": "uuid",
+      "order_number": "HLV-001234",
+      "status": "preparing",
+      "customer": { "name": "Ahmad K." },
+      "items_count": 3,
+      "total": 4100,
+      "fulfillment_type": "delivery",
+      "created_at": "2026-01-28T10:32:00+09:00"
+    }
+  ],
+  "total": 45
+}
+```
+
+### GET /v1/merchant/orders/{id}
+
+Get order details.
+
+```json
+// Response
+{
+  "id": "uuid",
+  "order_number": "HLV-001234",
+  "status": "preparing",
+  "customer": {
+    "id": "uuid",
+    "name": "Ahmad K.",
+    "email": "ahmad@email.com",
+    "phone": "080-1234-5678"
+  },
+  "items": [
+    {
+      "id": "uuid",
+      "name": "Halal Beef 500g",
+      "quantity": 2,
+      "unit_price": 1200,
+      "total_price": 2400
+    }
+  ],
+  "subtotal": 3600,
+  "shipping_fee": 500,
+  "total": 4100,
+  "payment_status": "paid",
+  "fulfillment_type": "delivery",
+  "shipping_address": {...},
+  "created_at": "2026-01-28T10:32:00+09:00"
+}
+```
+
+### PUT /v1/merchant/orders/{id}/status
+
+Update order status.
+
+```json
+// Request
+{
+  "status": "preparing",
+  "note": "Started packing"
+}
+
+// Response
+{
+  "id": "uuid",
+  "status": "preparing",
+  "updated_at": "2026-01-28T10:45:00+09:00"
+}
+```
+
+### POST /v1/merchant/orders/{id}/confirm-payment
+
+Confirm payment received (Phase 1: manual confirmation).
+
+```json
+// Request
+{
+  "payment_method": "bank_transfer",
+  "note": "Received via Mizuho Bank"
+}
+
+// Response
+{
+  "id": "uuid",
+  "payment_status": "paid",
+  "confirmed_at": "2026-01-28T11:00:00+09:00"
+}
+```
+
+### POST /v1/merchant/orders/{id}/cancel
+
+Cancel an order.
+
+```json
+// Request
+{
+  "reason": "out_of_stock",
+  "note": "Halal Beef 500g unavailable"
+}
+
+// Response
+{
+  "id": "uuid",
+  "status": "cancelled",
+  "cancelled_at": "2026-01-28T11:30:00+09:00"
+}
+```
+
+### POST /v1/merchant/orders/{id}/refund
+
+Initiate refund for an order.
+
+```json
+// Request
+{
+  "amount": 4100,  // Full or partial
+  "reason": "Order cancelled due to stock unavailability"
+}
+
+// Response
+{
+  "id": "uuid",
+  "refund_status": "pending",
+  "refund_amount": 4100
+}
+```
+
+### PUT /v1/merchant/orders/{id}/tracking
+
+Add shipping tracking information.
+
+```json
+// Request
+{
+  "carrier": "yamato",
+  "tracking_number": "1234-5678-9012"
+}
+
+// Response
+{
+  "id": "uuid",
+  "tracking": {
+    "carrier": "yamato",
+    "tracking_number": "1234-5678-9012",
+    "tracking_url": "https://..."
+  }
+}
+```
+
+### GET /v1/merchant/orders/stats
+
+Get order statistics.
+
+```
+Query Parameters:
+  period        string    today, week, month, year
+```
+
+```json
+// Response
+{
+  "period": "today",
+  "total_orders": 23,
+  "total_revenue": 45200,
+  "by_status": {
+    "new": 3,
+    "preparing": 5,
+    "ready": 2,
+    "fulfilled": 13
+  },
+  "by_fulfillment": {
+    "delivery": 15,
+    "pickup": 8
+  }
+}
 ```
 
 ---

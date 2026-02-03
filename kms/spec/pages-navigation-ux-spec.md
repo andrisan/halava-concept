@@ -59,7 +59,9 @@ Halava uses a consistent, RESTful URL structure designed for clarity and SEO opt
 | `/cart` | Shopping Cart | Current cart contents and actions |
 | `/checkout` | Checkout | Multi-step checkout flow |
 | `/orders` | My Orders | List of all consumer orders |
-| `/purchase-history` | Purchase History | Unified expense tracking view |
+| `/profile/expenses` | Expense Tracker | Expense tracking, insights, price history |
+| `/profile/expenses/insights` | Spending Insights | Budget tracking, trends, analytics |
+| `/profile/expenses/prices` | Personal Price History | Track what you paid across merchants |
 | `/group-purchase/{invite-code}` | Group Purchase Join | Join a group purchase via invite link |
 | `/profile` | User Profile | Personal settings and preferences |
 

@@ -175,44 +175,223 @@ No Internet → POS continues working (local-first)
 
 ## Data Model
 
+### Entities
+
 ```
-POSTransaction
-├── id: UUID
-├── transaction_number: string (TXN-YYYY-XXXX)
-├── merchant_id: FK → Merchant
-├── staff_id: FK → Staff (cashier)
-├── consumer_id: FK → User (nullable, if linked)
-│
-├── items: JSONB
-│   └── [{ item_id, name, quantity, unit_price, subtotal }]
-├── subtotal: decimal
-├── tax_amount: decimal
-├── discount_amount: decimal
-├── total: decimal
-│
-├── payment_method: enum (cash, card, other)
-├── payment_status: enum (completed)
-│
-├── receipt_printed: boolean
-├── receipt_emailed: boolean
-│
-├── synced: boolean (for offline)
-├── created_at: timestamp
-├── synced_at: timestamp (nullable)
+┌─────────────────────────────────────────────────────────────────┐
+│                      POSTransaction                              │
+├─────────────────────────────────────────────────────────────────┤
+│  id              UUID PRIMARY KEY                               │
+│  merchant_id     UUID FK → Merchant                             │
+│  transaction_number  VARCHAR(30) NOT NULL                       │
+│  staff_id        UUID FK → User (cashier)                       │
+│  consumer_id     UUID FK → User (nullable, if QR linked)        │
+│  items           JSONB (item snapshots with prices, qty)        │
+│  subtotal        DECIMAL(10,2) NOT NULL                         │
+│  discount_amount DECIMAL(10,2) DEFAULT 0                        │
+│  tax_amount      DECIMAL(10,2) DEFAULT 0                        │
+│  total           DECIMAL(10,2) NOT NULL                         │
+│  payment_method  ENUM(cash, card, other)                        │
+│  payment_details JSONB (change given, card type, etc.)          │
+│  synced          BOOLEAN DEFAULT false                          │
+│  synced_at       TIMESTAMP                                      │
+│  created_at      TIMESTAMP NOT NULL                             │
+│  UNIQUE(merchant_id, transaction_number)                        │
+└─────────────────────────────────────────────────────────────────┘
 ```
+
+### Items JSONB Structure
+
+```json
+{
+  "items": [
+    {
+      "item_id": "uuid",
+      "name": "Halal Beef 500g",
+      "quantity": 2,
+      "unit_price": 1200,
+      "total_price": 2400,
+      "barcode": "4901234567890"
+    }
+  ]
+}
+```
+
+### Indexes
+
+| Table | Index | Purpose |
+|-------|-------|---------|
+| `pos_transaction` | `merchant_id, created_at DESC` | Transaction history |
+| `pos_transaction` | `merchant_id, transaction_number` (unique) | Receipt lookup |
+| `pos_transaction` | `consumer_id, created_at` | Linked purchases |
+| `pos_transaction` | `synced, created_at` | Offline sync queue |
 
 ---
 
 ## API Endpoints
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `POST` | `/api/v1/merchant/pos/transactions` | Create transaction |
-| `GET` | `/api/v1/merchant/pos/transactions` | List transactions |
-| `GET` | `/api/v1/merchant/pos/transactions/{id}` | Get transaction |
-| `GET` | `/api/v1/merchant/pos/quota` | Get quota status |
-| `POST` | `/api/v1/merchant/pos/quota/topup` | Purchase top-up |
-| `POST` | `/api/v1/merchant/pos/sync` | Sync offline transactions |
+> Full API index: [[api-spec#7. POS Module]]
+
+### POST /v1/pos/transactions
+
+Create a new POS transaction.
+
+```json
+// Request
+{
+  "items": [
+    {
+      "item_id": "uuid",
+      "quantity": 2,
+      "unit_price": 1200
+    },
+    {
+      "item_id": "uuid",
+      "quantity": 1,
+      "unit_price": 980
+    }
+  ],
+  "payment_method": "cash",
+  "payment_details": {
+    "amount_tendered": 5000,
+    "change_given": 620
+  },
+  "consumer_id": "uuid"  // Optional, if QR linked
+}
+
+// Response
+{
+  "id": "uuid",
+  "transaction_number": "TXN-2026-0142",
+  "total": 4380,
+  "created_at": "2026-01-28T14:32:00+09:00"
+}
+```
+
+### GET /v1/pos/transactions
+
+List POS transactions.
+
+```
+Query Parameters:
+  date          date      Filter by date (YYYY-MM-DD)
+  from          datetime  Start datetime
+  to            datetime  End datetime
+  payment_method string   Filter: cash, card, other
+  limit         int       Results per page (default: 20)
+  offset        int       Pagination offset
+```
+
+```json
+// Response
+{
+  "transactions": [
+    {
+      "id": "uuid",
+      "transaction_number": "TXN-2026-0142",
+      "total": 4380,
+      "payment_method": "cash",
+      "items_count": 3,
+      "consumer_linked": true,
+      "created_at": "2026-01-28T14:32:00+09:00"
+    }
+  ],
+  "total": 23,
+  "daily_total": 45200
+}
+```
+
+### GET /v1/pos/transactions/{id}
+
+Get transaction details.
+
+```json
+// Response
+{
+  "id": "uuid",
+  "transaction_number": "TXN-2026-0142",
+  "items": [
+    {
+      "item_id": "uuid",
+      "name": "Halal Beef 500g",
+      "quantity": 2,
+      "unit_price": 1200,
+      "total_price": 2400
+    }
+  ],
+  "subtotal": 3980,
+  "tax_amount": 400,
+  "total": 4380,
+  "payment_method": "cash",
+  "payment_details": {
+    "amount_tendered": 5000,
+    "change_given": 620
+  },
+  "consumer": { "id": "uuid", "name": "Ahmad K." },
+  "staff": { "id": "uuid", "name": "Aisha" },
+  "created_at": "2026-01-28T14:32:00+09:00"
+}
+```
+
+### GET /v1/pos/quota
+
+Get POS transaction quota status.
+
+```json
+// Response
+{
+  "plan_limit": 300,
+  "used": 245,
+  "remaining": 55,
+  "topup_available": 100,
+  "period_ends": "2026-02-01"
+}
+```
+
+### POST /v1/pos/quota/topup
+
+Purchase additional transaction quota.
+
+```json
+// Request
+{
+  "bundle": "100"  // 100, 300, or 500
+}
+
+// Response
+{
+  "topup_amount": 100,
+  "price": 300,
+  "new_available": 155
+}
+```
+
+### POST /v1/pos/sync
+
+Sync offline transactions to server.
+
+```json
+// Request
+{
+  "transactions": [
+    {
+      "local_id": "local-uuid-1",
+      "items": [...],
+      "payment_method": "cash",
+      "created_at": "2026-01-28T14:32:00+09:00"
+    }
+  ]
+}
+
+// Response
+{
+  "synced": 5,
+  "failed": 0,
+  "mappings": [
+    { "local_id": "local-uuid-1", "server_id": "uuid" }
+  ]
+}
+```
 
 ---
 

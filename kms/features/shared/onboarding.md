@@ -284,51 +284,197 @@ Dashboard → Capabilities → Directory → [Enable]
 
 ## Data Model
 
-```
-User
-├── id: UUID
-├── email: string (unique)
-├── name: string
-├── phone: string (nullable)
-├── role: enum (consumer, merchant_owner, staff, moderator, admin)
-├── email_verified_at: timestamp
-├── created_at: timestamp
+### Entities
 
-Merchant
-├── id: UUID
-├── owner_id: FK → User
-├── name: string (business name)
-├── contact_email: string
-├── contact_phone: string (nullable)
-├── onboarding_completed_at: timestamp (nullable)
-├── created_at: timestamp
-
-MerchantCapability
-├── id: UUID
-├── merchant_id: FK → Merchant
-├── capability_type: enum (directory, shop, pos, restaurant)
-├── status: enum (disabled, enabled, needs_setup, active, suspended)
-├── enabled_at: timestamp (nullable)
-├── setup_completed_at: timestamp (nullable)
-├── activated_at: timestamp (nullable)
 ```
+┌─────────────────────────────────────────────────────────────────┐
+│                         Merchant                                 │
+├─────────────────────────────────────────────────────────────────┤
+│  id              UUID PRIMARY KEY                               │
+│  user_id         UUID FK → User (owner) UNIQUE                  │
+│  name            VARCHAR(255) NOT NULL                          │
+│  slug            VARCHAR(100) UNIQUE NOT NULL                   │
+│  description     TEXT                                           │
+│  contact_email   VARCHAR(255)                                   │
+│  contact_phone   VARCHAR(20)                                    │
+│  logo_url        VARCHAR(500)                                   │
+│  created_at      TIMESTAMP NOT NULL                             │
+│  updated_at      TIMESTAMP                                      │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│                    MerchantCapability                            │
+├─────────────────────────────────────────────────────────────────┤
+│  merchant_id     UUID FK → Merchant                             │
+│  capability_type ENUM(directory, shop, pos, restaurant)         │
+│  status          ENUM(disabled, enabled_needs_setup,            │
+│                       active, suspended)                        │
+│  enabled_at      TIMESTAMP                                      │
+│  setup_completed_at  TIMESTAMP                                  │
+│  suspended_at    TIMESTAMP                                      │
+│  suspended_reason VARCHAR(255)                                  │
+│  PRIMARY KEY (merchant_id, capability_type)                     │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Capability Lifecycle
+
+```
+disabled → enabled_needs_setup → active
+                 ↓                  ↓
+              disabled          suspended
+                                    ↓
+                                 active (reinstated)
+```
+
+| State | Description |
+|-------|-------------|
+| **disabled** | Capability not enabled |
+| **enabled_needs_setup** | Enabled but requires configuration |
+| **active** | Fully configured and usable |
+| **suspended** | Temporarily disabled (policy/billing) |
+
+### Indexes
+
+| Table | Index | Purpose |
+|-------|-------|---------|
+| `merchant` | `user_id` (unique) | Owner lookup |
+| `merchant` | `slug` (unique) | URL lookup |
+| `merchant_capability` | `merchant_id, capability_type` (primary) | Capability lookup |
 
 ---
 
 ## API Endpoints
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `POST` | `/api/v1/auth/register` | Register user |
-| `POST` | `/api/v1/auth/verify` | Verify OTP/magic link |
-| `POST` | `/api/v1/auth/login` | Login (passwordless) |
-| `GET` | `/api/v1/profile` | Get user profile |
-| `PUT` | `/api/v1/profile` | Update profile |
-| `POST` | `/api/v1/merchant/register` | Register merchant |
-| `GET` | `/api/v1/merchant/profile` | Get merchant profile |
-| `PUT` | `/api/v1/merchant/profile` | Update merchant profile |
-| `GET` | `/api/v1/merchant/capabilities` | List capabilities |
-| `POST` | `/api/v1/merchant/capabilities/{type}/enable` | Enable capability |
+> Full API index: [[api-spec#2. Auth Module]], [[api-spec#6.1 Profile & Capabilities]]
+
+### POST /v1/auth/register
+
+Register a new user account.
+
+```json
+// Request
+{
+  "email": "user@example.com",
+  "name": "Ahmad"
+}
+
+// Response
+{
+  "message": "Verification code sent",
+  "expires_in": 600
+}
+```
+
+### GET /v1/consumer/profile
+
+Get current user profile.
+
+```json
+// Response
+{
+  "id": "uuid",
+  "email": "user@example.com",
+  "name": "Ahmad",
+  "phone": "+81-90-1234-5678",
+  "role": "consumer",
+  "created_at": "2026-01-01"
+}
+```
+
+### PATCH /v1/consumer/profile
+
+Update user profile.
+
+```json
+// Request
+{
+  "name": "Ahmad K.",
+  "phone": "+81-90-1234-5678"
+}
+
+// Response
+{
+  "id": "uuid",
+  "updated_at": "2026-01-28"
+}
+```
+
+### POST /v1/merchant/register
+
+Register a new merchant account.
+
+```json
+// Request
+{
+  "business_name": "Halal Mart Shibuya",
+  "contact_email": "contact@halalmart.jp"
+}
+
+// Response
+{
+  "merchant_id": "uuid",
+  "slug": "halal-mart-shibuya",
+  "status": "created"
+}
+```
+
+### GET /v1/merchant/profile
+
+Get merchant profile.
+
+```json
+// Response
+{
+  "id": "uuid",
+  "name": "Halal Mart Shibuya",
+  "slug": "halal-mart-shibuya",
+  "description": "...",
+  "contact_email": "contact@halalmart.jp",
+  "logo_url": "..."
+}
+```
+
+### PATCH /v1/merchant/profile
+
+Update merchant profile.
+
+```json
+// Request
+{
+  "description": "Your one-stop halal grocery store",
+  "contact_phone": "03-1234-5678"
+}
+```
+
+### GET /v1/merchant/capabilities
+
+List merchant capabilities and their status.
+
+```json
+// Response
+{
+  "capabilities": [
+    { "type": "directory", "status": "active" },
+    { "type": "marketplace", "status": "enabled_needs_setup" },
+    { "type": "pos", "status": "disabled" },
+    { "type": "restaurant", "status": "disabled" }
+  ]
+}
+```
+
+### POST /v1/merchant/capabilities/{type}/enable
+
+Enable a capability. Triggers setup wizard.
+
+```json
+// Response
+{
+  "type": "marketplace",
+  "status": "enabled_needs_setup",
+  "setup_url": "/merchant/setup/marketplace"
+}
+```
 
 ---
 

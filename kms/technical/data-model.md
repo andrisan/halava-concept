@@ -10,126 +10,59 @@
 
 ---
 
-## 1. Entity Overview
+## Overview
 
-### Core Entities
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                         USERS & AUTH                             │
-├─────────────────────────────────────────────────────────────────┤
-│  User                                                           │
-│  ├── id, email, name, role, created_at                         │
-│  ├── Merchant (one-to-one if merchant)                         │
-│  └── Staff (one-to-many through merchant)                      │
-└─────────────────────────────────────────────────────────────────┘
-
-┌─────────────────────────────────────────────────────────────────┐
-│                         MERCHANTS                                │
-├─────────────────────────────────────────────────────────────────┤
-│  Merchant                                                       │
-│  ├── id, name, slug, description, contact_info                 │
-│  ├── MerchantCapability (one-to-many)                          │
-│  ├── Place (one-to-one, directory listing)                     │
-│  ├── Item (one-to-many, products/menu items)                   │
-│  └── Staff (one-to-many)                                       │
-│                                                                 │
-│  MerchantCapability                                             │
-│  └── merchant_id, capability_type, status, enabled_at          │
-│                                                                 │
-│  Staff                                                          │
-│  └── id, user_id, merchant_id, role                            │
-└─────────────────────────────────────────────────────────────────┘
-
-┌─────────────────────────────────────────────────────────────────┐
-│                         DIRECTORY                                │
-├─────────────────────────────────────────────────────────────────┤
-│  Place                                                          │
-│  ├── id, merchant_id, name, slug, description                  │
-│  ├── address, location (PostGIS point)                         │
-│  ├── halal_status, halal_evidence_url                          │
-│  ├── opening_hours (JSONB)                                      │
-│  ├── amenities (array), tags (array)                           │
-│  └── photos (one-to-many)                                      │
-└─────────────────────────────────────────────────────────────────┘
-
-┌─────────────────────────────────────────────────────────────────┐
-│                         CATALOG                                  │
-├─────────────────────────────────────────────────────────────────┤
-│  Item (unified product/menu item)                               │
-│  ├── id, merchant_id, name, description, base_price            │
-│  ├── item_type: 'product' | 'menu_item' | 'hybrid'             │
-│  ├── enabled_channels: ['shop', 'restaurant', 'pos']           │
-│  ├── is_available, halal_status                                │
-│  ├── ProductExtension (if product/hybrid)                      │
-│  │   └── stock_count, low_stock_threshold, sku, barcode        │
-│  └── MenuItemExtension (if menu_item)                          │
-│      └── modifiers[], prep_time_minutes, dietary_tags[]        │
-│                                                                 │
-│  Category                                                       │
-│  └── id, name, slug, parent_id                                 │
-└─────────────────────────────────────────────────────────────────┘
-
-┌─────────────────────────────────────────────────────────────────┐
-│                         COMMERCE                                 │
-├─────────────────────────────────────────────────────────────────┤
-│  Cart                                                           │
-│  ├── id, consumer_id, merchant_id, created_at                  │
-│  └── CartItem (one-to-many)                                    │
-│                                                                 │
-│  Order                                                          │
-│  ├── id, consumer_id, merchant_id, order_number                │
-│  ├── status, type (online | group | pos)                       │
-│  ├── subtotal, discount_amount, shipping_fee, total            │
-│  ├── payment_method, payment_status                            │
-│  ├── fulfillment_type, shipping_address (JSONB)                │
-│  └── OrderItem (one-to-many)                                   │
-│                                                                 │
-│  GroupPurchase                                                  │
-│  ├── id, initiator_id, merchant_id, invite_code                │
-│  ├── deadline, status, order_id                                │
-│  └── GroupPurchaseParticipant (one-to-many)                    │
-│                                                                 │
-│  POSTransaction                                                 │
-│  ├── id, merchant_id, transaction_number                       │
-│  ├── items (JSONB), total, payment_method                      │
-│  ├── consumer_id (nullable, if linked)                         │
-│  └── claim_code, created_at                                    │
-└─────────────────────────────────────────────────────────────────┘
-
-┌─────────────────────────────────────────────────────────────────┐
-│                         ENGAGEMENT                               │
-├─────────────────────────────────────────────────────────────────┤
-│  Review                                                         │
-│  └── id, consumer_id, target_type, target_id, rating, text     │
-│                                                                 │
-│  SavedItem                                                      │
-│  └── id, consumer_id, target_type, target_id                   │
-│                                                                 │
-│  Notification                                                   │
-│  └── id, user_id, type, payload (JSONB), read, created_at      │
-└─────────────────────────────────────────────────────────────────┘
-
-┌─────────────────────────────────────────────────────────────────┐
-│                         MODERATION                               │
-├─────────────────────────────────────────────────────────────────┤
-│  Report                                                         │
-│  ├── id, reporter_id, target_type, target_id                   │
-│  ├── reason, description, status                               │
-│  └── moderator_id, resolution, resolved_at                     │
-│                                                                 │
-│  AuditLog                                                       │
-│  └── id, actor_id, action, target_type, target_id, metadata    │
-└─────────────────────────────────────────────────────────────────┘
-```
+This document serves as an index to all data models in the Halava platform. Each feature page contains its own detailed data model definitions.
 
 ---
 
-## 2. Unified Item Model
+## Data Model by Feature
 
-> See [[web-app-spec#6.3.3 Unified Item Model]] for rationale.
+### Shared Features
 
-### Item Types
+| Feature | Entities |
+|---------|----------|
+| [[authentication#Data Model]] | User, Session, OTPCode, MagicLink, OAuthConnection |
+| [[onboarding#Data Model]] | Merchant, MerchantCapability |
+| [[directory#Data Model]] | Place, PlacePhoto |
+| [[marketplace#Data Model]] | Item, Category, Cart, CartItem, Order, OrderItem, OrderStatusHistory |
+| [[notifications#Data Model]] | Notification, NotificationPreference, MerchantNotificationPreference |
+| [[multi-language#Data Model]] | UserPreferences, MerchantTranslation, TranslationCache |
+
+### Consumer Features
+
+| Feature | Entities |
+|---------|----------|
+| [[group-purchase#Data Model]] | GroupPurchase, GroupPurchaseParticipant, GroupPurchaseItem |
+| [[reviews-ratings#Data Model]] | Review, ReviewHelpful, ReviewReport |
+| [[saved-items#Data Model]] | SavedItem, Collection |
+| [[expense-tracker#Data Model]] | PurchaseRecord, PersonalPriceHistory, FrequentItem, SpendingInsight, BudgetGoal |
+
+### Merchant Features
+
+| Feature | Entities |
+|---------|----------|
+| [[products#Data Model]] | Item, ProductExtension, MenuItemExtension, Category |
+| [[inventory#Data Model]] | InventoryAdjustment, Stocktake, StocktakeItem |
+| [[order-management#Data Model]] | Order, OrderItem, OrderStatusHistory |
+| [[pos#Data Model]] | POSTransaction |
+| [[promotions#Data Model]] | Promotion, PromotionUsage, FeaturedListing |
+| [[accounting#Data Model]] | FinancialTransaction, Expense, Invoice |
+
+### Platform Features
+
+| Feature | Entities |
+|---------|----------|
+| [[roles-permissions#Data Model]] | Staff, StaffRole, RoleAssignment |
+| [[admin-moderation#Data Model]] | Report, ReportResolution, AuditLog, PlatformSetting |
+
+---
+
+## Cross-Cutting Concepts
+
+### Unified Item Model
+
+> See [[products#Unified Item Model]] for full specification.
 
 | Type | Description | Inventory Behavior |
 |------|-------------|-------------------|
@@ -137,19 +70,9 @@
 | **menu_item** | Made-to-order food | Availability toggle (`is_available`) |
 | **hybrid** | Dual-purpose (e.g., fresh bread) | Counted inventory |
 
-### Channel Visibility
+### Capability States
 
-| Channel | Description |
-|---------|-------------|
-| **shop** | Available in online marketplace |
-| **restaurant** | Available in restaurant menu |
-| **pos** | Available in POS interface |
-
----
-
-## 3. Capability States
-
-> See [[web-app-spec#Capability lifecycle]] for state machine.
+> See [[onboarding#Capability Lifecycle]] for state machine.
 
 | State | Description |
 |-------|-------------|
@@ -158,65 +81,46 @@
 | **active** | Fully configured and usable |
 | **suspended** | Temporarily disabled (policy/billing) |
 
----
+### Order Status Flow
 
-## 4. Order Status Flow
+> See [[order-management#Order Status Flow]] for full specification.
 
-### Online Orders (Phase 1)
-
+**Online Orders:**
 ```
 placed → pending_payment → confirmed → preparing → ready → fulfilled
                 ↓
             cancelled
 ```
 
-### POS Transactions
+**POS Transactions:** `completed` (instant)
 
-```
-completed (instant)
-```
-
-### Prepared Orders (Pay at Counter)
-
-```
-prepared → confirmed (paid@POS) → preparing → ready → fulfilled
-```
+**Prepared Orders:** `prepared → confirmed → preparing → ready → fulfilled`
 
 ---
 
-## 5. Indexing Strategy
+## Database Strategy
 
-### Primary Indexes
+### Indexing Guidelines
 
-| Table | Index | Purpose |
-|-------|-------|---------|
-| `place` | `location` (GiST) | Geo-search |
-| `place` | `slug` (unique) | URL lookup |
-| `item` | `merchant_id, item_type` | Catalog queries |
-| `item` | `name, description` (GIN tsvector) | Full-text search |
-| `order` | `consumer_id, created_at` | Purchase history |
-| `order` | `merchant_id, status` | Merchant dashboard |
-| `pos_transaction` | `merchant_id, created_at` | POS history |
+Each feature page specifies its own indexes. Common patterns:
 
-### Composite Indexes
+| Pattern | Use Case | Example |
+|---------|----------|---------|
+| GiST spatial | Geo-queries | `place.location` |
+| GIN tsvector | Full-text search | `item.name, item.description` |
+| B-tree composite | Filtered queries | `order(merchant_id, status, created_at)` |
+| Unique partial | Conditional uniqueness | `promotion.code WHERE code IS NOT NULL` |
 
-| Table | Index | Purpose |
-|-------|-------|---------|
-| `item` | `merchant_id, enabled_channels, is_available` | Channel-specific queries |
-| `order` | `merchant_id, status, created_at` | Dashboard filtering |
+### Data Retention
 
----
-
-## 6. Data Retention
-
-| Data Type | Retention | Reason |
-|-----------|-----------|--------|
-| User accounts | Until deletion | APPI compliance |
-| Orders | 7 years | Accounting/tax |
-| POS Transactions | 7 years | Accounting/tax |
-| Audit logs | 3 years | Compliance |
-| Session tokens | 7 days | Security |
-| Cart data | 30 days inactive | Cleanup |
+| Category | Retention | Reason |
+|----------|-----------|--------|
+| **User Data** | Until deletion | APPI compliance |
+| **Transactions** | 7 years | Accounting/tax (Orders, POS, Invoices, Expenses) |
+| **Marketing** | 2 years after end | Analytics (Promotions, Featured listings) |
+| **Security** | Short-lived | Sessions (7 days), OTP/Magic links (24 hours) |
+| **Cache** | As needed | Translation cache (30 days), Frequent items (monthly) |
+| **Audit** | 3 years | Compliance |
 
 ---
 

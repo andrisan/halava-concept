@@ -4,7 +4,7 @@
 > **Version:** MVP (v1)
 > **Status:** Active
 >
-> **Related:** [[directory]] · [[marketplace]] · [[purchase-history]]
+> **Related:** [[directory]] · [[marketplace]] · [[expense-tracker]]
 
 ---
 
@@ -240,70 +240,249 @@ Place Page → Reviews Tab
 
 ## Data Model
 
-```
-Review
-├── id: UUID
-├── user_id: FK → User
-├── subject_type: enum (place, product)
-├── subject_id: UUID (FK to Place or Product)
-├── order_id: UUID (nullable, for verification)
-│
-├── rating: int (1-5)
-├── aspect_ratings: JSONB (nullable)
-│   └── { food_quality: 5, service: 4, ... }
-├── content: text (nullable)
-├── photos: string[] (URLs)
-│
-├── is_verified: boolean
-├── helpful_count: int (default: 0)
-├── status: enum (active, hidden, removed)
-│
-├── created_at: timestamp
-├── updated_at: timestamp
+### Entities
 
-ReviewHelpful (vote tracking)
-├── id: UUID
-├── review_id: FK → Review
-├── user_id: FK → User
-├── created_at: timestamp
-├── UNIQUE(review_id, user_id)
-
-ReviewReport
-├── id: UUID
-├── review_id: FK → Review
-├── reporter_id: FK → User
-├── reason: enum (spam, fake, inappropriate, other)
-├── details: text (nullable)
-├── status: enum (pending, reviewed, actioned)
-├── created_at: timestamp
 ```
+┌─────────────────────────────────────────────────────────────────┐
+│                         Review                                   │
+├─────────────────────────────────────────────────────────────────┤
+│  id              UUID PRIMARY KEY                               │
+│  user_id         UUID FK → User                                 │
+│  subject_type    ENUM(place, product, order)                    │
+│  subject_id      UUID NOT NULL                                  │
+│  order_id        UUID FK → Order (for verification)             │
+│  rating          INT NOT NULL (1-5)                             │
+│  aspect_ratings  JSONB (food_quality, service, halal_trust,     │
+│                         value_for_money)                        │
+│  content         TEXT                                           │
+│  photos          TEXT[]                                         │
+│  is_verified     BOOLEAN DEFAULT false                          │
+│  helpful_count   INT DEFAULT 0                                  │
+│  status          ENUM(pending, published, hidden, removed)      │
+│  created_at      TIMESTAMP NOT NULL                             │
+│  updated_at      TIMESTAMP                                      │
+│  UNIQUE(user_id, subject_type, subject_id)                      │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│                      ReviewHelpful                               │
+├─────────────────────────────────────────────────────────────────┤
+│  id              UUID PRIMARY KEY                               │
+│  review_id       UUID FK → Review                               │
+│  user_id         UUID FK → User                                 │
+│  created_at      TIMESTAMP NOT NULL                             │
+│  UNIQUE(review_id, user_id)                                     │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│                      ReviewReport                                │
+├─────────────────────────────────────────────────────────────────┤
+│  id              UUID PRIMARY KEY                               │
+│  review_id       UUID FK → Review                               │
+│  reporter_id     UUID FK → User                                 │
+│  reason          ENUM(spam, inappropriate, fake, other)         │
+│  details         TEXT                                           │
+│  status          ENUM(pending, reviewed, dismissed, actioned)   │
+│  created_at      TIMESTAMP NOT NULL                             │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Indexes
+
+| Table | Index | Purpose |
+|-------|-------|---------|
+| `review` | `subject_type, subject_id, created_at DESC` | Reviews list |
+| `review` | `user_id, subject_type, subject_id` (unique) | One review per user |
+| `review` | `status, helpful_count DESC` | Top reviews |
+| `review_helpful` | `review_id, user_id` (unique) | Helpful check |
+| `review_report` | `review_id, status` | Moderation queue |
 
 ---
 
 ## API Endpoints
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/api/v1/places/{id}/reviews` | List place reviews |
-| `GET` | `/api/v1/products/{id}/reviews` | List product reviews |
-| `POST` | `/api/v1/reviews` | Create review |
-| `PUT` | `/api/v1/reviews/{id}` | Update own review |
-| `DELETE` | `/api/v1/reviews/{id}` | Delete own review |
-| `POST` | `/api/v1/reviews/{id}/helpful` | Mark as helpful |
-| `DELETE` | `/api/v1/reviews/{id}/helpful` | Remove helpful vote |
-| `POST` | `/api/v1/reviews/{id}/report` | Report review |
-| `GET` | `/api/v1/profile/reviews` | Get user's reviews |
+> Full API index: [[api-spec#5.4 Reviews]]
 
-### Query Parameters
+### GET /v1/directory/places/{slug}/reviews
+
+List reviews for a place.
 
 ```
-GET /api/v1/places/{id}/reviews?
-  sort=recent|helpful|rating_high|rating_low
-  &verified_only=true
-  &with_photos=true
-  &rating=5
-  &limit=20
-  &offset=0
+Query Parameters:
+  sort          string    Sort: recent, helpful, rating_high, rating_low
+  verified_only boolean   Filter to verified visits only
+  with_photos   boolean   Filter to reviews with photos
+  rating        int       Filter by exact rating (1-5)
+  limit         int       Results per page (default: 20)
+  offset        int       Pagination offset
+```
+
+```json
+// Response
+{
+  "reviews": [
+    {
+      "id": "uuid",
+      "user": { "name": "Ahmad K." },
+      "rating": 5,
+      "content": "Best halal ramen in Shibuya!",
+      "photos": [...],
+      "is_verified": true,
+      "helpful_count": 12,
+      "created_at": "2026-01-25"
+    }
+  ],
+  "total": 128,
+  "rating_summary": { "avg": 4.5, "count": 128, "distribution": {...} }
+}
+```
+
+### POST /v1/directory/places/{slug}/reviews
+
+Add a review for a place.
+
+```json
+// Request
+{
+  "rating": 5,
+  "aspect_ratings": {
+    "food_quality": 5,
+    "service": 4,
+    "halal_trust": 5,
+    "value_for_money": 4
+  },
+  "content": "Amazing halal ramen!",
+  "photos": ["url1", "url2"]
+}
+
+// Response
+{
+  "id": "uuid",
+  "is_verified": true,
+  "created_at": "2026-01-28"
+}
+```
+
+### GET /v1/marketplace/products/{id}/reviews
+
+List reviews for a product.
+
+```json
+// Response
+{
+  "reviews": [...],
+  "total": 45,
+  "rating_summary": { "avg": 4.8, "count": 45 }
+}
+```
+
+### POST /v1/marketplace/products/{id}/reviews
+
+Add a review for a product.
+
+```json
+// Request
+{
+  "rating": 5,
+  "content": "Best halal beef I've found!",
+  "would_recommend": true
+}
+
+// Response
+{
+  "id": "uuid",
+  "is_verified": true
+}
+```
+
+### GET /v1/consumer/reviews
+
+Get current user's reviews.
+
+```json
+// Response
+{
+  "reviews": [...],
+  "total": 23,
+  "helpful_votes_received": 156
+}
+```
+
+### POST /v1/consumer/reviews
+
+Create a review (alternative endpoint).
+
+```json
+// Request
+{
+  "subject_type": "place",
+  "subject_id": "uuid",
+  "rating": 5,
+  "content": "..."
+}
+```
+
+### PUT /v1/consumer/reviews/{id}
+
+Update own review.
+
+```json
+// Request
+{
+  "rating": 4,
+  "content": "Updated review..."
+}
+```
+
+### DELETE /v1/consumer/reviews/{id}
+
+Delete own review.
+
+```json
+// Response
+{
+  "message": "Review deleted"
+}
+```
+
+### POST /v1/consumer/reviews/{id}/helpful
+
+Mark a review as helpful.
+
+```json
+// Response
+{
+  "helpful_count": 13
+}
+```
+
+### DELETE /v1/consumer/reviews/{id}/helpful
+
+Remove helpful vote.
+
+```json
+// Response
+{
+  "helpful_count": 12
+}
+```
+
+### POST /v1/consumer/reviews/{id}/report
+
+Report a review for moderation.
+
+```json
+// Request
+{
+  "reason": "spam",  // spam, inappropriate, fake, other
+  "details": "This review is fake..."
+}
+
+// Response
+{
+  "report_id": "uuid",
+  "message": "Report submitted"
+}
 ```
 
 ---
@@ -361,7 +540,7 @@ Merchants can respond publicly to reviews:
 
 - [[directory]] — Place pages display reviews
 - [[marketplace]] — Product pages display reviews
-- [[purchase-history]] — Verification of purchases
+- [[expense-tracker]] — Verification of purchases
 - [[admin-moderation]] — Review moderation queue
 - [[notifications]] — Review prompts and responses
 

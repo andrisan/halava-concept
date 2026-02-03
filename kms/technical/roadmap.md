@@ -39,8 +39,7 @@
 | [[directory#Place Pages\|Place Pages]] | Hours, photos, tags, halal status disclosure *(→ [[directory]])* |
 | [[directory#Search & Filters\|Search & Filters]] | Distance, open now, cuisine, amenities *(→ [[directory]])* |
 | [[group-purchase]] | Multiple users contribute to shared order |
-| [[purchase-history]] | Unified expense tracking across all orders |
-| [[price-comparison]] | Historical price tracking across merchants |
+| [[expense-tracker]] | Expense tracking, spending insights, personal price history |
 | [[bopu]] | Buy-online-pick-up options |
 | [[reviews-ratings]] | Rate places and products |
 | [[saved-items]] | Bookmark places and products |
@@ -54,6 +53,15 @@
 | [[order-management]] | Online orders + POS transactions |
 | [[inventory]] | Low-stock alerts (online + in-store) |
 | [[promotions]] | Basic coupon codes |
+
+### Acceptance Criteria
+
+- [ ] Merchants can register in-store purchases via POS
+- [ ] POS transactions appear in consumers' unified purchase history (when linked)
+- [ ] Inventory updates correctly for both online and in-store sales
+- [ ] Consumers can perform bulk/group purchases and choose delivery or pickup
+- [ ] A merchant can register without selecting shop or restaurant
+- [ ] Capabilities can be enabled incrementally without data migration
 
 ---
 

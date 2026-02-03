@@ -145,46 +145,202 @@ After order is placed, Initiator sees:
 
 ## Data Model
 
-```
-GroupPurchase
-├── id: UUID
-├── code: string (invite code, e.g., "HALAL-ABCD")
-├── initiator_id: FK → User
-├── merchant_id: FK → Merchant
-├── status: enum (open, closed, submitted, fulfilled)
-├── deadline: timestamp
-├── order_id: FK → Order (after submission)
-├── created_at, updated_at
+### Entities
 
-GroupPurchaseParticipant
-├── id: UUID
-├── group_id: FK → GroupPurchase
-├── user_id: FK → User
-├── joined_at: timestamp
-
-GroupPurchaseItem
-├── id: UUID
-├── group_id: FK → GroupPurchase
-├── participant_id: FK → GroupPurchaseParticipant
-├── item_id: FK → Item
-├── quantity: int
-├── unit_price: decimal (snapshot)
-├── added_at: timestamp
 ```
+┌─────────────────────────────────────────────────────────────────┐
+│                      GroupPurchase                               │
+├─────────────────────────────────────────────────────────────────┤
+│  id              UUID PRIMARY KEY                               │
+│  initiator_id    UUID FK → User                                 │
+│  merchant_id     UUID FK → Merchant                             │
+│  invite_code     VARCHAR(20) UNIQUE NOT NULL                    │
+│  name            VARCHAR(255)                                   │
+│  deadline        TIMESTAMP NOT NULL                             │
+│  status          ENUM(open, closed, submitted, cancelled)       │
+│  order_id        UUID FK → Order (after submission)             │
+│  created_at      TIMESTAMP NOT NULL                             │
+│  updated_at      TIMESTAMP                                      │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│                GroupPurchaseParticipant                          │
+├─────────────────────────────────────────────────────────────────┤
+│  id              UUID PRIMARY KEY                               │
+│  group_id        UUID FK → GroupPurchase                        │
+│  user_id         UUID FK → User                                 │
+│  is_initiator    BOOLEAN DEFAULT false                          │
+│  joined_at       TIMESTAMP NOT NULL                             │
+│  UNIQUE(group_id, user_id)                                      │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│                  GroupPurchaseItem                               │
+├─────────────────────────────────────────────────────────────────┤
+│  id              UUID PRIMARY KEY                               │
+│  group_id        UUID FK → GroupPurchase                        │
+│  participant_id  UUID FK → GroupPurchaseParticipant             │
+│  item_id         UUID FK → Item                                 │
+│  quantity        INT NOT NULL                                   │
+│  unit_price      DECIMAL(10,2) NOT NULL                         │
+│  modifiers       JSONB                                          │
+│  created_at      TIMESTAMP NOT NULL                             │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Indexes
+
+| Table | Index | Purpose |
+|-------|-------|---------|
+| `group_purchase` | `invite_code` (unique) | Join link lookup |
+| `group_purchase` | `initiator_id, status` | My groups list |
+| `group_purchase` | `deadline, status` | Auto-close job |
+| `group_purchase_participant` | `group_id, user_id` (unique) | Membership check |
+| `group_purchase_participant` | `user_id` | User's participations |
+| `group_purchase_item` | `group_id` | Group cart contents |
 
 ---
 
 ## API Endpoints
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `POST` | `/api/v1/groups` | Create group purchase |
-| `GET` | `/api/v1/groups/{code}` | Get group details |
-| `POST` | `/api/v1/groups/{code}/join` | Join as participant |
-| `POST` | `/api/v1/groups/{code}/items` | Add item (participant) |
-| `DELETE` | `/api/v1/groups/{code}/items/{id}` | Remove item |
-| `POST` | `/api/v1/groups/{code}/submit` | Submit order (initiator) |
-| `GET` | `/api/v1/groups/{code}/breakdown` | Get participant breakdown |
+> Full API index: [[api-spec#4.4 Group Purchases]]
+
+### POST /v1/marketplace/group-purchases
+
+Create a new group purchase.
+
+```json
+// Request
+{
+  "merchant_id": "uuid",
+  "deadline": "2026-01-25T18:00:00Z",
+  "name": "Weekend grocery run"  // optional
+}
+
+// Response
+{
+  "id": "uuid",
+  "invite_code": "ABC123",
+  "invite_url": "https://halava.app/group/ABC123",
+  "deadline": "2026-01-25T18:00:00Z",
+  "status": "open"
+}
+```
+
+### GET /v1/marketplace/group-purchases/{code}
+
+Get group purchase details by invite code.
+
+```json
+// Response
+{
+  "id": "uuid",
+  "invite_code": "ABC123",
+  "merchant": { "id": "uuid", "name": "Halal Mart" },
+  "initiator": { "id": "uuid", "name": "Ahmad" },
+  "deadline": "2026-01-25T18:00:00Z",
+  "status": "open",
+  "participants": [
+    { "id": "uuid", "name": "Ahmad", "is_initiator": true, "items": [...], "subtotal": 3600 },
+    { "id": "uuid", "name": "Fatima", "is_initiator": false, "items": [...], "subtotal": 2940 }
+  ],
+  "subtotal": 6540,
+  "shipping_fee": 0,
+  "total": 6540
+}
+```
+
+### POST /v1/marketplace/group-purchases/{code}/join
+
+Join a group purchase as participant.
+
+```json
+// Request
+{}
+
+// Response
+{
+  "message": "Joined group",
+  "participant_id": "uuid"
+}
+```
+
+### POST /v1/marketplace/group-purchases/{code}/items
+
+Add item to group purchase (as current participant).
+
+```json
+// Request
+{
+  "product_id": "uuid",
+  "quantity": 2
+}
+
+// Response
+{
+  "item": {
+    "id": "uuid",
+    "product": { ... },
+    "quantity": 2,
+    "unit_price": 1200,
+    "total_price": 2400
+  },
+  "participant_subtotal": 2400,
+  "group_total": 8940
+}
+```
+
+### DELETE /v1/marketplace/group-purchases/{code}/items/{id}
+
+Remove item from group purchase.
+
+```json
+// Response
+{
+  "message": "Item removed",
+  "participant_subtotal": 0,
+  "group_total": 6540
+}
+```
+
+### POST /v1/marketplace/group-purchases/{code}/submit
+
+Submit group purchase order (initiator only).
+
+```json
+// Request
+{
+  "fulfillment_type": "delivery",
+  "shipping_address": { ... },
+  "payment_method": "bank_transfer"
+}
+
+// Response
+{
+  "order_id": "uuid",
+  "order_number": "HLV-GP-0042",
+  "status": "placed",
+  "total": 6540
+}
+```
+
+### GET /v1/marketplace/group-purchases/{code}/breakdown
+
+Get per-participant breakdown for reimbursement.
+
+```json
+// Response
+{
+  "order_number": "HLV-GP-0042",
+  "participants": [
+    { "name": "Ahmad", "items": [...], "subtotal": 3600 },
+    { "name": "Fatima", "items": [...], "subtotal": 2940 }
+  ],
+  "shipping_fee": 0,
+  "total_paid_by": "Ahmad",
+  "total": 6540
+}
+```
 
 ---
 

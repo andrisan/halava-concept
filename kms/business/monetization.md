@@ -126,7 +126,7 @@ Membership plans **do not affect transaction fee rates** for online orders.
 - Hard cap with 5-transaction grace buffer (auto-billed at ¥75)
 - Auto top-up available (opt-in)
 
-> See [[pages-navigation-ux#POS Screen]] for quota UI implementation.
+> See [[pages-navigation-ux-spec#POS Screen]] for quota UI implementation.
 
 ---
 

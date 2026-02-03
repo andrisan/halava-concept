@@ -263,34 +263,56 @@ For Arabic and other RTL languages:
 
 ## Data Model
 
-```
-UserPreferences
-├── user_id: FK → User
-├── language: enum (en, ja, id)
-├── region: string (JP, etc.)
-├── show_translation_button: boolean
-├── updated_at: timestamp
+### Entities
 
-MerchantTranslation
-├── id: UUID
-├── merchant_id: FK → Merchant
-├── entity_type: enum (place, item, category)
-├── entity_id: UUID
-├── field: string (name, description)
-├── language: enum (en, ja, id)
-├── value: text
-├── is_auto_translated: boolean
-├── created_at, updated_at: timestamp
-
-TranslationCache
-├── id: UUID
-├── source_text_hash: string
-├── source_language: string
-├── target_language: string
-├── translated_text: text
-├── created_at: timestamp
-├── expires_at: timestamp
 ```
+┌─────────────────────────────────────────────────────────────────┐
+│                     UserPreferences                              │
+├─────────────────────────────────────────────────────────────────┤
+│  user_id         UUID FK → User PRIMARY KEY                     │
+│  language        ENUM(en, ja, id) DEFAULT 'en'                  │
+│  region          VARCHAR(10) DEFAULT 'JP'                       │
+│  show_translation_button  BOOLEAN DEFAULT true                  │
+│  updated_at      TIMESTAMP                                      │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│                   MerchantTranslation                            │
+├─────────────────────────────────────────────────────────────────┤
+│  id              UUID PRIMARY KEY                               │
+│  merchant_id     UUID FK → Merchant                             │
+│  entity_type     VARCHAR(50) NOT NULL (item, place, etc.)       │
+│  entity_id       UUID NOT NULL                                  │
+│  field           VARCHAR(50) NOT NULL (name, description)       │
+│  language        VARCHAR(5) NOT NULL (en, ja, id)               │
+│  value           TEXT NOT NULL                                  │
+│  is_auto_translated  BOOLEAN DEFAULT false                      │
+│  created_at      TIMESTAMP NOT NULL                             │
+│  updated_at      TIMESTAMP                                      │
+│  UNIQUE(merchant_id, entity_type, entity_id, field, language)   │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│                    TranslationCache                              │
+├─────────────────────────────────────────────────────────────────┤
+│  id              UUID PRIMARY KEY                               │
+│  source_text_hash  VARCHAR(64) NOT NULL                         │
+│  source_language VARCHAR(5) NOT NULL                            │
+│  target_language VARCHAR(5) NOT NULL                            │
+│  translated_text TEXT NOT NULL                                  │
+│  created_at      TIMESTAMP NOT NULL                             │
+│  expires_at      TIMESTAMP NOT NULL                             │
+│  UNIQUE(source_text_hash, source_language, target_language)     │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Indexes
+
+| Table | Index | Purpose |
+|-------|-------|---------|
+| `merchant_translation` | `merchant_id, entity_type, entity_id, language` | Translation lookup |
+| `translation_cache` | `source_text_hash, source_language, target_language` | Cache hit |
+| `translation_cache` | `expires_at` | Cache cleanup |
 
 ---
 

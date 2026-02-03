@@ -356,71 +356,117 @@ Inventory → Product → History
 
 ## Data Model
 
-```
-InventoryAdjustment
-├── id: UUID
-├── item_id: FK → Item
-├── merchant_id: FK → Merchant
-├── adjustment_type: enum (add, remove, set)
-├── quantity_change: int (signed)
-├── quantity_before: int
-├── quantity_after: int
-├── reason: string
-├── source: enum (manual, order, pos, stocktake, system)
-├── source_id: UUID (nullable, FK to Order/POSTransaction)
-├── staff_id: FK → Staff (nullable)
-├── created_at: timestamp
+### Entities
 
-Stocktake
-├── id: UUID
-├── merchant_id: FK → Merchant
-├── status: enum (in_progress, completed, cancelled)
-├── started_at: timestamp
-├── completed_at: timestamp (nullable)
-├── products_counted: int
-├── discrepancies_found: int
-├── notes: text (nullable)
-
-StocktakeItem
-├── id: UUID
-├── stocktake_id: FK → Stocktake
-├── item_id: FK → Item
-├── expected_count: int
-├── actual_count: int
-├── discrepancy: int (computed)
-├── counted_at: timestamp
-├── counted_by: FK → Staff (nullable)
 ```
+┌─────────────────────────────────────────────────────────────────┐
+│                   InventoryAdjustment                            │
+├─────────────────────────────────────────────────────────────────┤
+│  id              UUID PRIMARY KEY                               │
+│  item_id         UUID FK → Item                                 │
+│  merchant_id     UUID FK → Merchant                             │
+│  adjustment_type ENUM(sale, restock, return, damage,            │
+│                       stocktake, correction)                    │
+│  quantity_change INT NOT NULL (positive or negative)            │
+│  quantity_before INT NOT NULL                                   │
+│  quantity_after  INT NOT NULL                                   │
+│  reason          TEXT                                           │
+│  source          ENUM(order, pos, manual, stocktake)            │
+│  source_id       UUID (FK → Order or POSTransaction)            │
+│  staff_id        UUID FK → User                                 │
+│  created_at      TIMESTAMP NOT NULL                             │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│                       Stocktake                                  │
+├─────────────────────────────────────────────────────────────────┤
+│  id              UUID PRIMARY KEY                               │
+│  merchant_id     UUID FK → Merchant                             │
+│  status          ENUM(in_progress, completed, cancelled)        │
+│  started_at      TIMESTAMP NOT NULL                             │
+│  completed_at    TIMESTAMP                                      │
+│  products_counted INT DEFAULT 0                                 │
+│  discrepancies_found INT DEFAULT 0                              │
+│  notes           TEXT                                           │
+│  started_by      UUID FK → User                                 │
+│  completed_by    UUID FK → User                                 │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│                      StocktakeItem                               │
+├─────────────────────────────────────────────────────────────────┤
+│  id              UUID PRIMARY KEY                               │
+│  stocktake_id    UUID FK → Stocktake                            │
+│  item_id         UUID FK → Item                                 │
+│  expected_count  INT NOT NULL                                   │
+│  actual_count    INT                                            │
+│  discrepancy     INT                                            │
+│  counted_by      UUID FK → User                                 │
+│  counted_at      TIMESTAMP                                      │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Related: ProductExtension (see [[products#Data Model]])
+
+Stock is stored in `ProductExtension`:
+- `stock_count` — Current inventory level
+- `low_stock_threshold` — Alert trigger level
+
+### Indexes
+
+| Table | Index | Purpose |
+|-------|-------|---------|
+| `inventory_adjustment` | `item_id, created_at DESC` | Item history |
+| `inventory_adjustment` | `merchant_id, created_at DESC` | Merchant audit |
+| `inventory_adjustment` | `source, source_id` | Order/POS lookup |
+| `stocktake` | `merchant_id, status` | Active stocktakes |
+| `stocktake_item` | `stocktake_id, item_id` | Stocktake lookup |
 
 ---
 
 ## API Endpoints
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/api/v1/merchant/inventory` | List inventory status |
-| `GET` | `/api/v1/merchant/inventory/{item_id}` | Get item stock |
-| `POST` | `/api/v1/merchant/inventory/{item_id}/adjust` | Adjust stock |
-| `GET` | `/api/v1/merchant/inventory/{item_id}/history` | Stock history |
-| `GET` | `/api/v1/merchant/inventory/alerts` | Get low stock alerts |
-| `POST` | `/api/v1/merchant/stocktake` | Start stocktake |
-| `PUT` | `/api/v1/merchant/stocktake/{id}` | Update stocktake |
-| `POST` | `/api/v1/merchant/stocktake/{id}/complete` | Complete stocktake |
-| `PUT` | `/api/v1/merchant/inventory/settings` | Update alert settings |
+> Full API index: [[api-spec#6.4 Inventory]]
 
-### Adjust Stock Request
+### GET /v1/merchant/inventory
+
+List inventory status for all products.
+
+```
+Query Parameters:
+  status        string    Filter: in_stock, low_stock, out_of_stock
+  limit         int       Results per page (default: 20)
+  offset        int       Pagination offset
+```
 
 ```json
+// Response
 {
-  "adjustment_type": "add",
-  "quantity": 30,
-  "reason": "Shipment received - Invoice #INV-2026-0042"
+  "items": [
+    {
+      "item_id": "uuid",
+      "name": "Halal Beef 500g",
+      "stock_count": 8,
+      "low_stock_threshold": 10,
+      "status": "low_stock",
+      "channels": ["shop", "pos"]
+    }
+  ],
+  "summary": {
+    "total": 156,
+    "in_stock": 142,
+    "low_stock": 11,
+    "out_of_stock": 3
+  }
 }
 ```
 
-### Inventory Response
+### GET /v1/merchant/inventory/{item_id}
+
+Get stock details for a specific item.
 
 ```json
+// Response
 {
   "item_id": "uuid",
   "name": "Halal Beef 500g",
@@ -429,6 +475,153 @@ StocktakeItem
   "status": "low_stock",
   "last_updated": "2026-01-28T14:32:00+09:00",
   "channels": ["shop", "pos"]
+}
+```
+
+### POST /v1/merchant/inventory/{item_id}/adjust
+
+Adjust stock count.
+
+```json
+// Request
+{
+  "adjustment_type": "add",  // add, remove, set
+  "quantity": 30,
+  "reason": "Shipment received - Invoice #INV-2026-0042"
+}
+
+// Response
+{
+  "item_id": "uuid",
+  "previous_count": 8,
+  "new_count": 38,
+  "adjustment_id": "uuid"
+}
+```
+
+### GET /v1/merchant/inventory/{item_id}/history
+
+Get stock adjustment history.
+
+```
+Query Parameters:
+  limit         int       Results per page (default: 20)
+  offset        int       Pagination offset
+```
+
+```json
+// Response
+{
+  "history": [
+    {
+      "id": "uuid",
+      "adjustment_type": "sale",
+      "quantity_change": -2,
+      "quantity_before": 10,
+      "quantity_after": 8,
+      "source": "order",
+      "source_id": "order-uuid",
+      "created_at": "2026-01-28T14:32:00+09:00"
+    }
+  ],
+  "total": 45
+}
+```
+
+### GET /v1/merchant/inventory/alerts
+
+Get low stock alerts.
+
+```json
+// Response
+{
+  "alerts": [
+    {
+      "item_id": "uuid",
+      "name": "Halal Beef 500g",
+      "stock_count": 8,
+      "threshold": 10,
+      "status": "low_stock"
+    }
+  ],
+  "total": 11
+}
+```
+
+### PUT /v1/merchant/inventory/settings
+
+Update inventory alert settings.
+
+```json
+// Request
+{
+  "default_threshold": 10,
+  "email_alerts": true,
+  "alert_frequency": "immediate"  // immediate, daily, weekly
+}
+
+// Response
+{
+  "message": "Settings updated"
+}
+```
+
+### POST /v1/merchant/stocktake
+
+Start a new stocktake session.
+
+```json
+// Request
+{
+  "notes": "Monthly inventory count"
+}
+
+// Response
+{
+  "id": "uuid",
+  "status": "in_progress",
+  "started_at": "2026-01-28T09:00:00+09:00",
+  "products_to_count": 156
+}
+```
+
+### PUT /v1/merchant/stocktake/{id}
+
+Update stocktake with counted items.
+
+```json
+// Request
+{
+  "counts": [
+    { "item_id": "uuid", "actual_count": 42 },
+    { "item_id": "uuid", "actual_count": 23 }
+  ]
+}
+
+// Response
+{
+  "id": "uuid",
+  "products_counted": 45,
+  "discrepancies_found": 3
+}
+```
+
+### POST /v1/merchant/stocktake/{id}/complete
+
+Complete stocktake and apply adjustments.
+
+```json
+// Request
+{
+  "apply_adjustments": true
+}
+
+// Response
+{
+  "id": "uuid",
+  "status": "completed",
+  "completed_at": "2026-01-28T12:00:00+09:00",
+  "adjustments_made": 3
 }
 ```
 

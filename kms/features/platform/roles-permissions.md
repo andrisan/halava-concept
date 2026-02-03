@@ -476,57 +476,78 @@ Admin Dashboard → Users → Search user
 
 ## Data Model
 
-### Platform RBAC
+### Entities
 
 ```
-User
-├── id: UUID
-├── email: string
-├── name: string
-├── platform_role: enum (consumer, moderator, admin)
-├── ...
+┌─────────────────────────────────────────────────────────────────┐
+│                         Staff                                    │
+├─────────────────────────────────────────────────────────────────┤
+│  id              UUID PRIMARY KEY                               │
+│  user_id         UUID FK → User                                 │
+│  merchant_id     UUID FK → Merchant                             │
+│  role_id         UUID FK → StaffRole                            │
+│  invited_by      UUID FK → User                                 │
+│  invited_at      TIMESTAMP NOT NULL                             │
+│  accepted_at     TIMESTAMP                                      │
+│  status          ENUM(invited, active, suspended, removed)      │
+│  created_at      TIMESTAMP NOT NULL                             │
+│  updated_at      TIMESTAMP                                      │
+│  UNIQUE(user_id, merchant_id)                                   │
+└─────────────────────────────────────────────────────────────────┘
 
-RoleAssignment (for moderators/admins)
-├── id: UUID
-├── user_id: FK → User
-├── role: enum (moderator, admin)
-├── assigned_by: FK → User
-├── assigned_at: timestamp
-├── revoked_at: timestamp (nullable)
+┌─────────────────────────────────────────────────────────────────┐
+│                       StaffRole                                  │
+├─────────────────────────────────────────────────────────────────┤
+│  id              UUID PRIMARY KEY                               │
+│  merchant_id     UUID FK → Merchant                             │
+│  name            VARCHAR(100) NOT NULL                          │
+│  description     TEXT                                           │
+│  permissions     TEXT[] NOT NULL                                │
+│  is_system       BOOLEAN DEFAULT false                          │
+│  created_at      TIMESTAMP NOT NULL                             │
+│  updated_at      TIMESTAMP                                      │
+│  UNIQUE(merchant_id, name)                                      │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│                    RoleAssignment                                │
+│                (platform moderators/admins)                      │
+├─────────────────────────────────────────────────────────────────┤
+│  id              UUID PRIMARY KEY                               │
+│  user_id         UUID FK → User                                 │
+│  role            ENUM(moderator, admin)                         │
+│  assigned_by     UUID FK → User                                 │
+│  assigned_at     TIMESTAMP NOT NULL                             │
+│  revoked_at      TIMESTAMP                                      │
+│  revoked_by      UUID FK → User                                 │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
-### Merchant RBAC
+### Permission Strings Format
+
+Permissions use `resource.action` format:
 
 ```
-StaffRole
-├── id: UUID
-├── merchant_id: FK → Merchant (nullable for system defaults)
-├── name: string // "Cashier", "Inventory", "Part-time", or custom
-├── permissions: string[] // Action-based permission strings
-│   // Example:
-│   // [
-│   //   "pos.process_sale",
-│   //   "pos.view_history",
-│   //   "orders.view",
-│   //   "orders.update_status",
-│   //   "customers.link_purchase"
-│   // ]
-├── is_system: boolean // true for defaults, false for custom
-├── created_at: timestamp
-├── updated_at: timestamp
-
-Staff
-├── id: UUID
-├── user_id: FK → User
-├── merchant_id: FK → Merchant
-├── role_id: FK → StaffRole
-├── permission_overrides: string[] (nullable) // Additional or revoked permissions
-├── status: enum (invited, active, deactivated)
-├── invited_by: FK → User (owner)
-├── invited_at: timestamp
-├── activated_at: timestamp (nullable)
-├── deactivated_at: timestamp (nullable)
+pos.process_sale
+pos.apply_discount
+orders.view
+orders.update_status
+inventory.view
+inventory.adjust
+products.create
+products.edit
 ```
+
+### Indexes
+
+| Table | Index | Purpose |
+|-------|-------|---------|
+| `staff` | `user_id, merchant_id` (unique) | Staff membership |
+| `staff` | `merchant_id, status` | Active staff list |
+| `staff_role` | `merchant_id, name` (unique) | Role lookup |
+| `staff_role` | `merchant_id, is_system` | System roles |
+| `role_assignment` | `user_id, role` | Platform role check |
+| `role_assignment` | `role, revoked_at` | Active moderators/admins |
 
 ---
 
@@ -534,23 +555,187 @@ Staff
 
 ### Platform RBAC (Admin only)
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/api/v1/admin/users/{id}/roles` | Get user platform roles |
-| `PUT` | `/api/v1/admin/users/{id}/roles` | Update user platform roles |
+### GET /v1/admin/users/{id}/roles
+
+Get user's platform roles.
+
+```json
+// Response
+{
+  "user_id": "uuid",
+  "roles": ["consumer", "moderator"]
+}
+```
+
+### PUT /v1/admin/users/{id}/roles
+
+Update user's platform roles.
+
+```json
+// Request
+{
+  "roles": ["consumer", "moderator", "admin"]
+}
+
+// Response
+{
+  "user_id": "uuid",
+  "roles": ["consumer", "moderator", "admin"],
+  "updated_at": "2026-01-28"
+}
+```
 
 ### Merchant RBAC (Owner only)
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/api/v1/merchant/roles` | List merchant's staff roles |
-| `POST` | `/api/v1/merchant/roles` | Create custom staff role |
-| `PUT` | `/api/v1/merchant/roles/{id}` | Update staff role |
-| `DELETE` | `/api/v1/merchant/roles/{id}` | Delete custom role |
-| `GET` | `/api/v1/merchant/staff` | List merchant's staff |
-| `POST` | `/api/v1/merchant/staff` | Invite staff member |
-| `PUT` | `/api/v1/merchant/staff/{id}` | Update staff (role, status) |
-| `DELETE` | `/api/v1/merchant/staff/{id}` | Remove staff |
+### GET /v1/merchant/roles
+
+List merchant's staff roles.
+
+```json
+// Response
+{
+  "roles": [
+    {
+      "id": "uuid",
+      "name": "Cashier",
+      "description": "Front-line sales",
+      "permissions": ["pos.process_sale", "pos.view_history", "orders.view"],
+      "is_system": true
+    },
+    {
+      "id": "uuid",
+      "name": "Senior Cashier",
+      "description": "Cashier with refund access",
+      "permissions": ["pos.process_sale", "pos.process_refund", "orders.view"],
+      "is_system": false
+    }
+  ]
+}
+```
+
+### POST /v1/merchant/roles
+
+Create a custom staff role.
+
+```json
+// Request
+{
+  "name": "Shift Manager",
+  "description": "Manages daily operations",
+  "permissions": [
+    "pos.process_sale",
+    "pos.process_refund",
+    "orders.view",
+    "orders.cancel",
+    "shift.close"
+  ]
+}
+
+// Response
+{
+  "id": "uuid",
+  "name": "Shift Manager",
+  "created_at": "2026-01-28"
+}
+```
+
+### PUT /v1/merchant/roles/{id}
+
+Update a staff role.
+
+```json
+// Request
+{
+  "name": "Shift Manager (Updated)",
+  "permissions": ["pos.process_sale", "pos.process_refund", "orders.view", "orders.cancel", "shift.close", "reports.daily"]
+}
+
+// Response
+{
+  "id": "uuid",
+  "updated_at": "2026-01-28"
+}
+```
+
+### DELETE /v1/merchant/roles/{id}
+
+Delete a custom role (system roles cannot be deleted).
+
+```json
+// Response
+{
+  "message": "Role deleted"
+}
+```
+
+### GET /v1/merchant/staff
+
+List merchant's staff members.
+
+```json
+// Response
+{
+  "staff": [
+    {
+      "id": "uuid",
+      "user": { "name": "Aisha Rahman", "email": "aisha@email.com" },
+      "role": { "id": "uuid", "name": "Cashier" },
+      "status": "active",
+      "last_active": "2026-01-28T14:30:00+09:00"
+    }
+  ],
+  "total": 3,
+  "limit": 5
+}
+```
+
+### POST /v1/merchant/staff
+
+Invite a staff member.
+
+```json
+// Request
+{
+  "email": "newstaff@email.com",
+  "role_id": "uuid"
+}
+
+// Response
+{
+  "id": "uuid",
+  "status": "invited",
+  "invited_at": "2026-01-28"
+}
+```
+
+### PUT /v1/merchant/staff/{id}
+
+Update staff member (role, status).
+
+```json
+// Request
+{
+  "role_id": "uuid",
+  "status": "suspended"
+}
+
+// Response
+{
+  "id": "uuid",
+  "updated_at": "2026-01-28"
+}
+```
+
+### DELETE /v1/merchant/staff/{id}
+
+Remove staff member from merchant.
+
+```json
+// Response
+{
+  "message": "Staff removed"
+}
+```
 
 ---
 

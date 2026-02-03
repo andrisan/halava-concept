@@ -282,58 +282,84 @@ Search Results: "halal beef"
 
 ## Data Model
 
-```
-Promotion
-├── id: UUID
-├── merchant_id: FK → Merchant
-├── name: string
-├── type: enum (coupon, automatic, featured)
-├── status: enum (draft, active, paused, ended)
-│
-├── discount_type: enum (percentage, fixed, free_shipping, buy_x_get_y)
-├── discount_value: decimal
-├── discount_config: JSONB (for complex discounts)
-│   └── { buy_quantity: 2, get_quantity: 1, get_product_id: ... }
-│
-├── code: string (nullable, for coupons)
-├── conditions: JSONB
-│   └── { min_order: 2000, first_time_only: true, product_ids: [...] }
-│
-├── usage_limit: int (nullable)
-├── per_customer_limit: int (default: 1)
-├── usage_count: int (computed)
-│
-├── starts_at: timestamp
-├── ends_at: timestamp (nullable)
-│
-├── created_at, updated_at: timestamp
+### Entities
 
-PromotionUsage
-├── id: UUID
-├── promotion_id: FK → Promotion
-├── order_id: FK → Order
-├── consumer_id: FK → User
-├── discount_amount: decimal
-├── created_at: timestamp
-
-FeaturedListing
-├── id: UUID
-├── merchant_id: FK → Merchant
-├── item_id: FK → Item (product or place)
-├── placement: enum (category_search, homepage, directory_map)
-├── category: string (nullable)
-│
-├── starts_at: timestamp
-├── ends_at: timestamp
-├── daily_rate: decimal
-├── total_cost: decimal
-│
-├── impressions: int (computed)
-├── clicks: int (computed)
-│
-├── status: enum (pending, active, ended, cancelled)
-├── created_at: timestamp
 ```
+┌─────────────────────────────────────────────────────────────────┐
+│                       Promotion                                  │
+├─────────────────────────────────────────────────────────────────┤
+│  id              UUID PRIMARY KEY                               │
+│  merchant_id     UUID FK → Merchant                             │
+│  name            VARCHAR(255) NOT NULL                          │
+│  type            ENUM(coupon, automatic, featured)              │
+│  status          ENUM(draft, active, paused, ended)             │
+│  discount_type   ENUM(percentage, fixed, free_shipping, bogo)   │
+│  discount_value  DECIMAL(10,2)                                  │
+│  discount_config JSONB (buy_quantity, get_quantity, etc.)       │
+│  code            VARCHAR(50) (for coupon type)                  │
+│  conditions      JSONB (min_order, first_time, products, etc.)  │
+│  usage_limit     INT (total uses)                               │
+│  per_customer_limit  INT (uses per customer)                    │
+│  usage_count     INT DEFAULT 0                                  │
+│  starts_at       TIMESTAMP NOT NULL                             │
+│  ends_at         TIMESTAMP                                      │
+│  created_at      TIMESTAMP NOT NULL                             │
+│  updated_at      TIMESTAMP                                      │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│                    PromotionUsage                                │
+├─────────────────────────────────────────────────────────────────┤
+│  id              UUID PRIMARY KEY                               │
+│  promotion_id    UUID FK → Promotion                            │
+│  order_id        UUID FK → Order                                │
+│  consumer_id     UUID FK → User                                 │
+│  discount_amount DECIMAL(10,2) NOT NULL                         │
+│  created_at      TIMESTAMP NOT NULL                             │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│                    FeaturedListing                               │
+├─────────────────────────────────────────────────────────────────┤
+│  id              UUID PRIMARY KEY                               │
+│  merchant_id     UUID FK → Merchant                             │
+│  item_id         UUID FK → Item (nullable)                      │
+│  place_id        UUID FK → Place (nullable)                     │
+│  placement       ENUM(search_category, homepage, directory)     │
+│  category        VARCHAR(100) (for category-specific placement) │
+│  starts_at       TIMESTAMP NOT NULL                             │
+│  ends_at         TIMESTAMP NOT NULL                             │
+│  daily_rate      DECIMAL(10,2) NOT NULL                         │
+│  total_cost      DECIMAL(10,2) NOT NULL                         │
+│  impressions     INT DEFAULT 0                                  │
+│  clicks          INT DEFAULT 0                                  │
+│  status          ENUM(pending, active, completed, cancelled)    │
+│  created_at      TIMESTAMP NOT NULL                             │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Conditions JSONB Structure
+
+```json
+{
+  "min_order_value": 2000,
+  "first_time_only": true,
+  "product_ids": ["uuid1", "uuid2"],
+  "category_ids": ["uuid3"],
+  "excluded_product_ids": []
+}
+```
+
+### Indexes
+
+| Table | Index | Purpose |
+|-------|-------|---------|
+| `promotion` | `merchant_id, status, starts_at, ends_at` | Active promotions |
+| `promotion` | `code` (unique where not null) | Coupon lookup |
+| `promotion_usage` | `promotion_id, consumer_id` | Per-customer usage |
+| `promotion_usage` | `order_id` | Order discount lookup |
+| `featured_listing` | `placement, status, starts_at, ends_at` | Active featured |
+| `featured_listing` | `merchant_id, status` | Merchant's listings |
 
 ---
 

@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**Halava** is a consumer-first halal commerce platform concept for Japan. This repository contains product specifications, business model documentation, and brand assets — not source code. The project is in the specification phase with MVP development in progress.
+**Halava** is a consumer-first halal commerce platform concept. This repository contains product specifications, business model documentation, and brand assets — not source code. The project is in the specification phase with MVP development in progress.
 
 **Tagline:** "Halal, Available Anywhere"
 
@@ -21,8 +21,34 @@ halava-concept/
 │   ├── index.md            # Map of Content
 │   ├── spec/               # Product specifications
 │   │   ├── web-app-spec.md
-│   │   ├── pages-navigation-ux.md
+│   │   ├── pages-navigation-ux-spec.md
 │   │   └── api-spec.md
+│   ├── features/           # Feature specifications by audience
+│   │   ├── consumer/       # Consumer-facing features
+│   │   │   ├── group-purchase.md
+│   │   │   ├── purchase-history.md
+│   │   │   ├── price-comparison.md
+│   │   │   ├── bopu.md
+│   │   │   ├── reviews-ratings.md
+│   │   │   └── saved-items.md
+│   │   ├── merchant/       # Merchant capabilities
+│   │   │   ├── pos.md
+│   │   │   ├── products.md
+│   │   │   ├── order-management.md
+│   │   │   ├── inventory.md
+│   │   │   ├── promotions.md
+│   │   │   ├── restaurant-ops.md
+│   │   │   └── accounting.md
+│   │   ├── shared/         # Features used by both consumers & merchants
+│   │   │   ├── authentication.md
+│   │   │   ├── onboarding.md
+│   │   │   ├── notifications.md
+│   │   │   ├── directory.md
+│   │   │   ├── marketplace.md
+│   │   │   └── multi-language.md
+│   │   └── platform/       # Platform-level features
+│   │       ├── roles-permissions.md
+│   │       └── admin-moderation.md
 │   ├── business/           # Business documents
 │   │   ├── monetization.md
 │   │   ├── pitch-deck.md
@@ -30,12 +56,21 @@ halava-concept/
 │   │   └── risk-assessment.md
 │   ├── technical/          # Technical architecture
 │   │   ├── architecture.md
-│   │   └── data-model.md
+│   │   ├── data-model.md
+│   │   └── roadmap.md
 │   └── design/             # Design documentation
 │       ├── wireframes.md
 │       └── design-system.md
 ├── flat/                   # AI-readable originals (full detail, no wikilinks)
-│   └── halava_*.md         # Original specification files
+│   ├── README.md
+│   ├── halava_web_app_spec_canvas.md
+│   ├── halava_pages_navigation_ux.md
+│   ├── halava_api_spec.md
+│   ├── halava_monetization_pricing_strategy_summary.md
+│   ├── halava_pitch_deck_outline_10_12_slides.md
+│   ├── halava_market_validation.md
+│   ├── halava_risk_assessment.md
+│   └── halava_technical_architecture.md
 ├── logo/logo.svg           # Brand logo
 ├── sync.sh                 # KMS → Flat sync script
 └── README.md               # Project overview
@@ -91,7 +126,8 @@ When working with this repository:
 2. **kms/spec/web-app-spec.md** — Product specification summary
 3. **flat/halava_web_app_spec_canvas.md** — Full detailed specification
 4. **flat/halava_monetization_pricing_strategy_summary.md** — Complete revenue model
-5. **kms/technical/architecture.md** — System architecture overview
+5. **kms/technical/architecture.md** — System architecture summary
+6. **flat/halava_technical_architecture.md** — Full technical architecture
 
 ## Key Terms
 

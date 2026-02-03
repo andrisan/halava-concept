@@ -9,7 +9,7 @@
 **Halava** is an abbreviation for "HALal, AVailable Anywhere." It is a **two-sided halal commerce platform** designed to serve both consumers and merchants with purpose-built features.
 
 **For Consumers:**
-One trusted platform to discover, shop, and manage halal purchases.
+One trusted platform to discover, shop, and take control of halal spending with expense tracking tools.
 
 **For Merchants:**
 All-in-one tools to reach halal-conscious customers and grow the business.
@@ -27,7 +27,7 @@ All-in-one tools to reach halal-conscious customers and grow the business.
 
 ## 📋 Specifications
 
-[[web-app-spec]] · [[roadmap]] · [[pages-navigation-ux]] · [[api-spec]]
+[[web-app-spec]] · [[roadmap]] · [[pages-navigation-ux-spec]] · [[api-spec]]
 
 ---
 
@@ -36,7 +36,7 @@ All-in-one tools to reach halal-conscious customers and grow the business.
 > **Full feature tables:** [[web-app-spec#Platform Features]]
 
 ### Consumer
-[[consumer/directory]] · [[consumer/marketplace]] · [[consumer/group-purchase]] · [[consumer/purchase-history]] · [[consumer/price-comparison]] · [[consumer/reviews-ratings]] · [[consumer/saved-items]]
+[[consumer/directory]] · [[consumer/marketplace]] · [[consumer/group-purchase]] · [[consumer/expense-tracker]] · [[consumer/reviews-ratings]] · [[consumer/saved-items]] · [[consumer/bopu]]
 
 ### Merchant
 [[merchant/order-management]] · [[merchant/restaurant-ops]] · [[merchant/pos]] · [[merchant/promotions]] · [[merchant/accounting]]
@@ -74,7 +74,8 @@ All-in-one tools to reach halal-conscious customers and grow the business.
 | Capability-based merchant model | [[web-app-spec#Capability-based approach]] |
 | Payment strategy phases | [[web-app-spec#Payment Strategy]] |
 | Transaction fee tiers | [[monetization#Transaction Fee Structure]] |
-| POS interface | [[pages-navigation-ux#POS Screen]] |
+| Expense tracking | [[consumer/expense-tracker]] |
+| POS interface | [[pages-navigation-ux-spec#POS Screen]] |
 | Technical stack | [[architecture#Tech Stack]] |
 | Order flow | [[order-management#Order Lifecycle]] |
 | Data schema | [[data-model]] |

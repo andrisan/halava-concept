@@ -5,7 +5,7 @@
 >
 > **Related documents:**
 > - [[wireframes]] — Screen wireframes
-> - [[pages-navigation-ux]] — Page specifications
+> - [[pages-navigation-ux-spec]] — Page specifications
 > - [[architecture]] — Technical stack (UI components)
 
 ---

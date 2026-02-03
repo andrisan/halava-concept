@@ -230,77 +230,115 @@ Profile Menu → [Switch Account]
 
 ## Data Model
 
+### Entities
+
 ```
-User
-├── id: UUID
-├── email: string (unique, indexed)
-├── name: string
-├── phone: string (nullable)
-├── role: enum (consumer, merchant_owner, staff, moderator, admin)
-├── email_verified_at: timestamp
-├── last_login_at: timestamp
-├── created_at: timestamp
+┌─────────────────────────────────────────────────────────────────┐
+│                         User                                     │
+├─────────────────────────────────────────────────────────────────┤
+│  id              UUID PRIMARY KEY                               │
+│  email           VARCHAR(255) UNIQUE NOT NULL                   │
+│  name            VARCHAR(100)                                   │
+│  phone           VARCHAR(20)                                    │
+│  role            ENUM(consumer, merchant_owner, staff,          │
+│                       moderator, admin)                         │
+│  email_verified_at  TIMESTAMP                                   │
+│  last_login_at   TIMESTAMP                                      │
+│  created_at      TIMESTAMP NOT NULL                             │
+│  updated_at      TIMESTAMP                                      │
+└─────────────────────────────────────────────────────────────────┘
 
-Session
-├── id: UUID
-├── user_id: FK → User
-├── refresh_token_hash: string
-├── device_info: JSONB
-│   └── { user_agent, ip, device_type }
-├── expires_at: timestamp
-├── revoked_at: timestamp (nullable)
-├── created_at: timestamp
+┌─────────────────────────────────────────────────────────────────┐
+│                         Session                                  │
+├─────────────────────────────────────────────────────────────────┤
+│  id              UUID PRIMARY KEY                               │
+│  user_id         UUID FK → User                                 │
+│  refresh_token_hash  VARCHAR(255) NOT NULL                      │
+│  device_info     JSONB (browser, os, ip)                        │
+│  expires_at      TIMESTAMP NOT NULL                             │
+│  revoked_at      TIMESTAMP                                      │
+│  created_at      TIMESTAMP NOT NULL                             │
+└─────────────────────────────────────────────────────────────────┘
 
-OTPCode
-├── id: UUID
-├── email: string (indexed)
-├── code_hash: string
-├── purpose: enum (login, verify_email)
-├── attempts: int (max 5)
-├── expires_at: timestamp
-├── used_at: timestamp (nullable)
-├── created_at: timestamp
+┌─────────────────────────────────────────────────────────────────┐
+│                         OTPCode                                  │
+├─────────────────────────────────────────────────────────────────┤
+│  id              UUID PRIMARY KEY                               │
+│  email           VARCHAR(255) NOT NULL                          │
+│  code_hash       VARCHAR(255) NOT NULL                          │
+│  purpose         ENUM(login, verify_email, reset)               │
+│  attempts        INT DEFAULT 0                                  │
+│  expires_at      TIMESTAMP NOT NULL                             │
+│  used_at         TIMESTAMP                                      │
+│  created_at      TIMESTAMP NOT NULL                             │
+└─────────────────────────────────────────────────────────────────┘
 
-MagicLink
-├── id: UUID
-├── email: string
-├── token_hash: string
-├── expires_at: timestamp
-├── used_at: timestamp (nullable)
-├── created_at: timestamp
+┌─────────────────────────────────────────────────────────────────┐
+│                         MagicLink                                │
+├─────────────────────────────────────────────────────────────────┤
+│  id              UUID PRIMARY KEY                               │
+│  email           VARCHAR(255) NOT NULL                          │
+│  token_hash      VARCHAR(255) NOT NULL                          │
+│  expires_at      TIMESTAMP NOT NULL                             │
+│  used_at         TIMESTAMP                                      │
+│  created_at      TIMESTAMP NOT NULL                             │
+└─────────────────────────────────────────────────────────────────┘
 
-OAuthConnection
-├── id: UUID
-├── user_id: FK → User
-├── provider: enum (google, apple)
-├── provider_user_id: string
-├── email: string
-├── created_at: timestamp
+┌─────────────────────────────────────────────────────────────────┐
+│                       OAuthConnection                            │
+├─────────────────────────────────────────────────────────────────┤
+│  id              UUID PRIMARY KEY                               │
+│  user_id         UUID FK → User                                 │
+│  provider        ENUM(google, apple) NOT NULL                   │
+│  provider_user_id  VARCHAR(255) NOT NULL                        │
+│  email           VARCHAR(255)                                   │
+│  created_at      TIMESTAMP NOT NULL                             │
+│  UNIQUE(provider, provider_user_id)                             │
+└─────────────────────────────────────────────────────────────────┘
 ```
+
+### Indexes
+
+| Table | Index | Purpose |
+|-------|-------|---------|
+| `user` | `email` (unique) | Login lookup |
+| `session` | `user_id` | Active sessions query |
+| `session` | `refresh_token_hash` | Token validation |
+| `otp_code` | `email, expires_at` | OTP lookup |
+| `magic_link` | `token_hash` | Link validation |
+| `oauth_connection` | `provider, provider_user_id` (unique) | OAuth lookup |
 
 ---
 
 ## API Endpoints
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `POST` | `/api/v1/auth/login` | Initiate login (send OTP) |
-| `POST` | `/api/v1/auth/verify-otp` | Verify OTP code |
-| `GET` | `/api/v1/auth/magic-link/{token}` | Verify magic link |
-| `POST` | `/api/v1/auth/refresh` | Refresh access token |
-| `POST` | `/api/v1/auth/logout` | Logout (revoke session) |
-| `GET` | `/api/v1/auth/sessions` | List active sessions |
-| `DELETE` | `/api/v1/auth/sessions/{id}` | Revoke specific session |
-| `POST` | `/api/v1/auth/oauth/google` | Google OAuth callback |
-| `POST` | `/api/v1/auth/oauth/apple` | Apple Sign-In callback |
+> Full API index: [[api-spec#2. Auth Module]]
 
-### Login Request
+### POST /v1/auth/magic-link
+
+Request magic link login.
 
 ```json
-// POST /api/v1/auth/login
+// Request
 {
-  "email": "user@example.com",
-  "method": "otp"  // or "magic_link"
+  "email": "user@example.com"
+}
+
+// Response
+{
+  "message": "Login link sent to email",
+  "expires_in": 900
+}
+```
+
+### POST /v1/auth/otp
+
+Request OTP login.
+
+```json
+// Request
+{
+  "email": "user@example.com"
 }
 
 // Response
@@ -311,13 +349,15 @@ OAuthConnection
 }
 ```
 
-### Verify OTP
+### POST /v1/auth/verify
+
+Verify OTP code or magic link token.
 
 ```json
-// POST /api/v1/auth/verify-otp
+// Request
 {
   "email": "user@example.com",
-  "code": "123456"
+  "code": "123456"  // or "token": "abc123..."
 }
 
 // Response
@@ -331,6 +371,103 @@ OAuthConnection
     "name": "Ahmad",
     "role": "consumer"
   }
+}
+```
+
+### POST /v1/auth/refresh
+
+Refresh access token using refresh token cookie.
+
+```json
+// Request (refresh_token in HTTP-only cookie)
+{}
+
+// Response
+{
+  "access_token": "eyJ...",
+  "expires_in": 900
+}
+```
+
+### POST /v1/auth/logout
+
+Logout and revoke current session.
+
+```json
+// Request
+Authorization: Bearer <access_token>
+
+// Response
+{
+  "message": "Logged out successfully"
+}
+```
+
+### GET /v1/auth/sessions
+
+List all active sessions for current user.
+
+```json
+// Response
+{
+  "sessions": [
+    {
+      "id": "uuid",
+      "device_info": { "browser": "Chrome", "os": "macOS" },
+      "created_at": "2026-01-28T10:00:00Z",
+      "last_active_at": "2026-01-28T14:30:00Z",
+      "is_current": true
+    }
+  ]
+}
+```
+
+### DELETE /v1/auth/sessions/{id}
+
+Revoke a specific session by ID.
+
+```json
+// Response
+{
+  "message": "Session revoked"
+}
+```
+
+### POST /v1/auth/oauth/google
+
+Google OAuth callback. Exchange authorization code for tokens.
+
+```json
+// Request
+{
+  "code": "google-auth-code",
+  "redirect_uri": "https://halava.app/auth/callback"
+}
+
+// Response
+{
+  "access_token": "eyJ...",
+  "refresh_token": "abc...",
+  "user": { ... }
+}
+```
+
+### POST /v1/auth/oauth/apple
+
+Apple Sign-In callback. Exchange authorization code for tokens.
+
+```json
+// Request
+{
+  "code": "apple-auth-code",
+  "id_token": "apple-id-token"
+}
+
+// Response
+{
+  "access_token": "eyJ...",
+  "refresh_token": "abc...",
+  "user": { ... }
 }
 ```
 

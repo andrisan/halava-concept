@@ -174,7 +174,7 @@ Enter Email → Send Magic Link → Click Link → Verify Token → Issue JWT �
 
 ## 6. POS Offline Architecture
 
-> See [[pages-navigation-ux#POS Screen]] for UI details.
+> See [[pages-navigation-ux-spec#POS Screen]] for UI details.
 
 ### 6.1 Offline Sync Flow
 
@@ -259,6 +259,118 @@ Enter Email → Send Magic Link → Click Link → Verify Token → Issue JWT �
 | Database connections > 80% | Connection pooling (PgBouncer) |
 | Search latency > 1s | Dedicated search (Meilisearch) |
 | 10+ regions | Regional deployments, edge caching |
+
+### 8.3 Modular Monolith Architecture
+
+Halava is developed as a **modular monolith** — a single deployable application with strict internal module boundaries, designed for future microservices migration.
+
+#### Development Principles
+
+| Principle | Description |
+|-----------|-------------|
+| **Module boundaries** | Each module (Auth, Consumer, Merchant, Directory, Marketplace, POS, Notification) has clear boundaries |
+| **Interface-based communication** | Modules communicate through defined service interfaces, not direct imports |
+| **Data ownership** | Each module owns its tables; no cross-module direct DB queries |
+| **No circular dependencies** | Module dependency graph must be acyclic |
+| **Shared kernel** | Only common types, utilities, and base models in shared layer |
+
+#### Developer Quick Reference
+
+**Folder Structure:**
+
+```
+src/
+├── modules/
+│   ├── auth/
+│   │   ├── auth.service.ts       # Public interface (import this)
+│   │   ├── auth.routes.ts
+│   │   └── internal/             # Private (never import from outside)
+│   ├── marketplace/
+│   │   ├── marketplace.service.ts
+│   │   └── internal/
+│   ├── consumer/
+│   ├── merchant/
+│   ├── directory/
+│   ├── pos/
+│   └── notification/
+├── shared/                       # Shared kernel
+│   ├── types/                    # Common TypeScript types
+│   ├── utils/                    # Pure utility functions
+│   └── db/                       # Database client only
+└── app.ts
+```
+
+**Module Rules (MVP):**
+
+1. **Import from `*.service.ts` only** — Never import from another module's `internal/`
+2. **No cross-module DB queries** — Need merchant data? Call `merchantService`, don't query their tables
+3. **Shared = pure utilities** — No business logic in `shared/`, only types and helpers
+4. **Events for side effects** — Don't call Notification directly; emit events instead
+5. **One module owns each table** — If unsure, ask: "Who is responsible for this data?"
+
+**ESLint Enforcement (optional):**
+
+```javascript
+// .eslintrc.js
+rules: {
+  'no-restricted-imports': ['error', {
+    patterns: ['**/internal/*']
+  }]
+}
+```
+
+#### Module Dependency Rules
+
+```
+┌─────────────────────────────────────────────────┐
+│                    Admin                         │
+├─────────────────────────────────────────────────┤
+│  Consumer  │  Merchant  │  Directory  │  POS    │
+├─────────────────────────────────────────────────┤
+│              Marketplace (core)                  │
+├─────────────────────────────────────────────────┤
+│           Notification (event-driven)            │
+├─────────────────────────────────────────────────┤
+│                Auth (foundation)                 │
+├─────────────────────────────────────────────────┤
+│              Shared Kernel (types)               │
+└─────────────────────────────────────────────────┘
+```
+
+- Upper layers may depend on lower layers
+- Same-level modules must not directly depend on each other
+- Cross-module communication via service interfaces or events
+
+#### Microservices Migration Triggers
+
+| Trigger | Action |
+|---------|--------|
+| Team grows to 5+ engineers | Consider splitting by module ownership |
+| Module requires independent scaling | Extract as separate service |
+| Different tech stack needed | Extract module with appropriate stack |
+| Deployment independence required | Extract critical modules first (POS, Auth) |
+
+#### Migration Path
+
+1. **Current (MVP):** Modular monolith with clear boundaries
+2. **Phase 2:** Extract Notification module (event-driven, low coupling)
+3. **Phase 3+:** Extract POS, Marketplace based on scaling needs
+
+#### Files Affected by Future Migration
+
+When microservices migration happens, the following files will need updates:
+
+**Primary (architecture changes):**
+- [[architecture]] — Update system diagram to show separate services
+- [[data-model]] — Document data ownership per service
+- [[api-spec]] — Split into per-service API contracts
+
+**Secondary (reference updates):**
+- [[web-app-spec]] — Update module references
+- [[roadmap]] — Add migration phases
+- [[pos]] — POS service architecture
+- [[marketplace]] — Core service interactions
+- [[notifications]] — Event service architecture
 
 ---
 

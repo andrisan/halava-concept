@@ -271,60 +271,97 @@ For tax-compliant exports:
 
 ## Data Model
 
-```
-FinancialTransaction
-├── id: UUID
-├── merchant_id: FK → Merchant
-├── type: enum (sale, refund, expense, fee, adjustment)
-├── source: enum (marketplace, pos, group, manual, platform)
-├── source_id: UUID (nullable, FK to Order/POSTransaction)
-│
-├── amount: decimal (positive for income, negative for expense)
-├── tax_amount: decimal
-├── tax_rate: decimal (0.10, 0.08)
-│
-├── category: string
-├── description: text
-├── counterparty: string (customer or vendor name)
-│
-├── recorded_at: timestamp
-├── created_at: timestamp
+### Entities
 
-Expense
-├── id: UUID
-├── merchant_id: FK → Merchant
-├── category: enum (inventory, rent, utilities, labor, marketing, other)
-├── vendor: string
-├── amount: decimal
-├── tax_amount: decimal
-├── receipt_url: string (nullable)
-├── notes: text (nullable)
-├── expense_date: date
-├── created_at: timestamp
-
-Invoice
-├── id: UUID
-├── merchant_id: FK → Merchant
-├── invoice_number: string (INV-YYYY-NNN)
-├── customer_name: string
-├── customer_address: text
-├── customer_registration: string (nullable)
-│
-├── items: JSONB
-│   └── [{ description, quantity, unit_price, tax_rate, amount }]
-├── subtotal: decimal
-├── tax_breakdown: JSONB
-│   └── [{ rate: 0.10, taxable: 90000, tax: 9000 }]
-├── total: decimal
-│
-├── issued_at: date
-├── due_at: date
-├── payment_terms: string
-├── status: enum (draft, sent, paid, overdue, cancelled)
-│
-├── pdf_url: string (nullable)
-├── created_at: timestamp
 ```
+┌─────────────────────────────────────────────────────────────────┐
+│                   FinancialTransaction                           │
+├─────────────────────────────────────────────────────────────────┤
+│  id              UUID PRIMARY KEY                               │
+│  merchant_id     UUID FK → Merchant                             │
+│  type            ENUM(sale, refund, expense, fee, payout)       │
+│  source          ENUM(order, pos, manual, platform)             │
+│  source_id       UUID (FK → Order, POSTransaction, etc.)        │
+│  amount          DECIMAL(12,2) NOT NULL                         │
+│  tax_amount      DECIMAL(12,2) DEFAULT 0                        │
+│  tax_rate        DECIMAL(4,2)                                   │
+│  category        VARCHAR(100)                                   │
+│  description     TEXT                                           │
+│  counterparty    VARCHAR(255) (customer/vendor name)            │
+│  recorded_at     TIMESTAMP NOT NULL                             │
+│  created_at      TIMESTAMP NOT NULL                             │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│                        Expense                                   │
+├─────────────────────────────────────────────────────────────────┤
+│  id              UUID PRIMARY KEY                               │
+│  merchant_id     UUID FK → Merchant                             │
+│  category        ENUM(inventory, rent, utilities, supplies,     │
+│                       marketing, wages, other)                  │
+│  vendor          VARCHAR(255)                                   │
+│  amount          DECIMAL(12,2) NOT NULL                         │
+│  tax_amount      DECIMAL(12,2) DEFAULT 0                        │
+│  receipt_url     VARCHAR(500)                                   │
+│  notes           TEXT                                           │
+│  expense_date    DATE NOT NULL                                  │
+│  created_by      UUID FK → User                                 │
+│  created_at      TIMESTAMP NOT NULL                             │
+│  updated_at      TIMESTAMP                                      │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│                        Invoice                                   │
+├─────────────────────────────────────────────────────────────────┤
+│  id              UUID PRIMARY KEY                               │
+│  merchant_id     UUID FK → Merchant                             │
+│  invoice_number  VARCHAR(50) NOT NULL                           │
+│  customer_name   VARCHAR(255) NOT NULL                          │
+│  customer_address TEXT                                          │
+│  customer_registration VARCHAR(50) (tax registration)           │
+│  items           JSONB (line items with qty, price, tax)        │
+│  subtotal        DECIMAL(12,2) NOT NULL                         │
+│  tax_amount      DECIMAL(12,2) DEFAULT 0                        │
+│  total           DECIMAL(12,2) NOT NULL                         │
+│  status          ENUM(draft, issued, paid, overdue, cancelled)  │
+│  issued_at       TIMESTAMP                                      │
+│  due_at          TIMESTAMP                                      │
+│  paid_at         TIMESTAMP                                      │
+│  notes           TEXT                                           │
+│  created_at      TIMESTAMP NOT NULL                             │
+│  updated_at      TIMESTAMP                                      │
+│  UNIQUE(merchant_id, invoice_number)                            │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Invoice Items JSONB Structure
+
+```json
+{
+  "items": [
+    {
+      "description": "Halal Beef 5kg",
+      "quantity": 10,
+      "unit_price": 6000,
+      "tax_rate": 10,
+      "tax_amount": 6000,
+      "total": 66000
+    }
+  ]
+}
+```
+
+### Indexes
+
+| Table | Index | Purpose |
+|-------|-------|---------|
+| `financial_transaction` | `merchant_id, recorded_at DESC` | Transaction history |
+| `financial_transaction` | `merchant_id, type, recorded_at` | Type filtering |
+| `financial_transaction` | `source, source_id` | Source lookup |
+| `expense` | `merchant_id, expense_date DESC` | Expense history |
+| `expense` | `merchant_id, category` | Category reports |
+| `invoice` | `merchant_id, invoice_number` (unique) | Invoice lookup |
+| `invoice` | `merchant_id, status, due_at` | Overdue tracking |
 
 ---
 

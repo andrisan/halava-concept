@@ -233,51 +233,184 @@ Merchant Dashboard → Settings → Notifications
 
 ## Data Model
 
-```
-Notification
-├── id: UUID
-├── user_id: FK → User
-├── type: enum (order, group, review, promo, system, alert)
-├── title: string
-├── body: text
-├── data: JSONB
-│   └── { order_id, merchant_id, action_url, ... }
-├── read_at: timestamp (nullable)
-├── created_at: timestamp
+### Entities
 
-NotificationPreference
-├── user_id: FK → User (unique)
-├── in_app_enabled: boolean (default: true)
-├── email_orders: boolean (default: true)
-├── email_promos: boolean (default: false)
-├── email_digest: boolean (default: false)
-├── push_order_ready: boolean (default: true)
-├── push_group_invite: boolean (default: true)
-├── updated_at: timestamp
-
-MerchantNotificationPreference
-├── merchant_id: FK → Merchant (unique)
-├── new_order_sound: boolean (default: true)
-├── new_order_email: boolean (default: true)
-├── low_stock_email: boolean (default: true)
-├── low_stock_threshold: int (default: 10)
-├── review_notification: boolean (default: true)
-├── updated_at: timestamp
 ```
+┌─────────────────────────────────────────────────────────────────┐
+│                       Notification                               │
+├─────────────────────────────────────────────────────────────────┤
+│  id              UUID PRIMARY KEY                               │
+│  user_id         UUID FK → User                                 │
+│  type            VARCHAR(50) NOT NULL                           │
+│                  (order_placed, order_ready, group_invite,      │
+│                   review_received, low_stock, etc.)             │
+│  title           VARCHAR(255) NOT NULL                          │
+│  body            TEXT                                           │
+│  data            JSONB (order_id, merchant_id, etc.)            │
+│  read_at         TIMESTAMP                                      │
+│  created_at      TIMESTAMP NOT NULL                             │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│                 NotificationPreference                           │
+├─────────────────────────────────────────────────────────────────┤
+│  user_id         UUID FK → User PRIMARY KEY                     │
+│  in_app_enabled  BOOLEAN DEFAULT true                           │
+│  email_orders    BOOLEAN DEFAULT true                           │
+│  email_shipping  BOOLEAN DEFAULT true                           │
+│  email_promos    BOOLEAN DEFAULT false                          │
+│  email_digest    BOOLEAN DEFAULT false                          │
+│  push_order_ready  BOOLEAN DEFAULT true                         │
+│  push_group_invite BOOLEAN DEFAULT true                         │
+│  updated_at      TIMESTAMP                                      │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│             MerchantNotificationPreference                       │
+├─────────────────────────────────────────────────────────────────┤
+│  merchant_id     UUID FK → Merchant PRIMARY KEY                 │
+│  new_order_sound BOOLEAN DEFAULT true                           │
+│  new_order_email BOOLEAN DEFAULT true                           │
+│  low_stock_email BOOLEAN DEFAULT true                           │
+│  low_stock_threshold  INT DEFAULT 10                            │
+│  review_notification  BOOLEAN DEFAULT true                      │
+│  updated_at      TIMESTAMP                                      │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Indexes
+
+| Table | Index | Purpose |
+|-------|-------|---------|
+| `notification` | `user_id, created_at DESC` | User notifications list |
+| `notification` | `user_id, read_at` | Unread count |
+| `notification` | `type, created_at` | Analytics queries |
 
 ---
 
 ## API Endpoints
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/api/v1/notifications` | List user's notifications |
-| `PUT` | `/api/v1/notifications/{id}/read` | Mark as read |
-| `PUT` | `/api/v1/notifications/read-all` | Mark all as read |
-| `GET` | `/api/v1/notifications/preferences` | Get preferences |
-| `PUT` | `/api/v1/notifications/preferences` | Update preferences |
-| `GET` | `/api/v1/merchant/notifications/preferences` | Merchant prefs |
-| `PUT` | `/api/v1/merchant/notifications/preferences` | Update merchant prefs |
+> Full API index: [[api-spec#8. Notification Module]]
+
+### GET /v1/notifications
+
+List user's notifications.
+
+```
+Query Parameters:
+  type          string    Filter: order, social, promo (optional)
+  unread_only   boolean   Only unread notifications
+  limit         int       Results per page (default: 20)
+  offset        int       Pagination offset
+```
+
+```json
+// Response
+{
+  "notifications": [
+    {
+      "id": "uuid",
+      "type": "order_ready",
+      "title": "Your food is ready!",
+      "body": "Halal Bistro · Order #0087",
+      "data": { "order_id": "uuid" },
+      "read_at": null,
+      "created_at": "2026-01-28T12:30:00+09:00"
+    }
+  ],
+  "total": 45,
+  "unread_count": 3
+}
+```
+
+### POST /v1/notifications/{id}/read
+
+Mark a notification as read.
+
+```json
+// Response
+{
+  "id": "uuid",
+  "read_at": "2026-01-28T12:35:00+09:00"
+}
+```
+
+### POST /v1/notifications/read-all
+
+Mark all notifications as read.
+
+```json
+// Response
+{
+  "marked_count": 3
+}
+```
+
+### GET /v1/notifications/preferences
+
+Get notification preferences.
+
+```json
+// Response
+{
+  "in_app_enabled": true,
+  "email_orders": true,
+  "email_shipping": true,
+  "email_promos": false,
+  "email_digest": false,
+  "push_order_ready": true,
+  "push_group_invite": true
+}
+```
+
+### PUT /v1/notifications/preferences
+
+Update notification preferences.
+
+```json
+// Request
+{
+  "email_promos": true,
+  "push_order_ready": false
+}
+
+// Response
+{
+  "message": "Preferences updated"
+}
+```
+
+### GET /v1/merchant/notifications/preferences
+
+Get merchant notification preferences.
+
+```json
+// Response
+{
+  "new_order_sound": true,
+  "new_order_email": true,
+  "low_stock_email": true,
+  "low_stock_threshold": 10,
+  "review_notification": true
+}
+```
+
+### PUT /v1/merchant/notifications/preferences
+
+Update merchant notification preferences.
+
+```json
+// Request
+{
+  "new_order_sound": false,
+  "low_stock_threshold": 5
+}
+
+// Response
+{
+  "message": "Preferences updated"
+}
+```
 
 ---
 

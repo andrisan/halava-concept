@@ -323,43 +323,92 @@ Admin Dashboard → Settings
 
 ## Data Model
 
+### Entities
+
 ```
-Report
-├── id: UUID
-├── reporter_id: FK → User
-├── subject_type: enum (user, merchant, place, product, review, order)
-├── subject_id: UUID
-├── reason: enum (halal_dispute, offensive_content, fraud, policy_violation, other)
-├── description: text
-├── evidence_urls: string[]
-├── status: enum (pending, in_review, resolved, escalated)
-├── assigned_to: FK → User (moderator)
-├── created_at: timestamp
+┌─────────────────────────────────────────────────────────────────┐
+│                         Report                                   │
+├─────────────────────────────────────────────────────────────────┤
+│  id              UUID PRIMARY KEY                               │
+│  reporter_id     UUID FK → User                                 │
+│  subject_type    ENUM(user, merchant, place, product, review,   │
+│                       order)                                    │
+│  subject_id      UUID NOT NULL                                  │
+│  reason          ENUM(spam, fake, inappropriate, halal_issue,   │
+│                       fraud, harassment, other)                 │
+│  description     TEXT                                           │
+│  evidence_urls   TEXT[]                                         │
+│  status          ENUM(pending, in_review, resolved, escalated)  │
+│  priority        ENUM(low, normal, high, urgent)                │
+│  assigned_to     UUID FK → User (moderator)                     │
+│  created_at      TIMESTAMP NOT NULL                             │
+│  updated_at      TIMESTAMP                                      │
+└─────────────────────────────────────────────────────────────────┘
 
-ReportResolution
-├── id: UUID
-├── report_id: FK → Report
-├── resolved_by: FK → User (moderator/admin)
-├── decision: enum (dismissed, warned, suspended, removed, escalated)
-├── notes: text
-├── created_at: timestamp
+┌─────────────────────────────────────────────────────────────────┐
+│                    ReportResolution                              │
+├─────────────────────────────────────────────────────────────────┤
+│  id              UUID PRIMARY KEY                               │
+│  report_id       UUID FK → Report                               │
+│  resolved_by     UUID FK → User                                 │
+│  decision        ENUM(dismissed, warning_issued, content_removed│
+│                       account_suspended, escalated)             │
+│  notes           TEXT                                           │
+│  action_taken    JSONB (details of action)                      │
+│  created_at      TIMESTAMP NOT NULL                             │
+└─────────────────────────────────────────────────────────────────┘
 
-AuditLog
-├── id: UUID
-├── actor_id: FK → User (moderator/admin)
-├── action: enum (view, edit, suspend, delete, approve, reject, ...)
-├── target_type: string
-├── target_id: UUID
-├── details: JSONB
-├── ip_address: string
-├── created_at: timestamp
+┌─────────────────────────────────────────────────────────────────┐
+│                        AuditLog                                  │
+├─────────────────────────────────────────────────────────────────┤
+│  id              UUID PRIMARY KEY                               │
+│  actor_id        UUID FK → User                                 │
+│  action          VARCHAR(100) NOT NULL                          │
+│                  (user.suspend, merchant.edit, content.remove,  │
+│                   setting.update, etc.)                         │
+│  target_type     VARCHAR(50) NOT NULL                           │
+│  target_id       UUID NOT NULL                                  │
+│  details         JSONB (before/after state, reason)             │
+│  ip_address      INET                                           │
+│  created_at      TIMESTAMP NOT NULL                             │
+└─────────────────────────────────────────────────────────────────┘
 
-PlatformSetting
-├── key: string (unique)
-├── value: JSONB
-├── updated_by: FK → User
-├── updated_at: timestamp
+┌─────────────────────────────────────────────────────────────────┐
+│                    PlatformSetting                               │
+├─────────────────────────────────────────────────────────────────┤
+│  key             VARCHAR(100) PRIMARY KEY                       │
+│  value           JSONB NOT NULL                                 │
+│  description     TEXT                                           │
+│  updated_by      UUID FK → User                                 │
+│  updated_at      TIMESTAMP NOT NULL                             │
+└─────────────────────────────────────────────────────────────────┘
 ```
+
+### Platform Settings Examples
+
+```json
+{
+  "transaction_fee_rate": 0.03,
+  "pos_free_tier_limit": 300,
+  "maintenance_mode": false,
+  "feature_flags": {
+    "group_purchase": true,
+    "multi_language": false
+  }
+}
+```
+
+### Indexes
+
+| Table | Index | Purpose |
+|-------|-------|---------|
+| `report` | `status, priority, created_at` | Moderation queue |
+| `report` | `assigned_to, status` | Moderator workload |
+| `report` | `subject_type, subject_id` | Reports on entity |
+| `report_resolution` | `report_id` | Resolution lookup |
+| `audit_log` | `actor_id, created_at DESC` | User actions |
+| `audit_log` | `target_type, target_id, created_at` | Entity history |
+| `audit_log` | `action, created_at` | Action analytics |
 
 ---
 

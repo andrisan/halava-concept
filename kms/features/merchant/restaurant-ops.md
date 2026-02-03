@@ -218,29 +218,66 @@ Kitchen Queue → New Order Alert 🔔
 
 ## Data Model
 
-```
-MenuItem (extends Item base)
-├── item_type: 'menu_item'
-├── enabled_channels: ['restaurant', 'pos']
-│
-└── MenuItemExtension
-    ├── modifiers: JSONB
-    │   └── [{ name: "Spice Level", options: ["Mild", "Medium", "Hot"], 
-    │          required: true, price_adjustments: { "Hot": 100 } }]
-    ├── prep_time_minutes: int
-    ├── course_type: enum (appetizer, main, dessert, drink)
-    ├── dietary_tags: string[] (vegetarian, vegan, gluten-free)
-    └── available_times: JSONB (breakfast, lunch, dinner)
+### Entities
 
-RestaurantOrder (extends Order base)
-├── type: 'restaurant'
-├── fulfillment_type: enum (dine_in, takeaway)
-├── table_number: string (nullable)
-├── requested_time: timestamp (for scheduled orders)
-├── prep_started_at: timestamp
-├── ready_at: timestamp
-├── served_at: timestamp
+Restaurant operations use the unified Item model with `menu_item` type and the `MenuItemExtension`.
+
 ```
+┌─────────────────────────────────────────────────────────────────┐
+│                   MenuItemExtension                              │
+│                   (for menu items)                               │
+├─────────────────────────────────────────────────────────────────┤
+│  item_id         UUID FK → Item PRIMARY KEY                     │
+│  modifiers       JSONB (size, extras, customizations)           │
+│  prep_time_minutes  INT                                         │
+│  dietary_tags    TEXT[] (vegetarian, vegan, spicy, etc.)        │
+│  allergens       TEXT[] (peanuts, gluten, dairy, etc.)          │
+│  is_featured     BOOLEAN DEFAULT false                          │
+│  course_type     ENUM(appetizer, main, dessert, drink, side)    │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Modifiers JSONB Structure
+
+```json
+{
+  "groups": [
+    {
+      "name": "Size",
+      "required": true,
+      "max_selections": 1,
+      "options": [
+        { "name": "Regular", "price_modifier": 0 },
+        { "name": "Large", "price_modifier": 200 }
+      ]
+    },
+    {
+      "name": "Extras",
+      "required": false,
+      "max_selections": 3,
+      "options": [
+        { "name": "Extra Egg", "price_modifier": 100 },
+        { "name": "Extra Noodles", "price_modifier": 150 }
+      ]
+    }
+  ]
+}
+```
+
+### Restaurant Order Fields
+
+Orders with `order_type = 'restaurant'` use additional fields:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `table_number` | VARCHAR(20) | Table assignment |
+| `dine_in_at` | TIMESTAMP | When customer seated |
+| `ready_at` | TIMESTAMP | When food ready |
+
+### Related Entities
+
+- **Item** — See [[products#Data Model]] for base Item entity
+- **Order** — See [[order-management#Data Model]] for Order entity
 
 ---
 
