@@ -27,7 +27,7 @@ All-in-one tools to reach halal-conscious customers and grow the business.
 
 ## 📋 Specifications
 
-[[web-app-spec]] · [[roadmap]] · [[pages-navigation-ux-spec]] · [[api-spec]]
+[[web-app-spec]] · [[roadmap]] · [[pages-navigation-ux-spec]] · [[routes-spec]] · [[api-spec]]
 
 ---
 

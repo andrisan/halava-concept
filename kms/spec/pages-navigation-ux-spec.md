@@ -11,8 +11,9 @@
 ## Related Documents
 
 - [[web-app-spec]] — Full product specification
-- [[architecture]] — Technical implementation
+- [[routes-spec]] — Complete URL routing specification
 - [[api-spec]] — API contracts
+- [[architecture]] — Technical implementation
 - [[wireframes]] — Visual wireframe specifications
 - [[design-system]] — Component library
 
@@ -47,6 +48,10 @@ Halava uses a consistent, RESTful URL structure designed for clarity and SEO opt
 
 ### 1.2 Complete URL Map
 
+> **Full route specification:** [[routes-spec]] — 116 routes across all user types.
+
+Below is a summary of key routes. See [[routes-spec]] for the complete listing.
+
 #### Public (Consumer) Routes
 
 | URL Path | Page Name | Description |
@@ -54,15 +59,18 @@ Halava uses a consistent, RESTful URL structure designed for clarity and SEO opt
 | `/` | Home / Explore | Primary marketplace landing page |
 | `/search` | Search Results | Global search results across all merchants |
 | `/places` | Places Directory | Map + list view of all merchants |
-| `/places/{merchant-slug}` | Place Page | Business details, photos, halal status |
-| `/m/{merchant-slug}` | Merchant Shopfront | Merchant-owned branded storefront |
+| `/places/{slug}` | Place Page | Business details, photos, halal status |
+| `/products` | Products | Browse all marketplace products |
+| `/products/{slug}` | Product Details | Product info, reviews, purchase |
+| `/m/{merchant}` | Merchant Shopfront | Merchant-owned branded storefront |
+| `/m/{merchant}/menu` | Restaurant Menu | QR menu for restaurants |
 | `/cart` | Shopping Cart | Current cart contents and actions |
 | `/checkout` | Checkout | Multi-step checkout flow |
 | `/orders` | My Orders | List of all consumer orders |
-| `/profile/expenses` | Expense Tracker | Expense tracking, insights, price history |
-| `/profile/expenses/insights` | Spending Insights | Budget tracking, trends, analytics |
-| `/profile/expenses/prices` | Personal Price History | Track what you paid across merchants |
-| `/group-purchase/{invite-code}` | Group Purchase Join | Join a group purchase via invite link |
+| `/orders/{id}` | Order Details | Order tracking and status |
+| `/saved` | Saved Items | All saved places and products |
+| `/profile/expenses` | Expense Tracker | Expense tracking and insights |
+| `/group-purchase/{code}` | Group Purchase | Join/manage group purchase |
 | `/profile` | User Profile | Personal settings and preferences |
 
 #### Merchant Dashboard Routes
@@ -71,12 +79,15 @@ Halava uses a consistent, RESTful URL structure designed for clarity and SEO opt
 |----------|-----------|-------------|
 | `/dashboard` | Merchant Dashboard | Overview and quick actions |
 | `/dashboard/capabilities` | Capabilities | Enable/configure business capabilities |
-| `/dashboard/products` | Products & Menu | Product and menu item management |
-| `/dashboard/orders` | Orders & Transactions | All orders and POS transactions |
-| `/dashboard/kitchen` | Kitchen Order Queue | Real-time kitchen order management |
+| `/dashboard/products` | Products | Product catalog management |
+| `/dashboard/menu` | Menu | Restaurant menu management |
+| `/dashboard/orders` | Orders | All orders and transactions |
+| `/dashboard/kitchen` | Kitchen Queue | Real-time kitchen order management |
 | `/dashboard/inventory` | Inventory | Stock levels and alerts |
+| `/dashboard/promotions` | Promotions | Coupons and discounts |
+| `/dashboard/accounting` | Accounting | Financial overview and reports |
 | `/dashboard/staff` | Staff & Roles | Team member management |
-| `/dashboard/settings` | Settings | Business and POS configuration |
+| `/dashboard/settings` | Settings | Business configuration |
 
 #### POS Routes (Merchant Staff)
 
@@ -85,7 +96,17 @@ Halava uses a consistent, RESTful URL structure designed for clarity and SEO opt
 | `/pos` | POS Main Screen | Primary cashier interface |
 | `/pos/prepared-orders` | Prepared Orders Queue | Orders awaiting payment |
 | `/pos/transactions` | Today's Transactions | Daily transaction history |
-| `/pos/kitchen` | Kitchen Queue | Real-time order preparation (v1.1) |
+| `/pos/kitchen` | Kitchen Queue | Real-time order preparation |
+
+#### Admin & Moderator Routes
+
+| URL Path | Page Name | Description |
+|----------|-----------|-------------|
+| `/mod` | Mod Dashboard | Content moderation overview |
+| `/mod/reports` | Reports Queue | Pending content reports |
+| `/admin` | Admin Dashboard | Platform administration |
+| `/admin/users` | Users | User management |
+| `/admin/merchants` | Merchants | Merchant management |
 
 ---
 

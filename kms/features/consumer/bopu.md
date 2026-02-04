@@ -347,10 +347,10 @@ placed → confirmed → preparing → ready → fulfilled
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| `GET` | `/api/v1/merchants/{id}/pickup-locations` | List pickup locations |
-| `GET` | `/api/v1/orders/{id}/pickup` | Get pickup details |
-| `PUT` | `/api/v1/merchant/orders/{id}/ready` | Mark ready for pickup |
-| `PUT` | `/api/v1/merchant/orders/{id}/fulfilled` | Mark picked up |
+| `GET` | `/v1/merchant/pickup-locations` | List merchant's pickup locations |
+| `GET` | `/v1/consumer/orders/{id}/pickup` | Get pickup details and QR code |
+| `POST` | `/v1/merchant/orders/{id}/ready` | Mark ready for pickup |
+| `POST` | `/v1/merchant/orders/{id}/fulfilled` | Mark picked up |
 
 ### Checkout Request (with Pickup)
 

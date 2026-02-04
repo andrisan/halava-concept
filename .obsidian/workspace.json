@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "kms/spec/web-app-spec.md",
+                "file": "output/halava-ui-prototype-brief.md",
                 "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "web-app-spec"
+              "title": "halava-ui-prototype-brief"
             }
           }
         ],
@@ -171,13 +171,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "kms/spec/web-app-spec.md",
+                "file": "output/halava-ui-prototype-brief.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of web-app-spec"
+              "title": "Outline of halava-ui-prototype-brief"
             }
           },
           {
@@ -211,8 +211,24 @@
   },
   "active": "37095749395d759d",
   "lastOpenFiles": [
-    "kms/features/merchant/restaurant-ops.md",
+    "kms/business/market-validation.md",
+    "output/halava-ui-prototype-brief.md",
+    "output/halava-ui-prototype-brief.md.tmp.14724.1770186677760",
+    "kms/business/pitch-deck.md",
+    "kms/design/design-system.md",
+    "kms/spec/routes-spec.md",
+    "output",
+    "kms/index.md.tmp.14724.1770186315663",
+    "kms/spec/pages-navigation-ux-spec.md.tmp.14724.1770186304908",
+    "kms/spec/pages-navigation-ux-spec.md.tmp.14724.1770186282999",
+    "kms/spec/api-spec.md",
+    "kms/spec/routes-spec.md.tmp.14724.1770186265483",
+    "kms/spec/pages-navigation-ux-spec.md",
+    "kms/spec/api-spec.md.tmp.14724.1770185956000",
+    "kms/spec/api-spec.md.tmp.14724.1770185955086",
+    "kms/features/consumer/bopu.md.tmp.14724.1770185953229",
     "kms/spec/web-app-spec.md",
+    "kms/features/merchant/restaurant-ops.md",
     "kms/features/shared/onboarding.md",
     "kms/features/shared/authentication.md",
     "kms/features/shared/multi-language.md",
@@ -225,23 +241,11 @@
     "kms/features/merchant/accounting.md",
     "kms/features/consumer/group-purchase.md",
     "kms/spec/roadmap.md.tmp.5064.1770090194154",
-    "kms/features/consumer/group-purchase.md.tmp.5064.1770090184120",
-    "kms/features/consumer/group-purchase.md.tmp.5064.1770090136054",
-    "kms/spec/roadmap.md.tmp.5064.1770090052012",
-    "kms/features/shared/multi-language.md.tmp.5064.1770090034196",
-    "kms/features/merchant/pos.md.tmp.5064.1770089986073",
-    "kms/features/merchant/pos.md.tmp.5064.1770089957953",
-    "kms/features/merchant/restaurant-ops.md.tmp.5064.1770089933677",
-    "kms/features/merchant/restaurant-ops.md.tmp.5064.1770089922869",
-    "kms/features/merchant/restaurant-ops.md.tmp.5064.1770089883713",
     "kms/features/merchant/inventory.md",
     "kms/features/merchant/products.md",
     "kms/features/consumer/search-filters.md",
     "kms/features/consumer/bopu.md",
     "kms/features/consumer/place-pages.md",
-    "kms/features/consumer/marketplace.md",
-    "kms/features/consumer/directory.md",
-    "kms/technical/data-model.md",
-    "README.md"
+    "kms/features/consumer/marketplace.md"
   ]
 }

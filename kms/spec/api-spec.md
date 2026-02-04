@@ -225,7 +225,7 @@ API endpoints are organized by **module ownership**, not user type. This support
 |------------|--------|----------|-------------|
 | [[bopu]] | `GET` | [[bopu#GET /v1/merchant/pickup-locations\|/v1/merchant/pickup-locations]] | List merchant's pickup locations |
 
-### 6.2 Staff Management
+### 6.3 Staff Management
 
 | Feature(s) | Method | Endpoint | Description |
 |------------|--------|----------|-------------|
@@ -380,6 +380,7 @@ API endpoints are organized by **module ownership**, not user type. This support
 | [[restaurant-ops]] | `GET` | [[restaurant-ops#GET /v1/merchant/menu\|/v1/merchant/menu]] | List menu items |
 | [[restaurant-ops]] | `POST` | [[restaurant-ops#POST /v1/merchant/menu\|/v1/merchant/menu]] | Add menu item |
 | [[restaurant-ops]] | `PUT` | [[restaurant-ops#PUT /v1/merchant/menu/{id}\|/v1/merchant/menu/{id}]] | Update menu item |
+| [[restaurant-ops]] | `PATCH` | [[restaurant-ops#PATCH /v1/merchant/menu/{id}/availability\|/v1/merchant/menu/{id}/availability]] | Toggle item availability |
 | [[restaurant-ops]] | `DELETE` | [[restaurant-ops#DELETE /v1/merchant/menu/{id}\|/v1/merchant/menu/{id}]] | Remove menu item |
 
 ### 10.3 Kitchen Queue
@@ -389,12 +390,19 @@ API endpoints are organized by **module ownership**, not user type. This support
 | [[restaurant-ops]] | `GET` | [[restaurant-ops#GET /v1/merchant/kitchen/queue\|/v1/merchant/kitchen/queue]] | Get kitchen queue |
 | [[restaurant-ops]] | `PUT` | [[restaurant-ops#PUT /v1/merchant/kitchen/orders/{id}/status\|/v1/merchant/kitchen/orders/{id}/status]] | Update order status |
 
-### 10.4 QR Ordering
+### 10.4 QR Code Management (Merchant)
 
 | Feature(s) | Method | Endpoint | Description |
 |------------|--------|----------|-------------|
 | [[restaurant-ops]] | `GET` | [[restaurant-ops#GET /v1/merchant/qr-codes\|/v1/merchant/qr-codes]] | List QR codes |
 | [[restaurant-ops]] | `POST` | [[restaurant-ops#POST /v1/merchant/qr-codes\|/v1/merchant/qr-codes]] | Generate QR codes |
+
+### 10.5 QR Ordering (Consumer)
+
+| Feature(s) | Method | Endpoint | Description |
+|------------|--------|----------|-------------|
+| [[restaurant-ops]] | `POST` | [[restaurant-ops#POST /v1/restaurant/{merchant}/qr-order\|/v1/restaurant/{merchant}/qr-order]] | Submit order via QR code |
+| [[restaurant-ops]] | `GET` | [[restaurant-ops#GET /v1/restaurant/{merchant}/qr-order/{id}\|/v1/restaurant/{merchant}/qr-order/{id}]] | Check order status |
 
 ---
 
