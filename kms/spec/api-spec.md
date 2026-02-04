@@ -51,6 +51,10 @@ API endpoints are organized by **module ownership**, not user type. This support
 | Merchant | `/v1/merchant` | Business profile, capabilities, staff, products, inventory |
 | POS | `/v1/pos` | In-store transactions, offline sync |
 | Notification | `/v1/notifications` | User notifications, preferences |
+| Promotions | `/v1/merchant/promotions` | Coupons, discounts, featured listings |
+| Restaurant | `/v1/restaurant` | Menu, kitchen queue, QR ordering |
+| Admin | `/v1/admin` | Platform administration (internal) |
+| Moderation | `/v1/mod` | Content moderation, reports (internal) |
 
 ---
 
@@ -118,7 +122,7 @@ API endpoints are organized by **module ownership**, not user type. This support
 
 | Feature(s) | Method | Endpoint | Description |
 |------------|--------|----------|-------------|
-| [[marketplace]] | `POST` | [[marketplace#POST /v1/marketplace/orders\|/v1/marketplace/orders]] | Create order (checkout) |
+| [[marketplace]] | `POST` | [[marketplace#POST /v1/marketplace/orders\|/v1/marketplace/orders]] | Create order (checkout). Body includes fulfillment details for delivery or pickup. |
 | [[marketplace]] | `GET` | [[marketplace#GET /v1/marketplace/orders/{id}\|/v1/marketplace/orders/{id}]] | Get order details |
 | [[marketplace]] | `GET` | [[marketplace#GET /v1/marketplace/orders\|/v1/marketplace/orders]] | List user's orders |
 
@@ -192,6 +196,12 @@ API endpoints are organized by **module ownership**, not user type. This support
 | [[reviews-ratings]] | `DELETE` | [[reviews-ratings#DELETE /v1/consumer/reviews/{id}/helpful\|/v1/consumer/reviews/{id}/helpful]] | Remove helpful vote |
 | [[reviews-ratings]] | `POST` | [[reviews-ratings#POST /v1/consumer/reviews/{id}/report\|/v1/consumer/reviews/{id}/report]] | Report review |
 
+### 5.5 Pickup (BOPU)
+
+| Feature(s) | Method | Endpoint | Description |
+|------------|--------|----------|-------------|
+| [[bopu]] | `GET` | [[bopu#GET /v1/consumer/orders/{id}/pickup\|/v1/consumer/orders/{id}/pickup]] | Get pickup details and QR code |
+
 ---
 
 ## 6. Merchant Module
@@ -208,6 +218,12 @@ API endpoints are organized by **module ownership**, not user type. This support
 | [[onboarding]] | `PATCH` | [[onboarding#PATCH /v1/merchant/profile\|/v1/merchant/profile]] | Update merchant profile |
 | [[onboarding]] | `GET` | [[onboarding#GET /v1/merchant/capabilities\|/v1/merchant/capabilities]] | List capabilities |
 | [[onboarding]] | `POST` | [[onboarding#POST /v1/merchant/capabilities/{type}/enable\|/v1/merchant/capabilities/{type}/enable]] | Enable capability |
+
+### 6.2 Pickup Locations
+
+| Feature(s) | Method | Endpoint | Description |
+|------------|--------|----------|-------------|
+| [[bopu]] | `GET` | [[bopu#GET /v1/merchant/pickup-locations\|/v1/merchant/pickup-locations]] | List merchant's pickup locations |
 
 ### 6.2 Staff Management
 
@@ -263,6 +279,8 @@ API endpoints are organized by **module ownership**, not user type. This support
 | [[order-management]] | `POST` | [[order-management#POST /v1/merchant/orders/{id}/cancel\|/v1/merchant/orders/{id}/cancel]] | Cancel order |
 | [[order-management]] | `POST` | [[order-management#POST /v1/merchant/orders/{id}/refund\|/v1/merchant/orders/{id}/refund]] | Initiate refund |
 | [[order-management]] | `PUT` | [[order-management#PUT /v1/merchant/orders/{id}/tracking\|/v1/merchant/orders/{id}/tracking]] | Add tracking info |
+| [[bopu]] | `POST` | [[bopu#POST /v1/merchant/orders/{id}/ready\|/v1/merchant/orders/{id}/ready]] | Mark order as ready for pickup |
+| [[bopu]] | `POST` | [[bopu#POST /v1/merchant/orders/{id}/fulfilled\|/v1/merchant/orders/{id}/fulfilled]] | Mark order as collected/fulfilled |
 | [[order-management]] | `GET` | [[order-management#GET /v1/merchant/orders/stats\|/v1/merchant/orders/stats]] | Order statistics |
 
 ### 6.6 Directory (Place Management)
@@ -307,9 +325,167 @@ API endpoints are organized by **module ownership**, not user type. This support
 
 ---
 
-## 9. Error Handling
+## 9. Promotions Module
 
-### 9.1 Error Response Format
+> **Base Path:** `/v1/merchant/promotions`
+> **Details:** [[promotions]]
+
+### 9.1 Coupon & Discount Management
+
+| Feature(s) | Method | Endpoint | Description |
+|------------|--------|----------|-------------|
+| [[promotions]] | `GET` | [[promotions#GET /v1/merchant/promotions\|/v1/merchant/promotions]] | List promotions |
+| [[promotions]] | `POST` | [[promotions#POST /v1/merchant/promotions\|/v1/merchant/promotions]] | Create promotion |
+| [[promotions]] | `GET` | [[promotions#GET /v1/merchant/promotions/{id}\|/v1/merchant/promotions/{id}]] | Get promotion details |
+| [[promotions]] | `PUT` | [[promotions#PUT /v1/merchant/promotions/{id}\|/v1/merchant/promotions/{id}]] | Update promotion |
+| [[promotions]] | `DELETE` | [[promotions#DELETE /v1/merchant/promotions/{id}\|/v1/merchant/promotions/{id}]] | Delete promotion |
+| [[promotions]] | `POST` | [[promotions#POST /v1/merchant/promotions/{id}/pause\|/v1/merchant/promotions/{id}/pause]] | Pause promotion |
+| [[promotions]] | `POST` | [[promotions#POST /v1/merchant/promotions/{id}/resume\|/v1/merchant/promotions/{id}/resume]] | Resume promotion |
+| [[promotions]] | `GET` | [[promotions#GET /v1/merchant/promotions/{id}/stats\|/v1/merchant/promotions/{id}/stats]] | Get usage statistics |
+
+### 9.2 Consumer Coupon Application
+
+| Feature(s) | Method | Endpoint | Description |
+|------------|--------|----------|-------------|
+| [[promotions]] | `POST` | [[promotions#POST /v1/marketplace/cart/apply-coupon\|/v1/marketplace/cart/apply-coupon]] | Apply coupon to cart |
+| [[promotions]] | `DELETE` | [[promotions#DELETE /v1/marketplace/cart/remove-coupon\|/v1/marketplace/cart/remove-coupon]] | Remove coupon from cart |
+
+### 9.3 Featured Listings
+
+| Feature(s) | Method | Endpoint | Description |
+|------------|--------|----------|-------------|
+| [[promotions]] | `GET` | [[promotions#GET /v1/merchant/featured\|/v1/merchant/featured]] | List featured listings |
+| [[promotions]] | `POST` | [[promotions#POST /v1/merchant/featured\|/v1/merchant/featured]] | Create featured listing |
+| [[promotions]] | `DELETE` | [[promotions#DELETE /v1/merchant/featured/{id}\|/v1/merchant/featured/{id}]] | Cancel featured listing |
+
+---
+
+## 10. Restaurant Module
+
+> **Base Path:** `/v1/restaurant`
+> **Details:** [[restaurant-ops]]
+> **Status:** v1.1 (Planned)
+
+### 10.1 Public Menu
+
+| Feature(s) | Method | Endpoint | Description |
+|------------|--------|----------|-------------|
+| [[restaurant-ops]] | `GET` | [[restaurant-ops#GET /v1/restaurant/{merchant}/menu\|/v1/restaurant/{merchant}/menu]] | Get public menu |
+| [[restaurant-ops]] | `GET` | [[restaurant-ops#GET /v1/restaurant/{merchant}/menu/{id}\|/v1/restaurant/{merchant}/menu/{id}]] | Get menu item details |
+
+### 10.2 Menu Management (Merchant)
+
+| Feature(s) | Method | Endpoint | Description |
+|------------|--------|----------|-------------|
+| [[restaurant-ops]] | `GET` | [[restaurant-ops#GET /v1/merchant/menu\|/v1/merchant/menu]] | List menu items |
+| [[restaurant-ops]] | `POST` | [[restaurant-ops#POST /v1/merchant/menu\|/v1/merchant/menu]] | Add menu item |
+| [[restaurant-ops]] | `PUT` | [[restaurant-ops#PUT /v1/merchant/menu/{id}\|/v1/merchant/menu/{id}]] | Update menu item |
+| [[restaurant-ops]] | `DELETE` | [[restaurant-ops#DELETE /v1/merchant/menu/{id}\|/v1/merchant/menu/{id}]] | Remove menu item |
+
+### 10.3 Kitchen Queue
+
+| Feature(s) | Method | Endpoint | Description |
+|------------|--------|----------|-------------|
+| [[restaurant-ops]] | `GET` | [[restaurant-ops#GET /v1/merchant/kitchen/queue\|/v1/merchant/kitchen/queue]] | Get kitchen queue |
+| [[restaurant-ops]] | `PUT` | [[restaurant-ops#PUT /v1/merchant/kitchen/orders/{id}/status\|/v1/merchant/kitchen/orders/{id}/status]] | Update order status |
+
+### 10.4 QR Ordering
+
+| Feature(s) | Method | Endpoint | Description |
+|------------|--------|----------|-------------|
+| [[restaurant-ops]] | `GET` | [[restaurant-ops#GET /v1/merchant/qr-codes\|/v1/merchant/qr-codes]] | List QR codes |
+| [[restaurant-ops]] | `POST` | [[restaurant-ops#POST /v1/merchant/qr-codes\|/v1/merchant/qr-codes]] | Generate QR codes |
+
+---
+
+## 11. Admin Module (Internal)
+
+> **Base Path:** `/v1/admin`
+> **Details:** [[admin-moderation]]
+> **Access:** Admin role only
+
+| Feature(s) | Method | Endpoint | Description |
+|------------|--------|----------|-------------|
+| [[admin-moderation]] | `GET` | [[admin-moderation#GET /v1/admin/dashboard\|/v1/admin/dashboard]] | Dashboard statistics |
+| [[admin-moderation]] | `GET` | [[admin-moderation#GET /v1/admin/users\|/v1/admin/users]] | List/search users |
+| [[admin-moderation]] | `GET` | [[admin-moderation#GET /v1/admin/users/{id}\|/v1/admin/users/{id}]] | Get user details |
+| [[admin-moderation]] | `PUT` | [[admin-moderation#PUT /v1/admin/users/{id}\|/v1/admin/users/{id}]] | Update user |
+| [[admin-moderation]] | `POST` | [[admin-moderation#POST /v1/admin/users/{id}/suspend\|/v1/admin/users/{id}/suspend]] | Suspend user |
+| [[admin-moderation]] | `DELETE` | [[admin-moderation#DELETE /v1/admin/users/{id}\|/v1/admin/users/{id}]] | Delete user |
+| [[admin-moderation]] | `GET` | [[admin-moderation#GET /v1/admin/merchants\|/v1/admin/merchants]] | List/search merchants |
+| [[admin-moderation]] | `GET` | [[admin-moderation#GET /v1/admin/merchants/{id}\|/v1/admin/merchants/{id}]] | Get merchant details |
+| [[admin-moderation]] | `POST` | [[admin-moderation#POST /v1/admin/merchants/{id}/suspend\|/v1/admin/merchants/{id}/suspend]] | Suspend merchant |
+| [[admin-moderation]] | `GET` | [[admin-moderation#GET /v1/admin/escalations\|/v1/admin/escalations]] | List escalations |
+| [[admin-moderation]] | `POST` | [[admin-moderation#POST /v1/admin/escalations/{id}/resolve\|/v1/admin/escalations/{id}/resolve]] | Resolve escalation |
+| [[admin-moderation]] | `GET` | [[admin-moderation#GET /v1/admin/settings\|/v1/admin/settings]] | Get platform settings |
+| [[admin-moderation]] | `PUT` | [[admin-moderation#PUT /v1/admin/settings\|/v1/admin/settings]] | Update platform settings |
+
+---
+
+## 12. Moderation Module (Internal)
+
+> **Base Path:** `/v1/mod`
+> **Details:** [[admin-moderation]]
+> **Access:** Moderator and Admin roles
+
+| Feature(s) | Method | Endpoint | Description |
+|------------|--------|----------|-------------|
+| [[admin-moderation]] | `GET` | [[admin-moderation#GET /v1/mod/reports\|/v1/mod/reports]] | List pending reports |
+| [[admin-moderation]] | `GET` | [[admin-moderation#GET /v1/mod/reports/{id}\|/v1/mod/reports/{id}]] | Get report details |
+| [[admin-moderation]] | `POST` | [[admin-moderation#POST /v1/mod/reports/{id}/resolve\|/v1/mod/reports/{id}/resolve]] | Resolve report |
+| [[admin-moderation]] | `POST` | [[admin-moderation#POST /v1/mod/reports/{id}/escalate\|/v1/mod/reports/{id}/escalate]] | Escalate to admin |
+| [[admin-moderation]] | `GET` | [[admin-moderation#GET /v1/mod/content/flagged\|/v1/mod/content/flagged]] | List flagged content |
+| [[admin-moderation]] | `POST` | [[admin-moderation#POST /v1/mod/content/{id}/action\|/v1/mod/content/{id}/action]] | Take action on content |
+| [[admin-moderation]] | `GET` | [[admin-moderation#GET /v1/mod/audit\|/v1/mod/audit]] | View audit log |
+
+---
+
+## 13. Accounting Module (Future)
+
+> **Base Path:** `/v1/merchant/accounting`
+> **Details:** [[accounting]]
+> **Status:** Planned for v1.2+
+
+### 13.1 Financial Overview
+
+| Feature(s) | Method | Endpoint | Description |
+|------------|--------|----------|-------------|
+| [[accounting]] | `GET` | [[accounting#GET /v1/merchant/accounting/summary\|/v1/merchant/accounting/summary]] | Dashboard overview |
+| [[accounting]] | `GET` | [[accounting#GET /v1/merchant/accounting/sales\|/v1/merchant/accounting/sales]] | Sales report |
+| [[accounting]] | `GET` | [[accounting#GET /v1/merchant/accounting/transactions\|/v1/merchant/accounting/transactions]] | All transactions |
+
+### 13.2 Expense Management
+
+| Feature(s) | Method | Endpoint | Description |
+|------------|--------|----------|-------------|
+| [[accounting]] | `GET` | [[accounting#GET /v1/merchant/accounting/expenses\|/v1/merchant/accounting/expenses]] | List expenses |
+| [[accounting]] | `POST` | [[accounting#POST /v1/merchant/accounting/expenses\|/v1/merchant/accounting/expenses]] | Add expense |
+| [[accounting]] | `PUT` | [[accounting#PUT /v1/merchant/accounting/expenses/{id}\|/v1/merchant/accounting/expenses/{id}]] | Update expense |
+| [[accounting]] | `DELETE` | [[accounting#DELETE /v1/merchant/accounting/expenses/{id}\|/v1/merchant/accounting/expenses/{id}]] | Delete expense |
+
+### 13.3 Invoicing
+
+| Feature(s) | Method | Endpoint | Description |
+|------------|--------|----------|-------------|
+| [[accounting]] | `GET` | [[accounting#GET /v1/merchant/invoices\|/v1/merchant/invoices]] | List invoices |
+| [[accounting]] | `POST` | [[accounting#POST /v1/merchant/invoices\|/v1/merchant/invoices]] | Create invoice |
+| [[accounting]] | `GET` | [[accounting#GET /v1/merchant/invoices/{id}\|/v1/merchant/invoices/{id}]] | Get invoice |
+| [[accounting]] | `PUT` | [[accounting#PUT /v1/merchant/invoices/{id}\|/v1/merchant/invoices/{id}]] | Update invoice |
+| [[accounting]] | `POST` | [[accounting#POST /v1/merchant/invoices/{id}/send\|/v1/merchant/invoices/{id}/send]] | Send invoice |
+| [[accounting]] | `GET` | [[accounting#GET /v1/merchant/invoices/{id}/pdf\|/v1/merchant/invoices/{id}/pdf]] | Download PDF |
+
+### 13.4 Tax Export
+
+| Feature(s) | Method | Endpoint | Description |
+|------------|--------|----------|-------------|
+| [[accounting]] | `POST` | [[accounting#POST /v1/merchant/accounting/export\|/v1/merchant/accounting/export]] | Generate tax export |
+| [[accounting]] | `GET` | [[accounting#GET /v1/merchant/accounting/export/{id}\|/v1/merchant/accounting/export/{id}]] | Get export status/download |
+
+---
+
+## 14. Error Handling
+
+### 14.1 Error Response Format
 
 ```json
 {
@@ -323,7 +499,7 @@ API endpoints are organized by **module ownership**, not user type. This support
 }
 ```
 
-### 9.2 Common Error Codes
+### 14.2 Common Error Codes
 
 | Code | HTTP Status | Description |
 |------|-------------|-------------|
@@ -337,7 +513,7 @@ API endpoints are organized by **module ownership**, not user type. This support
 
 ---
 
-## 10. Rate Limiting
+## 15. Rate Limiting
 
 Rate limits are applied per module:
 
@@ -350,6 +526,10 @@ Rate limits are applied per module:
 | Merchant | 60 requests | 1 minute |
 | POS | 300 requests | 1 minute |
 | Notification | 60 requests | 1 minute |
+| Promotions | 60 requests | 1 minute |
+| Restaurant | 120 requests | 1 minute |
+| Admin | 30 requests | 1 minute |
+| Moderation | 60 requests | 1 minute |
 
 **Rate Limit Headers:**
 ```
@@ -360,9 +540,9 @@ X-RateLimit-Reset: 1704067260
 
 ---
 
-## 11. Authentication
+## 16. Authentication
 
-### 11.1 Token Structure (JWT)
+### 16.1 Token Structure (JWT)
 
 **Access Token Claims:**
 ```json
@@ -380,7 +560,7 @@ X-RateLimit-Reset: 1704067260
 - Access token: 15 minutes
 - Refresh token: 7 days
 
-### 11.2 Authorization Header
+### 16.2 Authorization Header
 
 ```
 Authorization: Bearer <access_token>

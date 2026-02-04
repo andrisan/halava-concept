@@ -365,25 +365,179 @@ Search Results: "halal beef"
 
 ## API Endpoints
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/api/v1/merchant/promotions` | List promotions |
-| `POST` | `/api/v1/merchant/promotions` | Create promotion |
-| `GET` | `/api/v1/merchant/promotions/{id}` | Get promotion details |
-| `PUT` | `/api/v1/merchant/promotions/{id}` | Update promotion |
-| `DELETE` | `/api/v1/merchant/promotions/{id}` | Delete promotion |
-| `POST` | `/api/v1/merchant/promotions/{id}/pause` | Pause promotion |
-| `POST` | `/api/v1/merchant/promotions/{id}/resume` | Resume promotion |
-| `GET` | `/api/v1/merchant/promotions/{id}/stats` | Get usage stats |
-| `POST` | `/api/v1/cart/apply-coupon` | Apply coupon (consumer) |
-| `DELETE` | `/api/v1/cart/remove-coupon` | Remove coupon (consumer) |
-| `GET` | `/api/v1/merchant/featured` | List featured listings |
-| `POST` | `/api/v1/merchant/featured` | Create featured listing |
+> Full API index: [[api-spec#9. Promotions Module]]
 
-### Validate Coupon
+### GET /v1/merchant/promotions
+
+List merchant's promotions.
+
+```
+Query Parameters:
+  status        string    Filter: active, paused, ended, draft
+  type          string    Filter: coupon, automatic, featured
+  limit         int       Results per page (default: 20)
+  offset        int       Pagination offset
+```
 
 ```json
-// POST /api/v1/cart/apply-coupon
+// Response
+{
+  "promotions": [
+    {
+      "id": "uuid",
+      "name": "WELCOME10",
+      "type": "coupon",
+      "status": "active",
+      "discount_type": "percentage",
+      "discount_value": 10,
+      "usage_count": 47,
+      "usage_limit": 100,
+      "starts_at": "2026-02-01T00:00:00Z",
+      "ends_at": "2026-02-28T23:59:59Z"
+    }
+  ],
+  "total": 5
+}
+```
+
+### POST /v1/merchant/promotions
+
+Create a new promotion.
+
+```json
+// Request
+{
+  "name": "WELCOME10",
+  "type": "coupon",
+  "discount_type": "percentage",
+  "discount_value": 10,
+  "code": "WELCOME10",
+  "conditions": {
+    "min_order_value": 2000,
+    "first_time_only": true
+  },
+  "usage_limit": 100,
+  "per_customer_limit": 1,
+  "starts_at": "2026-02-01T00:00:00Z",
+  "ends_at": "2026-02-28T23:59:59Z"
+}
+
+// Response
+{
+  "id": "uuid",
+  "name": "WELCOME10",
+  "status": "active",
+  "created_at": "2026-01-28T10:00:00Z"
+}
+```
+
+### GET /v1/merchant/promotions/{id}
+
+Get promotion details.
+
+```json
+// Response
+{
+  "id": "uuid",
+  "name": "WELCOME10",
+  "type": "coupon",
+  "status": "active",
+  "discount_type": "percentage",
+  "discount_value": 10,
+  "code": "WELCOME10",
+  "conditions": {
+    "min_order_value": 2000,
+    "first_time_only": true
+  },
+  "usage_limit": 100,
+  "per_customer_limit": 1,
+  "usage_count": 47,
+  "starts_at": "2026-02-01T00:00:00Z",
+  "ends_at": "2026-02-28T23:59:59Z",
+  "created_at": "2026-01-28T10:00:00Z"
+}
+```
+
+### PUT /v1/merchant/promotions/{id}
+
+Update promotion.
+
+```json
+// Request
+{
+  "usage_limit": 200,
+  "ends_at": "2026-03-15T23:59:59Z"
+}
+
+// Response
+{
+  "id": "uuid",
+  "updated_at": "2026-02-01T10:00:00Z"
+}
+```
+
+### DELETE /v1/merchant/promotions/{id}
+
+Delete a promotion (only if unused).
+
+```json
+// Response
+{
+  "message": "Promotion deleted"
+}
+```
+
+### POST /v1/merchant/promotions/{id}/pause
+
+Pause an active promotion.
+
+```json
+// Response
+{
+  "id": "uuid",
+  "status": "paused",
+  "paused_at": "2026-02-01T10:00:00Z"
+}
+```
+
+### POST /v1/merchant/promotions/{id}/resume
+
+Resume a paused promotion.
+
+```json
+// Response
+{
+  "id": "uuid",
+  "status": "active",
+  "resumed_at": "2026-02-01T12:00:00Z"
+}
+```
+
+### GET /v1/merchant/promotions/{id}/stats
+
+Get promotion usage statistics.
+
+```json
+// Response
+{
+  "id": "uuid",
+  "usage_count": 47,
+  "unique_customers": 45,
+  "total_discount_given": 25380,
+  "revenue_generated": 156800,
+  "usage_by_day": [
+    { "date": "2026-02-01", "count": 12 },
+    { "date": "2026-02-02", "count": 8 }
+  ]
+}
+```
+
+### POST /v1/marketplace/cart/apply-coupon
+
+Apply coupon code to cart (consumer).
+
+```json
+// Request
 {
   "code": "WELCOME10"
 }
@@ -402,6 +556,80 @@ Search Results: "halal beef"
   "valid": false,
   "error": "coupon_expired",
   "message": "This coupon has expired."
+}
+```
+
+### DELETE /v1/marketplace/cart/remove-coupon
+
+Remove coupon from cart (consumer).
+
+```json
+// Response
+{
+  "message": "Coupon removed",
+  "new_total": 2400
+}
+```
+
+### GET /v1/merchant/featured
+
+List merchant's featured listings.
+
+```json
+// Response
+{
+  "listings": [
+    {
+      "id": "uuid",
+      "item_id": "uuid",
+      "item_name": "Halal Beef 500g",
+      "placement": "search_category",
+      "category": "meat",
+      "status": "active",
+      "impressions": 1240,
+      "clicks": 89,
+      "starts_at": "2026-02-01T00:00:00Z",
+      "ends_at": "2026-02-08T00:00:00Z",
+      "daily_rate": 500,
+      "total_cost": 3500
+    }
+  ]
+}
+```
+
+### POST /v1/merchant/featured
+
+Create featured listing.
+
+```json
+// Request
+{
+  "item_id": "uuid",
+  "placement": "search_category",
+  "category": "meat",
+  "duration_days": 7
+}
+
+// Response
+{
+  "id": "uuid",
+  "daily_rate": 500,
+  "total_cost": 3500,
+  "starts_at": "2026-02-01T00:00:00Z",
+  "ends_at": "2026-02-08T00:00:00Z",
+  "status": "pending"
+}
+```
+
+### DELETE /v1/merchant/featured/{id}
+
+Cancel featured listing.
+
+```json
+// Response
+{
+  "message": "Featured listing cancelled",
+  "refund_amount": 2000
 }
 ```
 

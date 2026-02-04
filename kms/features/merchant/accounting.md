@@ -367,27 +367,337 @@ For tax-compliant exports:
 
 ## API Endpoints
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/api/v1/merchant/accounting/summary` | Dashboard overview |
-| `GET` | `/api/v1/merchant/accounting/sales` | Sales report |
-| `GET` | `/api/v1/merchant/accounting/transactions` | All transactions |
-| `GET` | `/api/v1/merchant/accounting/expenses` | List expenses |
-| `POST` | `/api/v1/merchant/accounting/expenses` | Add expense |
-| `PUT` | `/api/v1/merchant/accounting/expenses/{id}` | Update expense |
-| `DELETE` | `/api/v1/merchant/accounting/expenses/{id}` | Delete expense |
-| `GET` | `/api/v1/merchant/invoices` | List invoices |
-| `POST` | `/api/v1/merchant/invoices` | Create invoice |
-| `GET` | `/api/v1/merchant/invoices/{id}` | Get invoice |
-| `PUT` | `/api/v1/merchant/invoices/{id}` | Update invoice |
-| `POST` | `/api/v1/merchant/invoices/{id}/send` | Send invoice |
-| `GET` | `/api/v1/merchant/invoices/{id}/pdf` | Download PDF |
-| `POST` | `/api/v1/merchant/accounting/export` | Generate tax export |
+> Full API index: [[api-spec#13. Accounting Module]] *(Future v1.2+)*
 
-### Export Request
+### GET /v1/merchant/accounting/summary
+
+Get financial dashboard summary.
+
+```
+Query Parameters:
+  period        string    Filter: today, week, month, year, custom
+  from          string    Start date (ISO 8601, if custom)
+  to            string    End date (ISO 8601, if custom)
+```
 
 ```json
-// POST /api/v1/merchant/accounting/export
+// Response
+{
+  "period": {
+    "from": "2026-02-01",
+    "to": "2026-02-28"
+  },
+  "revenue": {
+    "gross_sales": 1250000,
+    "refunds": 15000,
+    "net_sales": 1235000
+  },
+  "costs": {
+    "platform_fees": 61750,
+    "payment_fees": 37050,
+    "expenses": 120000,
+    "total_costs": 218800
+  },
+  "profit": {
+    "gross_profit": 1016200,
+    "margin_percentage": 82.3
+  },
+  "comparison": {
+    "vs_previous_period": 8.5,
+    "trend": "up"
+  }
+}
+```
+
+### GET /v1/merchant/accounting/sales
+
+Get sales report.
+
+```
+Query Parameters:
+  period        string    Filter: today, week, month, year, custom
+  group_by      string    Grouping: day, week, month
+  from          string    Start date
+  to            string    End date
+```
+
+```json
+// Response
+{
+  "summary": {
+    "total_orders": 245,
+    "total_revenue": 1235000,
+    "avg_order_value": 5041
+  },
+  "breakdown": [
+    {
+      "date": "2026-02-01",
+      "orders": 12,
+      "revenue": 58400,
+      "refunds": 0
+    }
+  ],
+  "by_category": [
+    { "category": "Food", "revenue": 850000, "percentage": 68.8 },
+    { "category": "Products", "revenue": 385000, "percentage": 31.2 }
+  ]
+}
+```
+
+### GET /v1/merchant/accounting/transactions
+
+List all transactions.
+
+```
+Query Parameters:
+  type          string    Filter: sale, refund, payout, fee, expense
+  from          string    Start date
+  to            string    End date
+  limit         int       Results per page (default: 50)
+  offset        int       Pagination offset
+```
+
+```json
+// Response
+{
+  "transactions": [
+    {
+      "id": "uuid",
+      "type": "sale",
+      "order_id": "uuid",
+      "amount": 5400,
+      "net_amount": 5130,
+      "fees": {
+        "platform": 270,
+        "payment": 0
+      },
+      "timestamp": "2026-02-01T14:30:00Z"
+    }
+  ],
+  "total": 1250
+}
+```
+
+### GET /v1/merchant/accounting/expenses
+
+List expenses.
+
+```
+Query Parameters:
+  category      string    Filter by expense category
+  from          string    Start date
+  to            string    End date
+```
+
+```json
+// Response
+{
+  "expenses": [
+    {
+      "id": "uuid",
+      "category": "ingredients",
+      "description": "Halal meat supplier - February",
+      "amount": 85000,
+      "date": "2026-02-01",
+      "receipt_url": "https://cdn.halava.app/...",
+      "created_at": "2026-02-01T10:00:00Z"
+    }
+  ],
+  "total": 120000
+}
+```
+
+### POST /v1/merchant/accounting/expenses
+
+Add expense.
+
+```json
+// Request
+{
+  "category": "ingredients",
+  "description": "Halal meat supplier - February",
+  "amount": 85000,
+  "date": "2026-02-01",
+  "receipt_file": "base64_encoded_image"
+}
+
+// Response
+{
+  "id": "uuid",
+  "created_at": "2026-02-01T10:00:00Z"
+}
+```
+
+### PUT /v1/merchant/accounting/expenses/{id}
+
+Update expense.
+
+```json
+// Request
+{
+  "amount": 87000,
+  "description": "Halal meat supplier - February (adjusted)"
+}
+
+// Response
+{
+  "id": "uuid",
+  "updated_at": "2026-02-02T09:00:00Z"
+}
+```
+
+### DELETE /v1/merchant/accounting/expenses/{id}
+
+Delete expense.
+
+```json
+// Response
+{
+  "message": "Expense deleted"
+}
+```
+
+### GET /v1/merchant/invoices
+
+List invoices.
+
+```
+Query Parameters:
+  status        string    Filter: draft, sent, paid, overdue
+  from          string    Start date
+  to            string    End date
+```
+
+```json
+// Response
+{
+  "invoices": [
+    {
+      "id": "uuid",
+      "invoice_number": "INV-2026-0042",
+      "client_name": "ABC Corp",
+      "amount": 125000,
+      "status": "sent",
+      "due_date": "2026-02-28",
+      "sent_at": "2026-02-01T10:00:00Z"
+    }
+  ],
+  "total": 15
+}
+```
+
+### POST /v1/merchant/invoices
+
+Create invoice.
+
+```json
+// Request
+{
+  "client": {
+    "name": "ABC Corp",
+    "email": "billing@abc.com",
+    "address": "Tokyo, Japan"
+  },
+  "items": [
+    {
+      "description": "Catering service - Feb event",
+      "quantity": 1,
+      "unit_price": 125000,
+      "tax_rate": 10
+    }
+  ],
+  "due_date": "2026-02-28",
+  "notes": "Thank you for your business"
+}
+
+// Response
+{
+  "id": "uuid",
+  "invoice_number": "INV-2026-0042",
+  "status": "draft"
+}
+```
+
+### GET /v1/merchant/invoices/{id}
+
+Get invoice details.
+
+```json
+// Response
+{
+  "id": "uuid",
+  "invoice_number": "INV-2026-0042",
+  "status": "sent",
+  "client": {
+    "name": "ABC Corp",
+    "email": "billing@abc.com",
+    "address": "Tokyo, Japan"
+  },
+  "items": [...],
+  "subtotal": 125000,
+  "tax": 12500,
+  "total": 137500,
+  "due_date": "2026-02-28",
+  "created_at": "2026-02-01T10:00:00Z"
+}
+```
+
+### PUT /v1/merchant/invoices/{id}
+
+Update invoice (draft only).
+
+```json
+// Request
+{
+  "items": [
+    {
+      "description": "Catering service - Feb event",
+      "quantity": 2,
+      "unit_price": 75000,
+      "tax_rate": 10
+    }
+  ]
+}
+
+// Response
+{
+  "id": "uuid",
+  "updated_at": "2026-02-01T12:00:00Z"
+}
+```
+
+### POST /v1/merchant/invoices/{id}/send
+
+Send invoice to client.
+
+```json
+// Request
+{
+  "email_message": "Please find attached invoice for February catering."
+}
+
+// Response
+{
+  "id": "uuid",
+  "status": "sent",
+  "sent_at": "2026-02-01T14:00:00Z"
+}
+```
+
+### GET /v1/merchant/invoices/{id}/pdf
+
+Download invoice PDF.
+
+```
+Response: application/pdf
+```
+
+### POST /v1/merchant/accounting/export
+
+Generate tax-compliant export.
+
+```json
+// Request
 {
   "period": {
     "from": "2025-01-01",
@@ -401,9 +711,22 @@ For tax-compliant exports:
 {
   "export_id": "uuid",
   "status": "processing",
-  "download_url": null // populated when ready
+  "download_url": null
 }
 ```
+
+### GET /v1/merchant/accounting/export/{id}
+
+Check export status.
+
+```json
+// Response
+{
+  "export_id": "uuid",
+  "status": "ready",
+  "download_url": "https://cdn.halava.app/exports/...",
+  "expires_at": "2026-02-08T10:00:00Z"
+}
 
 ---
 

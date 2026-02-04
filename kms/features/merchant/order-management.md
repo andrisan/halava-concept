@@ -10,6 +10,8 @@
 
 ## Definition
 
+> **Core Logic:** The classification of order types is based on the principles defined in [[order-concepts]].
+
 **Order Management** is Halava's unified system for merchants to receive, process, and fulfill orders from all channels — online marketplace, group purchases, and restaurant orders. It provides a single inbox and workflow for efficient order handling.
 
 **Core value proposition:**

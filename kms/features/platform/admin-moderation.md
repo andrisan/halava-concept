@@ -414,34 +414,486 @@ Admin Dashboard → Settings
 
 ## API Endpoints
 
-### Moderation
+> Full API index: [[api-spec#11. Admin Module]] | [[api-spec#12. Moderation Module]]
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/api/v1/mod/reports` | List pending reports |
-| `GET` | `/api/v1/mod/reports/{id}` | Get report details |
-| `POST` | `/api/v1/mod/reports/{id}/resolve` | Resolve report |
-| `POST` | `/api/v1/mod/reports/{id}/escalate` | Escalate to admin |
-| `GET` | `/api/v1/mod/content/flagged` | List flagged content |
-| `POST` | `/api/v1/mod/content/{id}/action` | Take action on content |
-| `GET` | `/api/v1/mod/audit` | View audit log |
+### Moderation Endpoints
 
-### Admin
+#### GET /v1/mod/reports
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/api/v1/admin/dashboard` | Dashboard stats |
-| `GET` | `/api/v1/admin/users` | List/search users |
-| `GET` | `/api/v1/admin/users/{id}` | Get user details |
-| `PUT` | `/api/v1/admin/users/{id}` | Update user |
-| `POST` | `/api/v1/admin/users/{id}/suspend` | Suspend user |
-| `GET` | `/api/v1/admin/merchants` | List/search merchants |
-| `GET` | `/api/v1/admin/merchants/{id}` | Get merchant details |
-| `POST` | `/api/v1/admin/merchants/{id}/suspend` | Suspend merchant |
-| `GET` | `/api/v1/admin/escalations` | List escalations |
-| `POST` | `/api/v1/admin/escalations/{id}/resolve` | Resolve escalation |
-| `GET` | `/api/v1/admin/settings` | Get platform settings |
-| `PUT` | `/api/v1/admin/settings` | Update settings |
+List pending reports.
+
+```
+Query Parameters:
+  status        string    Filter: pending, resolved, escalated
+  type          string    Filter: content, user, merchant
+  limit         int       Results per page (default: 20)
+  offset        int       Pagination offset
+```
+
+```json
+// Response
+{
+  "reports": [
+    {
+      "id": "uuid",
+      "type": "content",
+      "target_type": "review",
+      "target_id": "uuid",
+      "reason": "inappropriate_content",
+      "description": "Contains offensive language",
+      "reporter_id": "uuid",
+      "status": "pending",
+      "created_at": "2026-02-01T10:00:00Z"
+    }
+  ],
+  "total": 15,
+  "pending": 8
+}
+```
+
+#### GET /v1/mod/reports/{id}
+
+Get report details.
+
+```json
+// Response
+{
+  "id": "uuid",
+  "type": "content",
+  "target_type": "review",
+  "target_id": "uuid",
+  "target_content": {
+    "text": "This place is...",
+    "author_id": "uuid",
+    "author_name": "User123",
+    "created_at": "2026-01-30T14:00:00Z"
+  },
+  "reason": "inappropriate_content",
+  "description": "Contains offensive language",
+  "reporter": {
+    "id": "uuid",
+    "name": "Reporter Name"
+  },
+  "status": "pending",
+  "previous_reports": 0,
+  "created_at": "2026-02-01T10:00:00Z"
+}
+```
+
+#### POST /v1/mod/reports/{id}/resolve
+
+Resolve a report.
+
+```json
+// Request
+{
+  "action": "remove_content",
+  "reason": "Violates community guidelines",
+  "notify_reporter": true,
+  "warn_author": true,
+  "internal_note": "Repeated offense"
+}
+
+// Response
+{
+  "id": "uuid",
+  "status": "resolved",
+  "action_taken": "remove_content",
+  "resolved_by": "uuid",
+  "resolved_at": "2026-02-01T12:00:00Z"
+}
+```
+
+#### POST /v1/mod/reports/{id}/escalate
+
+Escalate report to admin.
+
+```json
+// Request
+{
+  "reason": "Potential fraud pattern detected",
+  "priority": "high"
+}
+
+// Response
+{
+  "id": "uuid",
+  "status": "escalated",
+  "escalated_by": "uuid",
+  "escalated_at": "2026-02-01T12:00:00Z"
+}
+```
+
+#### GET /v1/mod/content/flagged
+
+List flagged content.
+
+```
+Query Parameters:
+  type          string    Filter: review, listing, message
+  status        string    Filter: pending, actioned
+```
+
+```json
+// Response
+{
+  "content": [
+    {
+      "id": "uuid",
+      "type": "review",
+      "flag_reason": "auto_detected_spam",
+      "confidence_score": 0.92,
+      "preview": "Buy cheap...",
+      "author_id": "uuid",
+      "flagged_at": "2026-02-01T10:00:00Z"
+    }
+  ],
+  "total": 5
+}
+```
+
+#### POST /v1/mod/content/{id}/action
+
+Take action on flagged content.
+
+```json
+// Request
+{
+  "action": "remove",
+  "reason": "spam",
+  "warn_author": true
+}
+
+// Response
+{
+  "content_id": "uuid",
+  "action": "remove",
+  "actioned_by": "uuid",
+  "actioned_at": "2026-02-01T12:00:00Z"
+}
+```
+
+#### GET /v1/mod/audit
+
+View moderation audit log.
+
+```
+Query Parameters:
+  moderator_id  string    Filter by moderator
+  action_type   string    Filter: resolve, escalate, warn, remove
+  date_from     string    Start date (ISO 8601)
+  date_to       string    End date (ISO 8601)
+  limit         int       Results per page (default: 50)
+```
+
+```json
+// Response
+{
+  "entries": [
+    {
+      "id": "uuid",
+      "moderator_id": "uuid",
+      "moderator_name": "Mod User",
+      "action_type": "resolve",
+      "target_type": "report",
+      "target_id": "uuid",
+      "details": {
+        "action_taken": "remove_content",
+        "reason": "spam"
+      },
+      "timestamp": "2026-02-01T12:00:00Z"
+    }
+  ],
+  "total": 124
+}
+```
+
+### Admin Endpoints
+
+#### GET /v1/admin/dashboard
+
+Get admin dashboard stats.
+
+```json
+// Response
+{
+  "users": {
+    "total": 5420,
+    "active_today": 312,
+    "new_this_week": 89
+  },
+  "merchants": {
+    "total": 245,
+    "active": 198,
+    "pending_verification": 12
+  },
+  "orders": {
+    "today": 156,
+    "this_week": 892,
+    "revenue_today": 234500
+  },
+  "moderation": {
+    "pending_reports": 8,
+    "escalations": 2
+  }
+}
+```
+
+#### GET /v1/admin/users
+
+List/search users.
+
+```
+Query Parameters:
+  q             string    Search query (name, email)
+  status        string    Filter: active, suspended, banned
+  role          string    Filter: consumer, merchant, moderator
+  limit         int       Results per page (default: 20)
+  offset        int       Pagination offset
+```
+
+```json
+// Response
+{
+  "users": [
+    {
+      "id": "uuid",
+      "name": "User Name",
+      "email": "user@example.com",
+      "role": "consumer",
+      "status": "active",
+      "created_at": "2025-12-01T10:00:00Z",
+      "last_active": "2026-02-01T14:00:00Z"
+    }
+  ],
+  "total": 5420
+}
+```
+
+#### GET /v1/admin/users/{id}
+
+Get user details.
+
+```json
+// Response
+{
+  "id": "uuid",
+  "name": "User Name",
+  "email": "user@example.com",
+  "phone": "+81...",
+  "role": "consumer",
+  "status": "active",
+  "created_at": "2025-12-01T10:00:00Z",
+  "last_active": "2026-02-01T14:00:00Z",
+  "orders_count": 23,
+  "reviews_count": 8,
+  "warnings_count": 0,
+  "moderation_history": []
+}
+```
+
+#### PUT /v1/admin/users/{id}
+
+Update user.
+
+```json
+// Request
+{
+  "role": "moderator",
+  "note": "Promoted to moderator"
+}
+
+// Response
+{
+  "id": "uuid",
+  "updated_at": "2026-02-01T12:00:00Z"
+}
+```
+
+#### POST /v1/admin/users/{id}/suspend
+
+Suspend user account.
+
+```json
+// Request
+{
+  "reason": "Terms of service violation",
+  "duration_days": 7,
+  "notify_user": true
+}
+
+// Response
+{
+  "id": "uuid",
+  "status": "suspended",
+  "suspended_until": "2026-02-08T12:00:00Z"
+}
+```
+
+#### GET /v1/admin/merchants
+
+List/search merchants.
+
+```
+Query Parameters:
+  q             string    Search query (name, email)
+  status        string    Filter: active, suspended, pending
+  verified      boolean   Filter by verification status
+  limit         int       Results per page (default: 20)
+```
+
+```json
+// Response
+{
+  "merchants": [
+    {
+      "id": "uuid",
+      "name": "Salam Kitchen",
+      "owner_email": "owner@example.com",
+      "status": "active",
+      "is_verified": true,
+      "created_at": "2025-11-01T10:00:00Z",
+      "orders_count": 456
+    }
+  ],
+  "total": 245
+}
+```
+
+#### GET /v1/admin/merchants/{id}
+
+Get merchant details (admin view).
+
+```json
+// Response
+{
+  "id": "uuid",
+  "name": "Salam Kitchen",
+  "owner": {
+    "id": "uuid",
+    "name": "Owner Name",
+    "email": "owner@example.com"
+  },
+  "status": "active",
+  "is_verified": true,
+  "verification_date": "2025-11-15T10:00:00Z",
+  "created_at": "2025-11-01T10:00:00Z",
+  "stats": {
+    "total_orders": 456,
+    "total_revenue": 1234500,
+    "avg_rating": 4.6,
+    "reviews_count": 89
+  },
+  "moderation_history": []
+}
+```
+
+#### POST /v1/admin/merchants/{id}/suspend
+
+Suspend merchant.
+
+```json
+// Request
+{
+  "reason": "Multiple customer complaints",
+  "duration_days": 30,
+  "notify_owner": true,
+  "hide_listings": true
+}
+
+// Response
+{
+  "id": "uuid",
+  "status": "suspended",
+  "suspended_until": "2026-03-01T12:00:00Z"
+}
+```
+
+#### GET /v1/admin/escalations
+
+List escalated issues.
+
+```
+Query Parameters:
+  priority      string    Filter: high, medium, low
+  status        string    Filter: pending, resolved
+```
+
+```json
+// Response
+{
+  "escalations": [
+    {
+      "id": "uuid",
+      "original_report_id": "uuid",
+      "reason": "Potential fraud pattern detected",
+      "priority": "high",
+      "escalated_by": "uuid",
+      "escalated_at": "2026-02-01T10:00:00Z",
+      "status": "pending"
+    }
+  ],
+  "total": 2
+}
+```
+
+#### POST /v1/admin/escalations/{id}/resolve
+
+Resolve escalation.
+
+```json
+// Request
+{
+  "action": "suspend_merchant",
+  "details": {
+    "merchant_id": "uuid",
+    "duration_days": 30
+  },
+  "internal_note": "Confirmed fraudulent activity"
+}
+
+// Response
+{
+  "id": "uuid",
+  "status": "resolved",
+  "resolved_by": "uuid",
+  "resolved_at": "2026-02-01T14:00:00Z"
+}
+```
+
+#### GET /v1/admin/settings
+
+Get platform settings.
+
+```json
+// Response
+{
+  "platform_name": "Halava",
+  "maintenance_mode": false,
+  "signup_enabled": true,
+  "default_language": "ja",
+  "supported_languages": ["ja", "en", "ar"],
+  "commission_rate": 0.05,
+  "min_order_amount": 500,
+  "max_order_amount": 100000
+}
+```
+
+#### PUT /v1/admin/settings
+
+Update platform settings.
+
+```json
+// Request
+{
+  "maintenance_mode": true,
+  "maintenance_message": "Scheduled maintenance until 06:00 JST"
+}
+
+// Response
+{
+  "updated_at": "2026-02-01T04:00:00Z"
+}
 
 ---
 

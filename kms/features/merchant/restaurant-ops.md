@@ -28,14 +28,9 @@
 
 ## How It Works
 
-### Unified Ordering Flow
+The core logic for determining order type is based on the unified principles for all Halava operations.
 
-The key insight: **payment method determines order type**, not the other way around.
-
-| Payment Choice | Order Type | Processing |
-|----------------|------------|------------|
-| Pay Online | Online Order | → Order Inbox |
-| Pay at Counter | Prepared Order | → POS Queue |
+> See core principles in [[order-concepts]]
 
 ### For Consumers
 
@@ -283,22 +278,262 @@ Orders with `order_type = 'restaurant'` use additional fields:
 
 ## API Endpoints
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/api/v1/merchants/{id}/menu` | Get public menu |
-| `GET` | `/api/v1/merchants/{id}/menu/{itemId}` | Get item details |
-| `POST` | `/api/v1/merchant/menu` | Add menu item |
-| `PUT` | `/api/v1/merchant/menu/{id}` | Update menu item |
-| `GET` | `/api/v1/merchant/kitchen/queue` | Get kitchen queue |
-| `PUT` | `/api/v1/merchant/orders/{id}/status` | Update order status |
+> Full API index: [[api-spec#10. Restaurant Module]]
 
-### Order Status Updates
+### GET /v1/restaurant/{merchant}/menu
+
+Get public menu for a restaurant.
 
 ```
-PUT /api/v1/merchant/orders/{id}/status
+Query Parameters:
+  category      string    Filter by category (mains, sides, drinks, dessert)
+  availability  string    Filter: breakfast, lunch, dinner
+```
+
+```json
+// Response
 {
-  "status": "preparing",  // or "ready", "fulfilled"
-  "estimated_ready_minutes": 15  // optional
+  "merchant_id": "uuid",
+  "name": "Salam Kitchen",
+  "categories": [
+    {
+      "name": "Mains",
+      "items": [
+        {
+          "id": "uuid",
+          "name": "Beef Rendang",
+          "description": "Slow-cooked beef in rich coconut curry",
+          "price": 1500,
+          "photo_url": "https://cdn.halava.app/...",
+          "prep_time_minutes": 15,
+          "dietary_tags": ["halal"],
+          "modifiers": [
+            {
+              "name": "Spice Level",
+              "required": true,
+              "options": [
+                { "name": "Mild", "price_adjust": 0, "default": true },
+                { "name": "Medium", "price_adjust": 0 },
+                { "name": "Hot", "price_adjust": 100 }
+              ]
+            }
+          ],
+          "is_available": true
+        }
+      ]
+    }
+  ]
+}
+```
+
+### GET /v1/restaurant/{merchant}/menu/{item}
+
+Get detailed item info.
+
+```json
+// Response
+{
+  "id": "uuid",
+  "name": "Beef Rendang",
+  "description": "Slow-cooked beef in rich coconut curry",
+  "price": 1500,
+  "photo_url": "https://cdn.halava.app/...",
+  "prep_time_minutes": 15,
+  "dietary_tags": ["halal"],
+  "allergens": ["coconut"],
+  "nutrition": {
+    "calories": 450,
+    "protein": 35
+  },
+  "modifiers": [...],
+  "is_available": true,
+  "availability_times": ["lunch", "dinner"]
+}
+```
+
+### POST /v1/merchant/menu
+
+Add menu item.
+
+```json
+// Request
+{
+  "name": "Chicken Satay",
+  "description": "Grilled chicken skewers with peanut sauce",
+  "price": 800,
+  "category": "mains",
+  "prep_time_minutes": 10,
+  "dietary_tags": ["halal"],
+  "availability_times": ["lunch", "dinner"],
+  "modifiers": [
+    {
+      "name": "Quantity",
+      "required": true,
+      "options": [
+        { "name": "3 sticks", "price_adjust": 0, "default": true },
+        { "name": "6 sticks", "price_adjust": 500 }
+      ]
+    }
+  ]
+}
+
+// Response
+{
+  "id": "uuid",
+  "name": "Chicken Satay",
+  "created_at": "2026-02-01T10:00:00Z"
+}
+```
+
+### PUT /v1/merchant/menu/{id}
+
+Update menu item.
+
+```json
+// Request
+{
+  "price": 850,
+  "is_available": true
+}
+
+// Response
+{
+  "id": "uuid",
+  "updated_at": "2026-02-01T12:00:00Z"
+}
+```
+
+### DELETE /v1/merchant/menu/{id}
+
+Remove menu item.
+
+```json
+// Response
+{
+  "message": "Menu item deleted"
+}
+```
+
+### PATCH /v1/merchant/menu/{id}/availability
+
+Toggle item availability.
+
+```json
+// Request
+{
+  "is_available": false,
+  "reason": "Sold out today"
+}
+
+// Response
+{
+  "id": "uuid",
+  "is_available": false
+}
+```
+
+### GET /v1/merchant/kitchen/queue
+
+Get kitchen order queue.
+
+```
+Query Parameters:
+  status        string    Filter: pending, preparing, ready
+```
+
+```json
+// Response
+{
+  "queue": [
+    {
+      "order_id": "uuid",
+      "order_number": "A-042",
+      "status": "preparing",
+      "order_type": "dine_in",
+      "table_number": "5",
+      "items": [
+        {
+          "name": "Beef Rendang",
+          "quantity": 2,
+          "modifiers": ["Hot"],
+          "notes": "No onions please"
+        }
+      ],
+      "placed_at": "2026-02-01T12:30:00Z",
+      "estimated_ready": "2026-02-01T12:45:00Z"
+    }
+  ],
+  "summary": {
+    "pending": 3,
+    "preparing": 2,
+    "ready": 1
+  }
+}
+```
+
+### PUT /v1/merchant/orders/{id}/status
+
+Update order status.
+
+```json
+// Request
+{
+  "status": "preparing",
+  "estimated_ready_minutes": 15
+}
+
+// Response
+{
+  "order_id": "uuid",
+  "status": "preparing",
+  "estimated_ready": "2026-02-01T12:45:00Z",
+  "updated_at": "2026-02-01T12:30:00Z"
+}
+```
+
+### POST /v1/restaurant/{merchant}/qr-order
+
+Submit order via QR code (consumer at table).
+
+```json
+// Request
+{
+  "table_number": "5",
+  "items": [
+    {
+      "item_id": "uuid",
+      "quantity": 2,
+      "modifiers": [
+        { "modifier_id": "uuid", "option": "Hot" }
+      ],
+      "notes": "No onions please"
+    }
+  ],
+  "payment_method": "online"
+}
+
+// Response
+{
+  "order_id": "uuid",
+  "order_number": "A-042",
+  "status": "placed",
+  "estimated_ready_minutes": 20,
+  "total": 3200
+}
+```
+
+### GET /v1/restaurant/{merchant}/qr-order/{id}
+
+Check order status (consumer).
+
+```json
+// Response
+{
+  "order_id": "uuid",
+  "order_number": "A-042",
+  "status": "preparing",
+  "estimated_ready": "2026-02-01T12:45:00Z",
+  "items": [...]
 }
 ```
 

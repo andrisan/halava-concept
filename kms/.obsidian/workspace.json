@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "features/shared/notifications.md",
+                "file": "features/shared/onboarding.md",
                 "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "notifications"
+              "title": "onboarding"
             }
           }
         ]
@@ -94,7 +94,8 @@
             "state": {
               "type": "backlink",
               "state": {
-                "collapseAll": false,
+                "file": "features/shared/onboarding.md",
+                "collapseAll": true,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
                 "showSearch": false,
@@ -103,7 +104,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks"
+              "title": "Backlinks for onboarding"
             }
           },
           {
@@ -154,20 +155,21 @@
             "state": {
               "type": "outline",
               "state": {
+                "file": "features/shared/onboarding.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline"
+              "title": "Outline of onboarding"
             }
           }
-        ]
+        ],
+        "currentTab": 4
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -182,6 +184,31 @@
   },
   "active": "efa9e9fc2b1d2b6b",
   "lastOpenFiles": [
+    "features/shared/notifications.md",
+    "features/shared/multi-language.md",
+    "features/shared/marketplace.md",
+    "features/shared/directory.md",
+    "features/shared/authentication.md",
+    "features/platform/roles-permissions.md",
+    "features/platform/admin-moderation.md",
+    "features/merchant/restaurant-ops.md",
+    "features/merchant/promotions.md",
+    "features/merchant/products.md",
+    "features/merchant/pos.md",
+    "features/merchant/order-management.md",
+    "features/merchant/inventory.md",
+    "features/merchant/accounting.md",
+    "features/consumer/saved-items.md",
+    "features/consumer/reviews-ratings.md",
+    "features/consumer/group-purchase.md",
+    "features/consumer/expense-tracker.md",
+    "features/consumer/bopu.md",
+    "concepts/order-concepts.md",
+    "business/order-concepts.md",
+    "concepts",
+    "business/monetization.md",
+    "spec/web-app-spec.md",
+    "technical/roadmap.md",
     "spec/api-spec.md",
     "spec/api-spec.md.tmp.4289.1770157182295",
     "spec/api-spec.md.tmp.4289.1770157176572",
@@ -193,30 +220,6 @@
     "index.md",
     "features/shared/notifications.md.tmp.4289.1770157074172",
     "features/merchant/pos.md.tmp.4289.1770157065711",
-    "features/merchant/order-management.md.tmp.4289.1770157051634",
-    "features/consumer/expense-tracker.md",
-    "features/shared/authentication.md",
-    "business/market-validation.md",
-    "spec/pages-navigation-ux-spec.md",
-    "features/consumer/bopu.md",
-    "technical/data-model.md",
-    "spec/web-app-spec.md",
-    "features/shared/directory.md",
-    "features/shared/onboarding.md",
-    "features/merchant/products.md",
-    "features/consumer/group-purchase.md",
-    "features/consumer/price-comparison.md",
-    "features/consumer/money-management.md",
-    "technical/roadmap.md",
-    "features/consumer/purchase-history.md",
-    "Untitled.canvas",
-    "design/design-system.md",
-    "design/wireframes.md",
-    "technical/architecture.md",
-    "business/monetization.md",
-    "business/pitch-deck.md",
-    "spec/roadmap.md",
-    "features/merchant/order-management.md",
-    "features/order-management.md"
+    "Untitled.canvas"
   ]
 }
