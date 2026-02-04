@@ -42,7 +42,7 @@ The **POS (Point of Sale)** is Halava's in-store transaction system. It enables 
 
 ### Quota System
 
-> See [[monetization#POS Transaction Quota & Top-ups]]
+> See [[monetization#4.1 POS Transaction Top-ups]]
 
 - Free tier: 300 transactions/month
 - Overage: Top-up bundles (100 for ¥300, 300 for ¥750, 500 for ¥1,000)
@@ -91,15 +91,22 @@ No Internet → POS continues working (local-first)
 
 ## UI/UX Specification
 
-### POS Screens
+> **Template Support:** Desktop only — POS is not available on mobile devices (see [[pages-navigation-ux-spec#1. Dual-Template Architecture]])
+
+### Screens
 
 | Screen | Path | Purpose |
 |--------|------|---------|
-| **POS Main** | `/merchant/pos` | Transaction interface |
-| **Transaction History** | `/merchant/pos/history` | Today's transactions |
-| **Quota Status** | `/merchant/pos/quota` | Usage and top-up |
+| **POS Main** | `/pos` | Transaction interface |
+| **Transaction History** | `/pos/transactions` | Today's transactions |
+| **Quota Status** | `/pos/quota` | Usage and top-up |
+| **Prepared Orders** | `/pos/prepared-orders` | Orders awaiting payment |
 
-### POS Main Layout (Tablet)
+---
+
+### Desktop Template
+
+#### POS Main Layout (Tablet/Desktop)
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -577,9 +584,9 @@ Table 5 Bill:
 
 ## Dependencies
 
-- [[web-app-spec#Capability lifecycle]] — POS must be enabled
+- [[web-app-spec#Capability Lifecycle]] — POS must be enabled
 - [[marketplace]] — Shared inventory
-- [[monetization#POS Transaction Top-ups]] — Transaction quotas
+- [[monetization#4.1 POS Transaction Top-ups]] — Transaction quotas
 
 ---
 

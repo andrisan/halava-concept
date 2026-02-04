@@ -194,6 +194,8 @@ Admin Dashboard → Settings
 
 ## UI/UX Specification
 
+> **Template Support:** Desktop only — Admin and moderator features are not available on mobile (see [[pages-navigation-ux-spec#1. Dual-Template Architecture]])
+
 ### Screens
 
 | Screen | Path | Purpose |

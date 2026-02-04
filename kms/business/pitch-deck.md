@@ -72,7 +72,7 @@ This problem is global, but the value proposition adapts:
 - Price comparison
 
 **Merchant platform:**
-- Capability-based model (see [[web-app-spec#Capability-based approach]])
+- Capability-based model (see [[web-app-spec#Capability Model]])
 - Shared product catalog across online + POS
 - Order management dashboard
 - Inventory sync and alerts

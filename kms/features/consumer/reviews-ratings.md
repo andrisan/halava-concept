@@ -112,14 +112,16 @@ Place Page → Reviews Tab
 
 ## UI/UX Specification
 
+> **Template Support:** Mobile + Desktop (see [[pages-navigation-ux-spec#1. Dual-Template Architecture]])
+
 ### Screens
 
-| Screen | Path | Purpose |
-|--------|------|---------|
-| **Place Reviews** | `/places/{slug}/reviews` | All reviews for a place |
-| **Product Reviews** | `/products/{id}/reviews` | All reviews for a product |
-| **Write Review** | `/review/new?type=place&id={id}` | Submit new review |
-| **My Reviews** | `/profile/reviews` | User's review history |
+| Screen | Path | Mobile | Desktop |
+|--------|------|--------|---------|
+| **Place Reviews** | `/places/{slug}/reviews` | Full-screen list | Tab in place page |
+| **Product Reviews** | `/products/{id}/reviews` | Full-screen list | Section in product page |
+| **Write Review** | `/review/new` | Full-screen form | Modal |
+| **My Reviews** | `/profile/reviews` | Full-screen list | Profile section |
 
 ### Place Reviews Layout
 

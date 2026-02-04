@@ -4,7 +4,7 @@
 > **Status:** Active specification
 > **Parent document:** [[web-app-spec]]
 >
-> This document provides the comprehensive UI/UX specification for all pages and navigation flows in the Halava web application.
+> This document defines cross-cutting UX patterns: template architecture, URL structure, navigation, components, and responsive design. For page-specific layouts, see individual feature documents.
 
 ---
 
@@ -21,21 +21,86 @@
 
 ## Table of Contents
 
-1. [URL Structure & Routing Architecture](#1-url-structure--routing-architecture)
-2. [Consumer-Facing Pages](#2-consumer-facing-pages)
-3. [Merchant-Facing Pages](#3-merchant-facing-pages)
-4. [Moderator Pages](#4-moderator-pages)
-5. [Admin Pages](#5-admin-pages)
-6. [Authentication Pages](#6-authentication-pages)
-7. [UI Components Inventory](#7-ui-components-inventory)
-8. [Navigation Patterns](#8-navigation-patterns)
-9. [Responsive Design Guidelines](#9-responsive-design-guidelines)
+1. [Dual-Template Architecture](#1-dual-template-architecture)
+2. [URL Structure & Routing](#2-url-structure--routing)
+3. [Page Specifications by Feature](#3-page-specifications-by-feature)
+4. [Navigation Patterns](#4-navigation-patterns)
+5. [UI Components Inventory](#5-ui-components-inventory)
+6. [Responsive Design Guidelines](#6-responsive-design-guidelines)
 
 ---
 
-## 1. URL Structure & Routing Architecture
+## 1. Dual-Template Architecture
 
-### 1.1 URL Naming Conventions
+> **Critical:** The mobile template is **NOT** a responsive version of the desktop template. It is a **completely separate codebase** designed like a native mobile app — with its own component tree, layouts, and navigation patterns. No desktop UI elements (hamburger menus, sidebars, hover states) exist in the mobile template. Only the desktop template uses responsive design (scaling from tablet to desktop).
+
+Halava uses **two entirely independent templates** based on device type:
+
+| Template | Target | Breakpoint | Architecture |
+|----------|--------|------------|--------------|
+| **Mobile Template** | Phones | < 640px | Separate component tree, dedicated mobile UI |
+| **Desktop Template** | Tablets, laptops, desktops | ≥ 640px | Single codebase with responsive CSS (tablet ↔ desktop) |
+
+### 1.1 Why Separate Templates (Not Responsive)
+
+The mobile template is a distinct implementation designed like a **native mobile app**, not CSS media queries on the desktop template:
+
+- **Native app paradigm:** No desktop elements (no hamburger menus, no sidebars, no hover states)
+- **Different component trees:** Mobile and desktop render entirely different UI components
+- **Different navigation structure:** Bottom tabs only (mobile) vs topbar + sidebar (desktop)
+- **Different page layouts:** Not just resized — fundamentally different information architecture
+- **Different interaction patterns:** Swipe gestures, bottom sheets, pull-to-refresh (no click/hover)
+- **Different bundle:** Mobile loads only mobile components (smaller JS payload)
+- **Different feature set:** POS, Admin, and full Merchant dashboard are desktop-only
+
+### 1.2 What This Means for Development
+
+```
+Mobile Template (< 640px)
+├── /components/mobile/       ← Separate component directory
+├── /layouts/mobile-layout    ← Different shell
+├── /pages/mobile/            ← Mobile-specific pages
+└── No responsive breakpoints within template
+
+Desktop Template (≥ 640px)
+├── /components/desktop/      ← Separate component directory
+├── /layouts/desktop-layout
+├── /pages/desktop/
+└── Responsive: tablet (640-1024px) ↔ desktop (>1024px)
+```
+
+### 1.3 Template Detection
+
+| Method | Purpose |
+|--------|---------|
+| **Server-side (User-Agent)** | Initial SSR render with correct template |
+| **Client-side (viewport width)** | Hydration and resize handling |
+| **Template switch** | Triggers full re-render (not CSS toggle) |
+
+### 1.4 Shared Across Templates
+
+Both templates share:
+- Design tokens (colors, typography, spacing)
+- Reusable logic and state management
+- API layer and data fetching
+- Authentication state
+- Business logic and validation
+
+### 1.5 Template-Specific Features
+
+| Feature | Mobile Template | Desktop Template |
+|---------|-----------------|------------------|
+| **Consumer browsing** | Full support | Full support |
+| **Consumer checkout** | Full support | Full support |
+| **Merchant dashboard** | Limited (view-only) | Full support |
+| **POS** | Not supported | Full support |
+| **Admin/Moderator** | Not supported | Full support |
+
+---
+
+## 2. URL Structure & Routing
+
+### 2.1 URL Naming Conventions
 
 Halava uses a consistent, RESTful URL structure designed for clarity and SEO optimization.
 
@@ -46,7 +111,7 @@ Halava uses a consistent, RESTful URL structure designed for clarity and SEO opt
 - Dashboard paths grouped by role (`/dashboard/...`, `/admin/...`, `/mod/...`)
 - Query parameters for filtering and search (e.g., `?category=food&sort=trending`)
 
-### 1.2 Complete URL Map
+### 2.2 Complete URL Map
 
 > **Full route specification:** [[routes-spec]] — 116 routes across all user types.
 
@@ -89,7 +154,7 @@ Below is a summary of key routes. See [[routes-spec]] for the complete listing.
 | `/dashboard/staff` | Staff & Roles | Team member management |
 | `/dashboard/settings` | Settings | Business configuration |
 
-#### POS Routes (Merchant Staff)
+#### POS Routes (Desktop Only)
 
 | URL Path | Page Name | Description |
 |----------|-----------|-------------|
@@ -98,7 +163,7 @@ Below is a summary of key routes. See [[routes-spec]] for the complete listing.
 | `/pos/transactions` | Today's Transactions | Daily transaction history |
 | `/pos/kitchen` | Kitchen Queue | Real-time order preparation |
 
-#### Admin & Moderator Routes
+#### Admin & Moderator Routes (Desktop Only)
 
 | URL Path | Page Name | Description |
 |----------|-----------|-------------|
@@ -110,109 +175,126 @@ Below is a summary of key routes. See [[routes-spec]] for the complete listing.
 
 ---
 
-## 2. Consumer-Facing Pages
+## 3. Page Specifications by Feature
 
-### 2.1 Home / Explore Page
+Detailed page layouts and UI specifications live in the respective feature documents:
 
-**URL:** `/`
+### Consumer Features (Mobile + Desktop)
 
-**Purpose:** Primary marketplace landing page where consumers discover halal products, restaurants, and shops.
+| Feature | Document | Key Screens |
+|---------|----------|-------------|
+| Directory & Search | [[directory#UI/UX Specification]] | Search bar, results (list/map), place page, filter sheet |
+| Expense Tracker | [[expense-tracker#UI/UX Specification]] | Purchase history, insights dashboard, price history |
+| Group Purchase | [[group-purchase#UI/UX Specification]] | Group creation, contribution, tracking |
+| Saved Items | [[saved-items#UI/UX Specification]] | Bookmarked places and products |
+| Reviews & Ratings | [[reviews-ratings#UI/UX Specification]] | Review form, rating display |
+| BOPU | [[bopu#UI/UX Specification]] | Store selection, pickup scheduling |
+| Marketplace | [[marketplace#UI/UX Specification]] | Product browsing, cart, checkout |
 
-**Layout Structure:**
-```
-┌─────────────────────────────────────────────────────────────────┐
-│ GLOBAL TOPBAR                                                   │
-│ [Logo] [Search Bar (scope: All of Halava)] [Location] [Profile] │
-├─────────────────────────────────────────────────────────────────┤
-│ HERO SECTION                                                    │
-│ - Welcome message / seasonal promotion                          │
-│ - Quick category shortcuts (Food, Groceries, Restaurants)       │
-├─────────────────────────────────────────────────────────────────┤
-│ TRENDING NOW                                                    │
-│ [Product Card] [Product Card] [Product Card] [Product Card] →   │
-├─────────────────────────────────────────────────────────────────┤
-│ NEARBY RESTAURANTS                                              │
-│ [Merchant Card] [Merchant Card] [Merchant Card] →               │
-├─────────────────────────────────────────────────────────────────┤
-│ CATEGORIES                                                      │
-│ [Category Grid: Halal Meat, Bakery, Indonesian, Japanese, ...]  │
-├─────────────────────────────────────────────────────────────────┤
-│ DEALS & PROMOTIONS                                              │
-│ [Promotion Banner] [Coupon Highlight]                           │
-├─────────────────────────────────────────────────────────────────┤
-│ FOOTER                                                          │
-└─────────────────────────────────────────────────────────────────┘
-```
+### Merchant Features (Desktop Only)
 
-### 2.2 POS Screen
+| Feature | Document | Key Screens |
+|---------|----------|-------------|
+| POS | [[pos#UI/UX Specification]] | POS main screen, checkout modal, receipt options |
+| Order Management | [[order-management#UI/UX Specification]] | Orders dashboard, order details |
+| Restaurant Ops | [[restaurant-ops#UI/UX Specification]] | Kitchen queue, menu management |
+| Inventory | [[inventory#UI/UX Specification]] | Stock levels, alerts |
+| Promotions | [[promotions#UI/UX Specification]] | Coupon management |
+| Products | [[products#UI/UX Specification]] | Catalog management |
+| Accounting | [[accounting#UI/UX Specification]] | Financial reports, invoicing |
 
-**URL:** `/pos`
+### Shared Features (Mobile + Desktop)
 
-**Purpose:** Cashier interface for processing in-store sales and prepared orders.
+| Feature | Document | Key Screens |
+|---------|----------|-------------|
+| Authentication | [[authentication#UI/UX Specification]] | Login, OTP verification |
+| Onboarding | [[onboarding#UI/UX Specification]] | Consumer/merchant registration flows |
+| Notifications | [[notifications#UI/UX Specification]] | Notification center, settings |
 
-> See [[monetization#POS Transaction Quota & Top-ups]] for quota logic.
+### Platform Features (Desktop Only)
 
-**POS Main Screen Layout:**
-```
-┌─────────────────────────────────────────────────────────────────┐
-│ POS TOPBAR: {Merchant} · POS   [Prepared Orders (3)] [≡ Menu]  │
-├──────────────────────────────────┬──────────────────────────────┤
-│ PRODUCT GRID                     │ CURRENT SALE                 │
-│                                  │                              │
-│ [Search products...] [Scan 📷]   │ ┌──────────────────────────┐ │
-│                                  │ │ Halal Chicken    x2 ¥900 │ │
-│ CATEGORIES:                      │ │ [- +]           [Remove] │ │
-│ [All] [Meat] [Dairy] [Frozen]    │ ├──────────────────────────┤ │
-│                                  │ │ Basmati Rice     x1 ¥450 │ │
-│ ┌─────┐ ┌─────┐ ┌─────┐         │ │ [- +]           [Remove] │ │
-│ │ 🍗  │ │ 🥩  │ │ 🧀  │         │ └──────────────────────────┘ │
-│ │¥450 │ │¥800 │ │¥350 │         │                              │
-│ └─────┘ └─────┘ └─────┘         │ TOTAL:               ¥1,485 │
-│                                  │                              │
-│                                  │ [Complete Sale - ¥1,485]    │
-├──────────────────────────────────┴──────────────────────────────┤
-│ STATUS BAR: ● Online  |  Quota: 245/300 this month  |  [Top-up] │
-└─────────────────────────────────────────────────────────────────┘
-```
+| Feature | Document | Key Screens |
+|---------|----------|-------------|
+| Admin & Moderation | [[admin-moderation#UI/UX Specification]] | Reports queue, user management |
+| Roles & Permissions | [[roles-permissions#UI/UX Specification]] | Staff management |
 
 ---
 
-## 3. Merchant-Facing Pages
+## 4. Navigation Patterns
 
-### 3.1 Merchant Dashboard (Overview)
+### 4.1 Primary Navigation by Template
 
-**URL:** `/dashboard`
+| User Type | Mobile Template | Desktop Template |
+|-----------|-----------------|------------------|
+| **Consumer** | Bottom tab bar (Home, Search, Cart, Profile) | Topbar with mega menu + sidebar filters |
+| **Merchant** | Limited view-only (bottom tabs) | Dashboard sidebar + topbar quick actions |
+| **POS Staff** | Not supported | POS topbar + contextual menu |
+| **Admin/Mod** | Not supported | Dashboard sidebar + topbar notifications |
 
-**Purpose:** Central hub for merchants to monitor business health and access all capabilities.
+### 4.2 Navigation Flows
 
-> See [[web-app-spec#Capability-based approach]] for capability model details.
+**Consumer Discovery Flow:**
+```
+Home → Search/Browse → Place/Product Page → Add to Cart → Cart → Checkout → Order Confirmation
+```
+
+**Merchant Order Flow:**
+```
+Dashboard → Orders → Order Details → Update Status → Fulfillment Complete
+```
+
+**POS Transaction Flow:**
+```
+POS Main → Add Items → Checkout → Payment → Receipt → Next Customer
+```
+
+### 4.3 Deep Linking
+
+All pages support direct URL access for:
+- Sharing (products, places, orders)
+- Bookmarking
+- QR code scanning (group purchase, menu)
+- Push notification targets
+
+### 4.4 Back Navigation
+
+| Context | Back Behavior |
+|---------|---------------|
+| **Within flow** | Previous step in flow |
+| **From detail page** | Return to list |
+| **From search result** | Return to search with filters preserved |
+| **From external link** | Home page |
 
 ---
 
-## 7. UI Components Inventory
+## 5. UI Components Inventory
 
 This section enumerates reusable UI building blocks.
 
 > See [[design-system]] for component specifications.
 
-### 7.1 Navigation & Layout Components
+### 5.1 Navigation & Layout Components
+
+| Component | Description | Template |
+|-----------|-------------|----------|
+| **Global Topbar** | Logo, search, location, profile menu | Desktop |
+| **Merchant Topbar** | Breadcrumb identity, scoped search | Desktop |
+| **Dashboard Sidebar** | Vertical navigation for dashboards | Desktop |
+| **Bottom Navigation** | Tab bar (Home, Search, Cart, Profile) | Mobile |
+| **Breadcrumbs** | Hierarchical path navigation | Desktop |
+
+### 5.2 Commerce Components
 
 | Component | Description | Usage |
 |-----------|-------------|-------|
-| **Global Topbar** | Logo, search, location, profile menu | All consumer pages |
-| **Merchant Topbar** | Breadcrumb identity, scoped search | Merchant shopfronts |
-| **Dashboard Sidebar** | Vertical navigation for dashboards | Merchant, Mod, Admin |
-
-### 7.2 Commerce Components
-
-| Component | Description | Usage |
-|-----------|-------------|-------|
+| **Product Card** | Thumbnail, name, price, rating | Product listings |
+| **Place Card** | Photo, name, distance, status | Directory listings |
 | **Add-to-Cart Button** | Primary CTA with quantity, price | Product pages |
 | **Cart Drawer** | Slide-out cart summary | Global, any page |
 | **Checkout Stepper** | Progress indicator for checkout | Checkout flow |
 | **Order Summary** | Itemized totals, discounts | Cart, checkout |
 
-### 7.3 POS Components
+### 5.3 POS Components (Desktop Only)
 
 | Component | Description | Usage |
 |-----------|-------------|-------|
@@ -222,34 +304,61 @@ This section enumerates reusable UI building blocks.
 | **QR Scanner** | Camera-based code scanning | Customer linking |
 | **Quota Banner** | Usage warning with CTA | POS status bar |
 
+### 5.4 Feedback Components
+
+| Component | Description | Usage |
+|-----------|-------------|-------|
+| **Toast** | Transient success/error message | After actions |
+| **Empty State** | Illustration + message + CTA | No results, empty lists |
+| **Loading Skeleton** | Placeholder animation | Data loading |
+| **Error State** | Error message + retry button | Failed requests |
+
 ---
 
-## 9. Responsive Design Guidelines
+## 6. Responsive Design Guidelines
 
-### 9.1 Breakpoints
+### 6.1 Breakpoints
+
+**Mobile Template (< 640px):**
+- Single breakpoint, optimized for phones
+- Fixed bottom navigation
+- Full-screen modals and sheets
+
+**Desktop Template (≥ 640px) — Responsive within template:**
 
 | Breakpoint | Width | Target Devices |
 |------------|-------|----------------|
-| Mobile | < 640px | Phones |
 | Tablet | 640px - 1024px | Tablets, small laptops |
 | Desktop | > 1024px | Laptops, desktops |
 
-### 9.2 Touch Targets
+### 6.2 Layout Adaptations
+
+| Element | Mobile Template | Desktop Template (Tablet) | Desktop Template (Desktop) |
+|---------|-----------------|---------------------------|----------------------------|
+| **Navigation** | Bottom tabs | Topbar | Topbar + sidebar |
+| **Product Grid** | 2 columns | 3 columns | 4-5 columns |
+| **Place List** | Card stack | Cards | Cards + map split |
+| **Dashboard** | Limited view-only | Sidebar collapsed | Sidebar expanded |
+| **POS** | Not supported | Split view | Split view |
+| **Checkout** | Full-screen steps | Modal | Side panel |
+
+### 6.3 Touch Targets
 
 - Minimum touch target: 44x44 px
 - Adequate spacing between interactive elements
 - Swipe gestures for carousels and drawers
 
+### 6.4 Mobile Template Considerations
+
+Designed like a native mobile app:
+
+- Bottom tab navigation (no hamburger menus or sidebars)
+- Full-screen pages with back gesture (no nested modals)
+- Thumb-friendly actions at bottom of screen
+- Native patterns: swipe back, pull to refresh, bottom sheets
+- Progressive disclosure (show less, reveal on demand)
+- Offline support for browsing cached content
+
 ---
 
-## Appendix: Page-to-Journey Mapping
-
-| Page | Supports User Journeys |
-|------|----------------------|
-| Home / Explore | [[web-app-spec#4.1 Consumer — buy at a shop online]] |
-| POS Screen | [[web-app-spec#4.5 Merchant — operate a shop with POS]] |
-| Kitchen Queue | [[web-app-spec#4.7.1 Merchant — manage online food orders]] |
-
----
-
-#halava #spec #ux #pages
+#halava #spec #ux #navigation

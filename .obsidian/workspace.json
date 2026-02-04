@@ -4,39 +4,24 @@
     "type": "split",
     "children": [
       {
-        "id": "76c9bbaf85c0cc9e",
+        "id": "f0c4be3f816904da",
         "type": "tabs",
         "children": [
           {
-            "id": "bff72eb79bb02d10",
+            "id": "43470e0c2525d442",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "kms/features/shared/multi-language.md",
-                "mode": "preview",
+                "file": "kms/spec/web-app-spec.md",
+                "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "multi-language"
-            }
-          },
-          {
-            "id": "37095749395d759d",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "output/halava-ui-prototype-brief.md",
-                "mode": "preview",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "halava-ui-prototype-brief"
+              "title": "web-app-spec"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -171,13 +156,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "output/halava-ui-prototype-brief.md",
+                "file": "kms/spec/web-app-spec.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of halava-ui-prototype-brief"
+              "title": "Outline of web-app-spec"
             }
           },
           {
@@ -209,43 +194,42 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "37095749395d759d",
+  "active": "43470e0c2525d442",
   "lastOpenFiles": [
-    "kms/business/market-validation.md",
-    "output/halava-ui-prototype-brief.md",
-    "output/halava-ui-prototype-brief.md.tmp.14724.1770186677760",
-    "kms/business/pitch-deck.md",
-    "kms/design/design-system.md",
-    "kms/spec/routes-spec.md",
-    "output",
-    "kms/index.md.tmp.14724.1770186315663",
-    "kms/spec/pages-navigation-ux-spec.md.tmp.14724.1770186304908",
-    "kms/spec/pages-navigation-ux-spec.md.tmp.14724.1770186282999",
-    "kms/spec/api-spec.md",
-    "kms/spec/routes-spec.md.tmp.14724.1770186265483",
-    "kms/spec/pages-navigation-ux-spec.md",
-    "kms/spec/api-spec.md.tmp.14724.1770185956000",
-    "kms/spec/api-spec.md.tmp.14724.1770185955086",
-    "kms/features/consumer/bopu.md.tmp.14724.1770185953229",
+    "consumer/directory.md",
     "kms/spec/web-app-spec.md",
-    "kms/features/merchant/restaurant-ops.md",
+    "output/halava-ui-prototype-brief.md",
+    "kms/spec/web-app-spec.md.tmp.11040.1770193849233",
+    "kms/features/merchant/pos.md",
+    "kms/features/shared/directory.md",
+    "kms/index.md",
+    "kms/design/design-system.md",
+    "README.md",
+    "kms/business/market-validation.md",
+    "kms/features/platform/roles-permissions.md.tmp.11040.1770193322067",
+    "kms/features/platform/admin-moderation.md.tmp.11040.1770193320985",
+    "kms/features/merchant/accounting.md.tmp.11040.1770193317735",
+    "kms/spec/pages-navigation-ux-spec.md",
+    "kms/features/shared/marketplace.md.tmp.11040.1770193294863",
+    "kms/features/consumer/bopu.md.tmp.11040.1770193291026",
+    "kms/features/consumer/reviews-ratings.md.tmp.11040.1770193289567",
+    "kms/features/shared/onboarding.md.tmp.11040.1770193265396",
+    "kms/features/shared/notifications.md.tmp.11040.1770193261379",
+    "kms/features/merchant/promotions.md.tmp.11040.1770193258517",
+    "kms/features/consumer/group-purchase.md",
+    "kms/features/consumer/expense-tracker.md",
+    "kms/business/monetization.md",
     "kms/features/shared/onboarding.md",
+    "kms/business/pitch-deck.md",
+    "kms/spec/routes-spec.md",
+    "kms/spec/api-spec.md",
+    "kms/features/merchant/restaurant-ops.md",
     "kms/features/shared/authentication.md",
     "kms/features/shared/multi-language.md",
     "kms/features/shared/marketplace.md",
-    "kms/features/shared/directory.md",
     "kms/features/shared/notifications.md",
     "kms/features/platform/roles-permissions.md",
-    "kms/index.md",
     "kms/spec/roadmap.md",
-    "kms/features/merchant/accounting.md",
-    "kms/features/consumer/group-purchase.md",
-    "kms/spec/roadmap.md.tmp.5064.1770090194154",
-    "kms/features/merchant/inventory.md",
-    "kms/features/merchant/products.md",
-    "kms/features/consumer/search-filters.md",
-    "kms/features/consumer/bopu.md",
-    "kms/features/consumer/place-pages.md",
-    "kms/features/consumer/marketplace.md"
+    "kms/features/merchant/accounting.md"
   ]
 }

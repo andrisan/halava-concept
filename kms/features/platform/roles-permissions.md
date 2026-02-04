@@ -418,6 +418,8 @@ Admin Dashboard → Users → Search user
 
 ## UI/UX Specification
 
+> **Template Support:** Desktop only — Staff management is not available on mobile (see [[pages-navigation-ux-spec#1. Dual-Template Architecture]])
+
 ### Staff Management (Merchant)
 
 ```

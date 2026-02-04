@@ -21,7 +21,7 @@
 
 ---
 
-## Platform Features
+## Halava Features
 
 ### Consumer Features
 
@@ -73,6 +73,14 @@ Shared features are **platform infrastructure used by both consumers and merchan
 | [[directory\|Directory (Halal Place Discovery)]] | Consumers discover places; merchants manage listings | MVP |
 | [[marketplace\|Marketplace (Online Shopping)]] | Consumers shop; merchants sell products | MVP |
 | [[multi-language\|Multi-language Support]] | EN + JP + ID support across platform | v1.1 |
+
+### Platform Features
+
+Platform features are **internal tools for platform governance**. These are used by Halava staff (moderators and administrators) to manage content quality, handle reports, and oversee platform operations.
+
+| Feature | Description | Version |
+|---------|-------------|---------|
+| [[admin-moderation\|Admin & Moderation]] | Content moderation, report handling, user management | MVP |
 
 ---
 

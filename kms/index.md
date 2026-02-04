@@ -36,16 +36,16 @@ All-in-one tools to reach halal-conscious customers and grow the business.
 > **Full feature tables:** [[web-app-spec#Platform Features]]
 
 ### Consumer
-[[consumer/directory]] · [[consumer/marketplace]] · [[consumer/group-purchase]] · [[consumer/expense-tracker]] · [[consumer/reviews-ratings]] · [[consumer/saved-items]] · [[consumer/bopu]]
+[[group-purchase]] · [[expense-tracker]] · [[reviews-ratings]] · [[saved-items]] · [[bopu]]
 
 ### Merchant
-[[merchant/order-management]] · [[merchant/restaurant-ops]] · [[merchant/pos]] · [[merchant/promotions]] · [[merchant/accounting]]
+[[order-management]] · [[restaurant-ops]] · [[pos]] · [[promotions]] · [[accounting]]
 
 ### Platform
-[[platform/admin-moderation]] · [[platform/roles-permissions]]
+[[admin-moderation]] · [[roles-permissions]]
 
 ### Shared
-[[shared/onboarding]] · [[shared/notifications]]
+[[directory]] · [[marketplace]] · [[onboarding]] · [[notifications]]
 
 ---
 
@@ -71,12 +71,11 @@ All-in-one tools to reach halal-conscious customers and grow the business.
 
 | Concept | Document |
 |---------|----------|
-| Capability-based merchant model | [[web-app-spec#Capability-based approach]] |
-| Payment strategy phases | [[web-app-spec#Payment Strategy]] |
-| Transaction fee tiers | [[monetization#Transaction Fee Structure]] |
-| Expense tracking | [[consumer/expense-tracker]] |
-| POS interface | [[pages-navigation-ux-spec#POS Screen]] |
-| Technical stack | [[architecture#Tech Stack]] |
+| Capability-based merchant model | [[web-app-spec#Capability Model]] |
+| Transaction fee tiers | [[monetization#3. Transaction Fee Model (Gradual Pricing)]] |
+| Expense tracking | [[expense-tracker]] |
+| POS interface | [[pos#UI/UX Specification]] |
+| Technical stack | [[architecture#3. Technology Stack]] |
 | Order flow | [[order-management#Order Lifecycle]] |
 | Data schema | [[data-model]] |
 

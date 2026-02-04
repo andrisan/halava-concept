@@ -132,13 +132,15 @@ Merchant Dashboard → Settings → Notifications
 
 ## UI/UX Specification
 
+> **Template Support:** Mobile + Desktop (see [[pages-navigation-ux-spec#1. Dual-Template Architecture]])
+
 ### Screens
 
-| Screen | Path | Purpose |
-|--------|------|---------|
-| **Notifications List** | `/notifications` | All notifications |
-| **Notification Settings** | `/settings/notifications` | Preferences |
-| **Merchant Alerts** | `/merchant/settings/notifications` | Merchant config |
+| Screen | Path | Mobile | Desktop |
+|--------|------|--------|---------|
+| **Notifications List** | `/notifications` | Full-screen list | Dropdown or page |
+| **Notification Settings** | `/settings/notifications` | Full-screen | Settings page |
+| **Merchant Alerts** | `/dashboard/settings/notifications` | N/A (desktop only) | Settings page |
 
 ### Notification Bell (Header)
 

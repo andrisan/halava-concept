@@ -107,16 +107,22 @@ Order Details → [Cancel Order]
 
 ## UI/UX Specification
 
+> **Template Support:** Desktop only — Merchant dashboard features are not available on mobile (see [[pages-navigation-ux-spec#1. Dual-Template Architecture]])
+
 ### Screens
 
 | Screen | Path | Purpose |
 |--------|------|---------|
-| **Orders Dashboard** | `/merchant/orders` | All orders inbox |
-| **Order Details** | `/merchant/orders/{id}` | Single order view |
-| **Order History** | `/merchant/orders/history` | Past orders |
-| **Order Settings** | `/merchant/settings/orders` | Preferences |
+| **Orders Dashboard** | `/dashboard/orders` | All orders inbox |
+| **Order Details** | `/dashboard/orders/{id}` | Single order view |
+| **Order History** | `/dashboard/orders/history` | Past orders |
+| **Order Settings** | `/dashboard/settings/orders` | Preferences |
 
-### Orders Dashboard Layout
+---
+
+### Desktop Template
+
+#### Orders Dashboard Layout
 
 ```
 ┌──────────────────────────────────────────┐

@@ -129,15 +129,21 @@ Dashboard → Capabilities → Directory → [Enable]
 
 ## UI/UX Specification
 
+> **Template Support:**
+> - Consumer onboarding: Mobile + Desktop
+> - Merchant onboarding: Desktop only
+>
+> See [[pages-navigation-ux-spec#1. Dual-Template Architecture]]
+
 ### Screens
 
-| Screen | Path | Purpose |
-|--------|------|---------|
-| **Sign Up** | `/signup` | Consumer registration |
-| **Merchant Sign Up** | `/merchant/signup` | Merchant registration |
-| **Verify Email** | `/verify` | OTP/magic link entry |
-| **Profile Setup** | `/profile/setup` | Initial profile |
-| **Merchant Dashboard** | `/merchant` | First-time dashboard |
+| Screen | Path | Mobile | Desktop |
+|--------|------|--------|---------|
+| **Sign Up** | `/signup` | Full-screen | Centered card |
+| **Merchant Sign Up** | `/merchant/signup` | N/A (desktop only) | Multi-step wizard |
+| **Verify Email** | `/verify` | Full-screen | Centered card |
+| **Profile Setup** | `/profile/setup` | Full-screen steps | Form page |
+| **Merchant Dashboard** | `/dashboard` | N/A (desktop only) | Full dashboard |
 
 ### Consumer Sign Up
 

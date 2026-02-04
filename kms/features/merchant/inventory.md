@@ -135,15 +135,17 @@ Inventory → Product → History
 
 ## UI/UX Specification
 
+> **Template Support:** Desktop only — Merchant dashboard features are not available on mobile (see [[pages-navigation-ux-spec#1. Dual-Template Architecture]])
+
 ### Screens
 
 | Screen | Path | Purpose |
 |--------|------|---------|
-| **Inventory Overview** | `/merchant/inventory` | Stock status dashboard |
-| **Product Stock** | `/merchant/inventory/{id}` | Individual product stock |
-| **Adjustments** | `/merchant/inventory/adjustments` | Adjustment history |
-| **Stocktake** | `/merchant/inventory/stocktake` | Physical count mode |
-| **Alerts** | `/merchant/inventory/alerts` | Low stock notifications |
+| **Inventory Overview** | `/dashboard/inventory` | Stock status dashboard |
+| **Product Stock** | `/dashboard/inventory/{id}` | Individual product stock |
+| **Adjustments** | `/dashboard/inventory/adjustments` | Adjustment history |
+| **Stocktake** | `/dashboard/inventory/stocktake` | Physical count mode |
+| **Alerts** | `/dashboard/inventory/alerts` | Low stock notifications |
 
 ### Inventory Overview
 

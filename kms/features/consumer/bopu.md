@@ -116,7 +116,9 @@ Orders Dashboard → New Order Alert
 
 ## UI/UX Specification
 
-### Checkout: Fulfillment Selection
+> **Template Support:** Mobile + Desktop (see [[pages-navigation-ux-spec#1. Dual-Template Architecture]])
+
+### Checkout: Fulfillment Selection (Mobile)
 
 ```
 ┌──────────────────────────────────────────┐

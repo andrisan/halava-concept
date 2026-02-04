@@ -115,16 +115,18 @@ Accounting → Tax Export
 
 ## UI/UX Specification
 
+> **Template Support:** Desktop only — Merchant dashboard features are not available on mobile (see [[pages-navigation-ux-spec#1. Dual-Template Architecture]])
+
 ### Screens
 
 | Screen | Path | Purpose |
 |--------|------|---------|
-| **Accounting Home** | `/merchant/accounting` | Overview dashboard |
-| **Sales Reports** | `/merchant/accounting/sales` | Revenue breakdown |
-| **Expenses** | `/merchant/accounting/expenses` | Expense ledger |
-| **Invoices** | `/merchant/accounting/invoices` | Invoice management |
-| **Tax Export** | `/merchant/accounting/tax` | Tax report generation |
-| **Settings** | `/merchant/accounting/settings` | Fiscal year, tax rate |
+| **Accounting Home** | `/dashboard/accounting` | Overview dashboard |
+| **Sales Reports** | `/dashboard/accounting/sales` | Revenue breakdown |
+| **Expenses** | `/dashboard/accounting/expenses` | Expense ledger |
+| **Invoices** | `/dashboard/accounting/invoices` | Invoice management |
+| **Tax Export** | `/dashboard/accounting/tax` | Tax report generation |
+| **Settings** | `/dashboard/accounting/settings` | Fiscal year, tax rate |
 
 ### Accounting Dashboard Layout
 

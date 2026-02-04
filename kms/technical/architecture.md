@@ -174,7 +174,7 @@ Enter Email → Send Magic Link → Click Link → Verify Token → Issue JWT �
 
 ## 6. POS Offline Architecture
 
-> See [[pages-navigation-ux-spec#POS Screen]] for UI details.
+> See [[pos#UI/UX Specification]] for UI details.
 
 ### 6.1 Offline Sync Flow
 

@@ -114,15 +114,21 @@ Kitchen Queue → New Order Alert 🔔
 
 ## UI/UX Specification
 
-### Consumer Screens
+> **Template Support:**
+> - Consumer screens (QR Menu): Mobile + Desktop
+> - Merchant screens (Kitchen, Menu Management): Desktop only
+>
+> See [[pages-navigation-ux-spec#1. Dual-Template Architecture]]
 
-| Screen | Path | Purpose |
-|--------|------|---------|
-| **QR Menu** | `/m/{merchant}/menu` | Browse menu |
-| **Menu Item** | `/m/{merchant}/menu/{item}` | Item details + modifiers |
-| **Cart** | Drawer | Current order |
-| **Checkout** | `/m/{merchant}/checkout` | Fulfillment + payment |
-| **Order Status** | `/orders/{id}` | Real-time tracking |
+### Consumer Screens (Mobile + Desktop)
+
+| Screen | Path | Mobile | Desktop |
+|--------|------|--------|---------|
+| **QR Menu** | `/m/{merchant}/menu` | Full-screen list | Side panel or page |
+| **Menu Item** | `/m/{merchant}/menu/{item}` | Full-screen | Modal |
+| **Cart** | Drawer | Bottom sheet | Side drawer |
+| **Checkout** | `/m/{merchant}/checkout` | Full-screen steps | Modal |
+| **Order Status** | `/orders/{id}` | Full-screen | Page or modal |
 
 ### Menu Page Layout
 
@@ -772,7 +778,7 @@ Dashboard → Reservations
 
 ## Dependencies
 
-- [[web-app-spec#Capability lifecycle]] — Restaurant Operations must be enabled
+- [[web-app-spec#Capability Lifecycle]] — Restaurant Operations must be enabled
 - [[pos]] — Prepared Orders queue integration
 - [[directory]] — Place page for discovery
 

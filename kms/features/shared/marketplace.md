@@ -97,16 +97,18 @@ Order Notification → Orders Dashboard
 
 ## UI/UX Specification
 
+> **Template Support:** Mobile + Desktop (see [[pages-navigation-ux-spec#1. Dual-Template Architecture]])
+
 ### Consumer Screens
 
-| Screen | Path | Purpose |
-|--------|------|---------|
-| **Product Listing** | `/products` | Browse all products |
-| **Product Page** | `/products/{slug}` | Product details |
-| **Merchant Shopfront** | `/m/{merchant}/shop` | Merchant's product catalog |
-| **Cart** | Drawer / `/cart` | Current cart items |
-| **Checkout** | `/checkout` | Fulfillment + payment |
-| **Order Tracking** | `/orders/{id}` | Real-time status |
+| Screen | Path | Mobile | Desktop |
+|--------|------|--------|---------|
+| **Product Listing** | `/products` | Full-screen grid (2 col) | Grid (4-5 col) + filters |
+| **Product Page** | `/products/{slug}` | Full-screen | Page or modal |
+| **Merchant Shopfront** | `/m/{merchant}/shop` | Full-screen | Page with sidebar |
+| **Cart** | `/cart` | Full-screen | Side drawer |
+| **Checkout** | `/checkout` | Full-screen steps | Multi-column form |
+| **Order Tracking** | `/orders/{id}` | Full-screen | Page |
 | **Purchase History** | `/purchases` | All past orders |
 
 ### Product Page Layout
@@ -516,7 +518,7 @@ Marketplace shares inventory with [[pos]]:
 
 ## Dependencies
 
-- [[web-app-spec#Capability lifecycle]] — Shop/Marketplace must be enabled
+- [[web-app-spec#Capability Lifecycle]] — Shop/Marketplace must be enabled
 - [[pos]] — Shared inventory
 - [[group-purchase]] — Extended flow for group orders
 - [[monetization#Transaction Fee Model]] — Fee structure

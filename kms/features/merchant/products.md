@@ -142,15 +142,17 @@ Products → Select multiple products
 
 ## UI/UX Specification
 
+> **Template Support:** Desktop only — Merchant dashboard features are not available on mobile (see [[pages-navigation-ux-spec#1. Dual-Template Architecture]])
+
 ### Screens
 
 | Screen | Path | Purpose |
 |--------|------|---------|
-| **Product List** | `/merchant/products` | View all products |
-| **Add Product** | `/merchant/products/new` | Create new product |
-| **Edit Product** | `/merchant/products/{id}` | Edit product details |
-| **Categories** | `/merchant/products/categories` | Manage categories |
-| **Import/Export** | `/merchant/products/import` | Bulk operations |
+| **Product List** | `/dashboard/products` | View all products |
+| **Add Product** | `/dashboard/products/new` | Create new product |
+| **Edit Product** | `/dashboard/products/{id}` | Edit product details |
+| **Categories** | `/dashboard/products/categories` | Manage categories |
+| **Import/Export** | `/dashboard/products/import` | Bulk operations |
 
 ### Product List Layout
 

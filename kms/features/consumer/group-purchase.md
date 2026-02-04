@@ -78,14 +78,16 @@ Receive Invite Link → Open in Halava
 
 ## UI/UX Specification
 
-### Consumer Screens
+> **Template Support:** Mobile + Desktop (see [[pages-navigation-ux-spec#1. Dual-Template Architecture]])
 
-| Screen | Path | Purpose |
-|--------|------|---------|
-| **Create Group** | `/m/{merchant}/group/new` | Start a group purchase |
-| **Group Lobby** | `/group/{code}` | View group, add items |
-| **Invite** | `/group/{code}/invite` | Share with friends |
-| **Checkout (Initiator)** | `/group/{code}/checkout` | Submit and pay |
+### Screens
+
+| Screen | Path | Mobile | Desktop |
+|--------|------|--------|---------|
+| **Create Group** | `/m/{merchant}/group/new` | Full-screen | Modal |
+| **Group Lobby** | `/group/{code}` | Full-screen | Page |
+| **Invite** | `/group/{code}/invite` | Share sheet | Modal |
+| **Checkout (Initiator)** | `/group/{code}/checkout` | Full-screen steps | Side panel |
 
 ### Group Lobby Layout
 

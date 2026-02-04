@@ -145,13 +145,15 @@ Profile Menu → [Switch Account]
 
 ## UI/UX Specification
 
+> **Template Support:** Mobile + Desktop (see [[pages-navigation-ux-spec#1. Dual-Template Architecture]])
+
 ### Screens
 
-| Screen | Path | Purpose |
-|--------|------|---------|
-| **Sign In** | `/login` | Returning user login |
-| **Verify Code** | `/verify` | OTP entry |
-| **Check Email** | `/check-email` | Magic link sent confirmation |
+| Screen | Path | Mobile | Desktop |
+|--------|------|--------|---------|
+| **Sign In** | `/login` | Full-screen | Centered card |
+| **Verify Code** | `/verify` | Full-screen | Centered card |
+| **Check Email** | `/check-email` | Full-screen | Centered card |
 
 ### Sign In Screen
 

@@ -95,15 +95,17 @@ Collection → [Share]
 
 ## UI/UX Specification
 
+> **Template Support:** Mobile + Desktop (see [[pages-navigation-ux-spec#1. Dual-Template Architecture]])
+
 ### Screens
 
-| Screen | Path | Purpose |
-|--------|------|---------|
-| **Saved Items** | `/saved` | All saved items |
-| **Places Saved** | `/saved/places` | Saved places only |
-| **Products Saved** | `/saved/products` | Saved products only |
-| **Collection** | `/saved/collections/{id}` | Single collection view |
-| **Manage Collections** | `/saved/collections` | All collections |
+| Screen | Path | Mobile | Desktop |
+|--------|------|--------|---------|
+| **Saved Items** | `/saved` | Full-screen tabs | Sidebar + content |
+| **Places Saved** | `/saved/places` | Full-screen list | Grid view |
+| **Products Saved** | `/saved/products` | Full-screen grid | Grid view |
+| **Collection** | `/saved/collections/{id}` | Full-screen | Page or modal |
+| **Manage Collections** | `/saved/collections` | Full-screen list | Modal |
 
 ### Saved Items Layout
 

@@ -118,14 +118,16 @@ Cart → Subtotal: ¥5,200
 
 ## UI/UX Specification
 
-### Merchant Screens
+> **Template Support:** Desktop only — Merchant dashboard features are not available on mobile (see [[pages-navigation-ux-spec#1. Dual-Template Architecture]])
+
+### Screens
 
 | Screen | Path | Purpose |
 |--------|------|---------|
-| **Promotions Dashboard** | `/merchant/promotions` | All promotions |
-| **Create Promotion** | `/merchant/promotions/new` | New promo wizard |
-| **Promotion Details** | `/merchant/promotions/{id}` | Edit & stats |
-| **Featured Listings** | `/merchant/promotions/featured` | Boost products |
+| **Promotions Dashboard** | `/dashboard/promotions` | All promotions |
+| **Create Promotion** | `/dashboard/promotions/new` | New promo wizard |
+| **Promotion Details** | `/dashboard/promotions/{id}` | Edit & stats |
+| **Featured Listings** | `/dashboard/promotions/featured` | Boost products |
 
 ### Promotions Dashboard Layout
 
