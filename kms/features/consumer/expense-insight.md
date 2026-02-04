@@ -1,4 +1,4 @@
-# Expense Tracker
+# Expense Insight
 
 > **Feature Type:** Consumer (Always Available)
 > **Version:** MVP (v1)
@@ -10,7 +10,7 @@
 
 ## Definition
 
-**Expense Tracker** is Halava's consumer-facing personal finance toolkit. It provides unified tools for tracking halal spending, analyzing purchase patterns, and making informed buying decisions based on personal price history.
+**Expense Insight** is Halava's consumer-facing personal finance toolkit. It provides unified tools for tracking halal spending, analyzing purchase patterns, and making informed buying decisions based on personal price history.
 
 **Core value proposition:**
 - Track spending across online orders, in-store purchases, and dining
@@ -150,7 +150,7 @@ At Checkout → Cashier: "Save receipt digitally?"
 Accessible from Profile tab in bottom navigation:
 
 ```
-Profile → [Expense Tracker]
+Profile → [Expense Insight]
   → Purchases
   → Insights
   → My Prices
@@ -161,7 +161,7 @@ Profile → [Expense Tracker]
 
 ```
 ┌──────────────────────────────────────────┐
-│ [←] Expense Tracker              [🔍]   │
+│ [←] Expense Insight              [🔍]   │
 ├──────────────────────────────────────────┤
 │ This Month: ¥45,200  ▲ 12%              │
 │ Budget: ¥60,000 · 75% used              │
@@ -365,7 +365,7 @@ Full dashboard view with sidebar navigation:
 ├────────────────────────────────────────────────────────────────────────────────┤
 │                                                                                │
 │  ┌──────────────┐  ┌────────────────────────────────────────────────────────┐  │
-│  │ PROFILE      │  │ Expense Tracker                                       │  │
+│  │ PROFILE      │  │ Expense Insight                                       │  │
 │  │ ───────────  │  │                                                        │  │
 │  │ My Orders    │  │  This Month: ¥45,200  ▲ 12%    Budget: ¥60,000 (75%)  │  │
 │  │ Saved Items  │  │                                                        │  │
@@ -509,7 +509,7 @@ Full dashboard view with sidebar navigation:
 
 ## API Endpoints
 
-> Full API index: [[api-spec#5.3 Expense Tracker]]
+> Full API index: [[api-spec#5.3 Expense Insight]]
 
 ### GET /v1/consumer/expenses/purchases
 
@@ -753,4 +753,4 @@ Post-MVP, with merchant opt-in and proper incentive design:
 
 ---
 
-#halava #feature #expense-tracker #consumer #personal-finance
+#halava #feature #expense-insight #consumer #personal-finance

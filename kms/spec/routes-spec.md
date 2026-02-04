@@ -135,13 +135,13 @@
 
 | Route | Page | Description | Feature |
 |-------|------|-------------|---------|
-| `/profile/expenses` | Expense Tracker | Purchase history with filters | [[expense-tracker]] |
-| `/profile/expenses/{id}` | Transaction Detail | Receipt and breakdown | [[expense-tracker]] |
-| `/profile/expenses/insights` | Spending Insights | Analytics and trends | [[expense-tracker]] |
-| `/profile/expenses/prices` | Price History | Personal price tracking | [[expense-tracker]] |
-| `/profile/expenses/prices/{id}` | Item Price History | Price history for one item | [[expense-tracker]] |
-| `/profile/expenses/frequent` | Frequent Items | Frequently bought | [[expense-tracker]] |
-| `/profile/expenses/budgets` | Budgets | Budget management | [[expense-tracker]] |
+| `/profile/expenses` | Expense Insight | Purchase history with filters | [[expense-insight]] |
+| `/profile/expenses/{id}` | Transaction Detail | Receipt and breakdown | [[expense-insight]] |
+| `/profile/expenses/insights` | Spending Insights | Analytics and trends | [[expense-insight]] |
+| `/profile/expenses/prices` | Price History | Personal price tracking | [[expense-insight]] |
+| `/profile/expenses/prices/{id}` | Item Price History | Price history for one item | [[expense-insight]] |
+| `/profile/expenses/frequent` | Frequent Items | Frequently bought | [[expense-insight]] |
+| `/profile/expenses/budgets` | Budgets | Budget management | [[expense-insight]] |
 
 ### 3.5 Group Purchase
 
@@ -164,7 +164,7 @@
 | Route | Page | Description | Feature |
 |-------|------|-------------|---------|
 | `/profile` | User Profile | Personal settings | [[onboarding]] |
-| `/profile/qr` | My QR Code | QR for in-store linking | [[expense-tracker]] |
+| `/profile/qr` | My QR Code | QR for in-store linking | [[expense-insight]] |
 | `/settings` | Settings | Account settings | [[onboarding]] |
 | `/settings/notifications` | Notification Settings | Notification preferences | [[notifications]] |
 | `/settings/language` | Language | Language preference | [[multi-language]] |

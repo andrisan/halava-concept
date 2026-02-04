@@ -24,7 +24,7 @@
 | Cart | P0 | Pending |
 | Checkout Flow | P0 | Pending |
 | Order Tracking | P0 | Pending |
-| Expense Tracker | P0 | Pending |
+| Expense Insight | P0 | Pending |
 | Spending Insights | P0 | Pending |
 | Personal Price History | P0 | Pending |
 | Group Purchase | P1 | Pending |

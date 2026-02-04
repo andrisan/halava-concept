@@ -4,7 +4,7 @@
 > **Version:** MVP (v1)
 > **Status:** Active
 >
-> **Related:** [[directory]] · [[marketplace]] · [[expense-tracker]]
+> **Related:** [[directory]] · [[marketplace]] · [[expense-insight]]
 
 ---
 
@@ -542,7 +542,7 @@ Merchants can respond publicly to reviews:
 
 - [[directory]] — Place pages display reviews
 - [[marketplace]] — Product pages display reviews
-- [[expense-tracker]] — Verification of purchases
+- [[expense-insight]] — Verification of purchases
 - [[admin-moderation]] — Review moderation queue
 - [[notifications]] — Review prompts and responses
 

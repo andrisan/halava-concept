@@ -32,8 +32,8 @@ Consumer features focus on **discovery, purchasing, and financial empowerment**.
 | [[directory#Place Pages\|Directory: Place Pages]]                                 | Hours, photos, tags, halal status disclosure                | MVP     |
 | [[directory#Search & Filters\|Directory: Search & Filters]]                       | Distance, open now, cuisine, amenities                      | MVP     |
 | [[group-purchase\|Group Purchase]]                                                | Multiple users contribute to shared order                   | MVP     |
-| [[expense-tracker\|Expense Tracker]]                                            | Expense tracking, spending insights, personal price history | MVP     |
-| [[expense-tracker#Item Price History\|Personal Price History]]                    | Track what you paid for items across merchants              | MVP     |
+| [[expense-insight\|Expense Insight]]                                            | Expense tracking, spending insights, personal price history | MVP     |
+| [[expense-insight#Item Price History\|Personal Price History]]                    | Track what you paid for items across merchants              | MVP     |
 | [[bopu\|BOPU (Buy Online, Pick Up)]]                                              | Buy-online-pick-up options                                  | MVP     |
 | [[reviews-ratings\|Reviews & Ratings]]                                            | Rate places and products                                    | MVP     |
 | [[saved-items\|Saved Items (Bookmarks)]]                                          | Bookmark places and products                                | MVP     |

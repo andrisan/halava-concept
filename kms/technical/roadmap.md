@@ -39,7 +39,7 @@
 | [[directory#Place Pages\|Place Pages]] | Hours, photos, tags, halal status disclosure *(→ [[directory]])* |
 | [[directory#Search & Filters\|Search & Filters]] | Distance, open now, cuisine, amenities *(→ [[directory]])* |
 | [[group-purchase]] | Multiple users contribute to shared order |
-| [[expense-tracker]] | Expense tracking, spending insights, personal price history |
+| [[expense-insight]] | Expense tracking, spending insights, personal price history |
 | [[bopu]] | Buy-online-pick-up options |
 | [[reviews-ratings]] | Rate places and products |
 | [[saved-items]] | Bookmark places and products |

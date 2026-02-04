@@ -143,7 +143,7 @@ API endpoints are organized by **module ownership**, not user type. This support
 ## 5. Consumer Module
 
 > **Base Path:** `/v1/consumer`
-> **Details:** [[saved-items]], [[expense-tracker]], [[reviews-ratings]]
+> **Details:** [[saved-items]], [[expense-insight]], [[reviews-ratings]]
 
 ### 5.1 Profile
 
@@ -151,7 +151,7 @@ API endpoints are organized by **module ownership**, not user type. This support
 |------------|--------|----------|-------------|
 | [[onboarding]] | `GET` | [[onboarding#GET /v1/consumer/profile\|/v1/consumer/profile]] | Get user profile |
 | [[onboarding]] | `PATCH` | [[onboarding#PATCH /v1/consumer/profile\|/v1/consumer/profile]] | Update user profile |
-| [[expense-tracker]] | `GET` | [[expense-tracker#GET /v1/consumer/qr\|/v1/consumer/qr]] | Get user's linking QR code |
+| [[expense-insight]] | `GET` | [[expense-insight#GET /v1/consumer/qr\|/v1/consumer/qr]] | Get user's linking QR code |
 
 ### 5.2 Saved Items
 
@@ -170,19 +170,19 @@ API endpoints are organized by **module ownership**, not user type. This support
 | [[saved-items]] | `DELETE` | [[saved-items#DELETE /v1/consumer/collections/{id}/items/{item_id}\|/v1/consumer/collections/{id}/items/{item_id}]] | Remove from collection |
 | [[saved-items]] | `GET` | [[saved-items#GET /v1/consumer/shared/{share_token}\|/v1/consumer/shared/{token}]] | View shared collection |
 
-### 5.3 Expense Tracker
+### 5.3 Expense Insight
 
 | Feature(s) | Method | Endpoint | Description |
 |------------|--------|----------|-------------|
-| [[expense-tracker]] | `GET` | [[expense-tracker#GET /v1/consumer/expenses/purchases\|/v1/consumer/expenses/purchases]] | List user's purchases |
-| [[expense-tracker]] | `GET` | [[expense-tracker#GET /v1/consumer/expenses/purchases/{id}\|/v1/consumer/expenses/purchases/{id}]] | Get purchase details |
-| [[expense-tracker]] | `GET` | [[expense-tracker#GET /v1/consumer/expenses/purchases/export\|/v1/consumer/expenses/purchases/export]] | Export purchases (CSV/JSON) |
-| [[expense-tracker]] | `GET` | [[expense-tracker#GET /v1/consumer/expenses/insights\|/v1/consumer/expenses/insights]] | Get spending analytics |
-| [[expense-tracker]] | `GET` | [[expense-tracker#GET /v1/consumer/expenses/prices/{item_id}\|/v1/consumer/expenses/prices/{item_id}]] | Get item price history |
-| [[expense-tracker]] | `GET` | [[expense-tracker#GET /v1/consumer/expenses/frequent\|/v1/consumer/expenses/frequent]] | Get frequently bought items |
-| [[expense-tracker]] | `GET` | [[expense-tracker#GET /v1/consumer/expenses/budgets\|/v1/consumer/expenses/budgets]] | Get budget goals |
-| [[expense-tracker]] | `PUT` | [[expense-tracker#PUT /v1/consumer/expenses/budgets\|/v1/consumer/expenses/budgets]] | Create/update budget |
-| [[expense-tracker]] | `DELETE` | [[expense-tracker#DELETE /v1/consumer/expenses/budgets/{id}\|/v1/consumer/expenses/budgets/{id}]] | Delete budget |
+| [[expense-insight]] | `GET` | [[expense-insight#GET /v1/consumer/expenses/purchases\|/v1/consumer/expenses/purchases]] | List user's purchases |
+| [[expense-insight]] | `GET` | [[expense-insight#GET /v1/consumer/expenses/purchases/{id}\|/v1/consumer/expenses/purchases/{id}]] | Get purchase details |
+| [[expense-insight]] | `GET` | [[expense-insight#GET /v1/consumer/expenses/purchases/export\|/v1/consumer/expenses/purchases/export]] | Export purchases (CSV/JSON) |
+| [[expense-insight]] | `GET` | [[expense-insight#GET /v1/consumer/expenses/insights\|/v1/consumer/expenses/insights]] | Get spending analytics |
+| [[expense-insight]] | `GET` | [[expense-insight#GET /v1/consumer/expenses/prices/{item_id}\|/v1/consumer/expenses/prices/{item_id}]] | Get item price history |
+| [[expense-insight]] | `GET` | [[expense-insight#GET /v1/consumer/expenses/frequent\|/v1/consumer/expenses/frequent]] | Get frequently bought items |
+| [[expense-insight]] | `GET` | [[expense-insight#GET /v1/consumer/expenses/budgets\|/v1/consumer/expenses/budgets]] | Get budget goals |
+| [[expense-insight]] | `PUT` | [[expense-insight#PUT /v1/consumer/expenses/budgets\|/v1/consumer/expenses/budgets]] | Create/update budget |
+| [[expense-insight]] | `DELETE` | [[expense-insight#DELETE /v1/consumer/expenses/budgets/{id}\|/v1/consumer/expenses/budgets/{id}]] | Delete budget |
 
 ### 5.4 Reviews
 

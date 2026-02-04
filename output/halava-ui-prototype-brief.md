@@ -91,7 +91,7 @@
 
 | Route | Page | Purpose |
 |-------|------|---------|
-| `/profile/expenses` | Expense Tracker | Purchase history with filters |
+| `/profile/expenses` | Expense Insight | Purchase history with filters |
 | `/profile/expenses/{id}` | Transaction Detail | Receipt, itemized breakdown |
 | `/profile/expenses/insights` | Spending Insights | Charts, trends, category breakdown |
 | `/profile/expenses/prices` | Price History | Personal price tracking across merchants |
@@ -427,13 +427,13 @@
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### 4.7 Expense Tracker (`/profile/expenses`)
+### 4.7 Expense Insight (`/profile/expenses`)
 
 **Purpose:** View and analyze purchase history.
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│ Expense Tracker                                      [Insights] │
+│ Expense Insight                                      [Insights] │
 ├─────────────────────────────────────────────────────────────────┤
 │ This Month: ¥45,230                         vs last: ▲ ¥3,200  │
 │                                                                 │
@@ -623,7 +623,7 @@
 | **Directory** | Discover halal places with map view | Home, Places, Place Page |
 | **Marketplace** | Browse and purchase products | Products, Product Page, Cart, Checkout |
 | **Group Purchase** | Coordinate orders with friends | Group Lobby, Invite, Checkout |
-| **Expense Tracker** | Track all halal spending | Expenses, Insights, Price History |
+| **Expense Insight** | Track all halal spending | Expenses, Insights, Price History |
 | **BOPU** | Buy online, pick up in-store | Checkout (pickup option), Order Pickup |
 | **Reviews & Ratings** | Rate places and products | Place Reviews, Product Reviews, Write Review |
 | **Saved Items** | Bookmark favorites | Saved, Collections |

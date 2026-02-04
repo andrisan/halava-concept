@@ -18,10 +18,10 @@ All-in-one tools to reach halal-conscious customers and grow the business.
 
 ## Platform Pillars
 
-- **Consumer Convenience:** One trusted place to discover, shop, and coordinate halal purchases
+- **Halal Hub:** One place to find groceries, restaurants, and halal services
+- **Halal Companion:** Personal tools to help consumers simplify their halal lifestyle
 - **Merchant Empowerment:** Modular tools to manage operations and grow online presence
 - **Unified Commerce:** Seamless experience across discovery, shopping, dining, and payments
-- **Halal Trust:** Transparent merchant-declared status; no gatekeeping
 
 ---
 
@@ -36,7 +36,7 @@ All-in-one tools to reach halal-conscious customers and grow the business.
 > **Full feature tables:** [[web-app-spec#Platform Features]]
 
 ### Consumer
-[[group-purchase]] · [[expense-tracker]] · [[reviews-ratings]] · [[saved-items]] · [[bopu]]
+[[group-purchase]] · [[expense-insight]] · [[reviews-ratings]] · [[saved-items]] · [[bopu]]
 
 ### Merchant
 [[order-management]] · [[restaurant-ops]] · [[pos]] · [[promotions]] · [[accounting]]
@@ -73,7 +73,7 @@ All-in-one tools to reach halal-conscious customers and grow the business.
 |---------|----------|
 | Capability-based merchant model | [[web-app-spec#Capability Model]] |
 | Transaction fee tiers | [[monetization#3. Transaction Fee Model (Gradual Pricing)]] |
-| Expense tracking | [[expense-tracker]] |
+| Expense tracking | [[expense-insight]] |
 | POS interface | [[pos#UI/UX Specification]] |
 | Technical stack | [[architecture#3. Technology Stack]] |
 | Order flow | [[order-management#Order Lifecycle]] |

@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "features/shared/onboarding.md",
+                "file": "spec/web-app-spec.md",
                 "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "onboarding"
+              "title": "web-app-spec"
             }
           }
         ]
@@ -155,13 +155,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "features/shared/onboarding.md",
+                "file": "spec/web-app-spec.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of onboarding"
+              "title": "Outline of web-app-spec"
             }
           }
         ],
@@ -184,10 +184,27 @@
   },
   "active": "efa9e9fc2b1d2b6b",
   "lastOpenFiles": [
+    "features/consumer/expense-insight.md.tmp.8515.1770197780320",
+    "design/wireframes.md.tmp.8515.1770197766459",
+    "spec/api-spec.md.tmp.8515.1770197761037",
+    "spec/pages-navigation-ux-spec.md.tmp.8515.1770197760215",
+    "spec/routes-spec.md.tmp.8515.1770197759316",
+    "spec/web-app-spec.md.tmp.8515.1770197758548",
+    "technical/data-model.md.tmp.8515.1770197749619",
+    "technical/roadmap.md.tmp.8515.1770197748814",
+    "features/consumer/reviews-ratings.md.tmp.8515.1770197747878",
+    "features/consumer/saved-items.md.tmp.8515.1770197747050",
+    "spec/web-app-spec.md.tmp.8515.1770197746028",
+    "features/consumer/expense-tracker.md",
+    "features/consumer/expense-insight.md",
+    "spec/web-app-spec.md",
+    "features/shared/directory.md",
+    "features/consumer/group-purchase.md",
+    "index.md",
+    "features/shared/onboarding.md",
     "features/shared/notifications.md",
     "features/shared/multi-language.md",
     "features/shared/marketplace.md",
-    "features/shared/directory.md",
     "features/shared/authentication.md",
     "features/platform/roles-permissions.md",
     "features/platform/admin-moderation.md",
@@ -200,26 +217,9 @@
     "features/merchant/accounting.md",
     "features/consumer/saved-items.md",
     "features/consumer/reviews-ratings.md",
-    "features/consumer/group-purchase.md",
-    "features/consumer/expense-tracker.md",
     "features/consumer/bopu.md",
     "concepts/order-concepts.md",
     "business/order-concepts.md",
-    "concepts",
-    "business/monetization.md",
-    "spec/web-app-spec.md",
-    "technical/roadmap.md",
-    "spec/api-spec.md",
-    "spec/api-spec.md.tmp.4289.1770157182295",
-    "spec/api-spec.md.tmp.4289.1770157176572",
-    "spec/api-spec.md.tmp.4289.1770157171616",
-    "spec/api-spec.md.tmp.4289.1770157143495",
-    "spec/api-spec.md.tmp.4289.1770157120681",
-    "spec/api-spec.md.tmp.4289.1770157106907",
-    "features/platform/roles-permissions.md.tmp.4289.1770157089070",
-    "index.md",
-    "features/shared/notifications.md.tmp.4289.1770157074172",
-    "features/merchant/pos.md.tmp.4289.1770157065711",
     "Untitled.canvas"
   ]
 }

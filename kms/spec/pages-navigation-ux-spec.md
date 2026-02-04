@@ -134,7 +134,7 @@ Below is a summary of key routes. See [[routes-spec]] for the complete listing.
 | `/orders` | My Orders | List of all consumer orders |
 | `/orders/{id}` | Order Details | Order tracking and status |
 | `/saved` | Saved Items | All saved places and products |
-| `/profile/expenses` | Expense Tracker | Expense tracking and insights |
+| `/profile/expenses` | Expense Insight | Expense tracking and insights |
 | `/group-purchase/{code}` | Group Purchase | Join/manage group purchase |
 | `/profile` | User Profile | Personal settings and preferences |
 
@@ -184,7 +184,7 @@ Detailed page layouts and UI specifications live in the respective feature docum
 | Feature | Document | Key Screens |
 |---------|----------|-------------|
 | Directory & Search | [[directory#UI/UX Specification]] | Search bar, results (list/map), place page, filter sheet |
-| Expense Tracker | [[expense-tracker#UI/UX Specification]] | Purchase history, insights dashboard, price history |
+| Expense Insight | [[expense-insight#UI/UX Specification]] | Purchase history, insights dashboard, price history |
 | Group Purchase | [[group-purchase#UI/UX Specification]] | Group creation, contribution, tracking |
 | Saved Items | [[saved-items#UI/UX Specification]] | Bookmarked places and products |
 | Reviews & Ratings | [[reviews-ratings#UI/UX Specification]] | Review form, rating display |

@@ -36,7 +36,7 @@ This document serves as an index to all data models in the Halava platform. Each
 | [[group-purchase#Data Model]] | GroupPurchase, GroupPurchaseParticipant, GroupPurchaseItem |
 | [[reviews-ratings#Data Model]] | Review, ReviewHelpful, ReviewReport |
 | [[saved-items#Data Model]] | SavedItem, Collection |
-| [[expense-tracker#Data Model]] | PurchaseRecord, PersonalPriceHistory, FrequentItem, SpendingInsight, BudgetGoal |
+| [[expense-insight#Data Model]] | PurchaseRecord, PersonalPriceHistory, FrequentItem, SpendingInsight, BudgetGoal |
 
 ### Merchant Features
 
