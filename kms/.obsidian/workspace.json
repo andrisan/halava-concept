@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "spec/web-app-spec.md",
+                "file": "business/monetization.md",
                 "mode": "preview",
-                "source": false
+                "source": true
               },
               "icon": "lucide-file",
-              "title": "web-app-spec"
+              "title": "monetization"
             }
           }
         ]
@@ -155,13 +155,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "spec/web-app-spec.md",
+                "file": "business/monetization.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of web-app-spec"
+              "title": "Outline of monetization"
             }
           }
         ],
@@ -184,23 +184,30 @@
   },
   "active": "efa9e9fc2b1d2b6b",
   "lastOpenFiles": [
-    "features/consumer/expense-insight.md.tmp.8515.1770197780320",
-    "design/wireframes.md.tmp.8515.1770197766459",
-    "spec/api-spec.md.tmp.8515.1770197761037",
-    "spec/pages-navigation-ux-spec.md.tmp.8515.1770197760215",
-    "spec/routes-spec.md.tmp.8515.1770197759316",
-    "spec/web-app-spec.md.tmp.8515.1770197758548",
-    "technical/data-model.md.tmp.8515.1770197749619",
-    "technical/roadmap.md.tmp.8515.1770197748814",
-    "features/consumer/reviews-ratings.md.tmp.8515.1770197747878",
-    "features/consumer/saved-items.md.tmp.8515.1770197747050",
-    "spec/web-app-spec.md.tmp.8515.1770197746028",
+    "business/pitch-deck.md.tmp.21659.1770242196124",
+    "business/monetization.md.tmp.21659.1770242188940",
+    "business/pitch-deck.md",
+    "business/monetization.md.tmp.21659.1770242059918",
+    "business/pitch-deck.md.tmp.21659.1770242055355",
+    "business/monetization.md.tmp.21659.1770242050290",
+    "business/pitch-deck.md.tmp.21659.1770241822254",
+    "business/monetization.md.tmp.21659.1770241799550",
+    "business/pitch-deck.md.tmp.21659.1770241416043",
+    "business/monetization.md.tmp.21659.1770241409313",
+    "business/monetization.md.tmp.21659.1770241186929",
+    "business/pitch-deck.md.tmp.21659.1770241179026",
+    "business/monetization.md",
+    "business/market-validation.md",
+    "spec/pages-navigation-ux-spec.md",
+    "design/design-system.md",
+    "index.md",
+    "spec/web-app-spec.md",
+    "glossary.md",
+    "business/risk-assessment.md",
     "features/consumer/expense-tracker.md",
     "features/consumer/expense-insight.md",
-    "spec/web-app-spec.md",
     "features/shared/directory.md",
     "features/consumer/group-purchase.md",
-    "index.md",
     "features/shared/onboarding.md",
     "features/shared/notifications.md",
     "features/shared/multi-language.md",
@@ -213,13 +220,6 @@
     "features/merchant/products.md",
     "features/merchant/pos.md",
     "features/merchant/order-management.md",
-    "features/merchant/inventory.md",
-    "features/merchant/accounting.md",
-    "features/consumer/saved-items.md",
-    "features/consumer/reviews-ratings.md",
-    "features/consumer/bopu.md",
-    "concepts/order-concepts.md",
-    "business/order-concepts.md",
     "Untitled.canvas"
   ]
 }

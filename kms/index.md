@@ -21,7 +21,7 @@ All-in-one tools to reach halal-conscious customers and grow the business.
 - **Halal Hub:** One place to find groceries, restaurants, and halal services
 - **Halal Companion:** Personal tools to help consumers simplify their halal lifestyle
 - **Merchant Empowerment:** Modular tools to manage operations and grow online presence
-- **Unified Commerce:** Seamless experience across discovery, shopping, dining, and payments
+- **Unified Commerce:** Seamless experience across discovery, shopping, and dining
 
 ---
 
@@ -33,19 +33,19 @@ All-in-one tools to reach halal-conscious customers and grow the business.
 
 ## 🎯 Features
 
-> **Full feature tables:** [[web-app-spec#Platform Features]]
+> **Full feature tables:** [[web-app-spec#Halava Features]]
 
 ### Consumer
 [[group-purchase]] · [[expense-insight]] · [[reviews-ratings]] · [[saved-items]] · [[bopu]]
 
 ### Merchant
-[[order-management]] · [[restaurant-ops]] · [[pos]] · [[promotions]] · [[accounting]]
+[[products]] · [[inventory]] · [[order-management]] · [[pos]] · [[restaurant-ops]] · [[promotions]] · [[accounting]]
 
 ### Platform
 [[admin-moderation]] · [[roles-permissions]]
 
 ### Shared
-[[directory]] · [[marketplace]] · [[onboarding]] · [[notifications]]
+[[authentication]] · [[onboarding]] · [[directory]] · [[marketplace]] · [[notifications]] · [[multi-language]]
 
 ---
 
@@ -64,6 +64,13 @@ All-in-one tools to reach halal-conscious customers and grow the business.
 ## 🎨 Design
 
 [[wireframes]] · [[design-system]]
+
+---
+
+## 📖 Reference
+
+[[glossary]] — Abbreviations and terms index
+[[order-concepts]] — Order type classification logic
 
 ---
 

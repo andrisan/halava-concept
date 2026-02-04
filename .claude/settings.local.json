@@ -4,7 +4,8 @@
       "Bash(git mv:*)",
       "Bash(git rm:*)",
       "Bash(done)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(wc:*)"
     ]
   }
 }

@@ -8,18 +8,24 @@
 
 ## 1. Project Overview
 
-**Halava** is a two-sided halal commerce platform serving consumers and merchants in Japan.
+**Halava** is a two-sided halal commerce platform serving consumers and merchants in Japan, with initial focus on the Indonesian diaspora (230,689+ people, growing 37.2% YoY).
 
 **For Consumers:** Discover halal places, shop online, track expenses, and coordinate group purchases.
 
 **For Merchants:** Manage products, process orders, run POS, and grow online presence with modular capabilities.
 
+### Growth Strategy
+
+**Consumer-first approach:** Build value for consumers first through discovery, group purchase, and expense tracking features. Consumer demand then pulls merchants into the platform organically.
+
+**Formalizing existing behavior:** Indonesians already coordinate group purchases via WhatsApp/LINE groups with scattered chats, manual calculations, and trust-based reimbursement. Halava formalizes this into a proper platform with automatic splitting, tracking, and receipts.
+
 ### Platform Pillars
 
-- **Consumer Convenience:** One trusted place to discover, shop, and track halal purchases
-- **Merchant Empowerment:** Modular tools to manage operations and reach customers
+- **Halal Hub:** One place to find groceries, restaurants, and halal services
+- **Halal Companion:** Personal tools to help consumers simplify their halal lifestyle (Expense Insight)
+- **Merchant Empowerment:** Modular capability-based tools to manage operations and grow online presence
 - **Unified Commerce:** Seamless experience across discovery, shopping, dining, and payments
-- **Halal Trust:** Transparent merchant-declared halal status
 
 ---
 
@@ -53,6 +59,8 @@
 | `/m/{merchant}/shop` | Merchant Products | Product catalog for a merchant |
 | `/m/{merchant}/menu` | Restaurant Menu | QR menu for restaurants |
 | `/m/{merchant}/menu/{item}` | Menu Item | Item details with modifiers |
+| `/m/{merchant}/cart` | Restaurant Cart | Current restaurant order |
+| `/m/{merchant}/checkout` | Restaurant Checkout | Complete restaurant order |
 
 ### 3.2 Authentication Routes
 
@@ -63,6 +71,7 @@
 | `/merchant/signup` | Merchant Sign Up | Merchant registration |
 | `/verify` | Verify Code | OTP/magic link entry |
 | `/check-email` | Check Email | Magic link sent confirmation |
+| `/logout` | Logout | Sign out (redirect to home) |
 
 ### 3.3 Consumer Routes (Auth Required)
 
@@ -104,9 +113,15 @@
 | Route | Page | Purpose |
 |-------|------|---------|
 | `/m/{merchant}/group/new` | Create Group | Start new group purchase |
-| `/group-purchase/{code}` | Group Lobby | View participants, items, totals |
-| `/group-purchase/{code}/invite` | Share Group | Copy invite link |
-| `/group-purchase/{code}/checkout` | Group Checkout | Submit combined order (initiator only) |
+| `/group/{code}` | Group Lobby | View participants, items, totals |
+| `/group/{code}/invite` | Share Group | Copy invite link |
+| `/group/{code}/checkout` | Group Checkout | Submit combined order (initiator only) |
+
+#### Reviews
+
+| Route | Page | Purpose |
+|-------|------|---------|
+| `/review/new` | Write Review | New review form |
 
 #### Profile & Settings
 
@@ -288,7 +303,7 @@
 │                                                                 │
 │ 📍 Shibuya, Tokyo · 1.2 km                                      │
 │ 🕐 Open · Closes 22:00                                          │
-│ ☪️ Halal Status: Self-declared Muslim-owned                     │
+│ ☪️ Certified Halal [View Certificate]                           │
 │                                                                 │
 │ [Tabs: Overview | Menu | Reviews | Photos]                      │
 ├─────────────────────────────────────────────────────────────────┤
@@ -429,15 +444,20 @@
 
 ### 4.7 Expense Insight (`/profile/expenses`)
 
-**Purpose:** View and analyze purchase history.
+**Purpose:** View and analyze purchase history. Track spending across online orders, in-store purchases, and dining. Personal price history to find your best deals.
+
+> **Design Note:** This feature intentionally avoids real-time cross-merchant price comparison to maintain healthy merchant relationships. Halava supports all merchants equally rather than driving a race-to-the-bottom on pricing.
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │ Expense Insight                                      [Insights] │
 ├─────────────────────────────────────────────────────────────────┤
 │ This Month: ¥45,230                         vs last: ▲ ¥3,200  │
+│ Budget: ¥60,000 · 75% used                                      │
 │                                                                 │
-│ [All] [Online] [In-Store]     [Jan 2026 ▼]    [Export]          │
+│ [Purchases] [Insights] [My Prices] [Frequent]                   │
+│                                                                 │
+│ [All] [Groceries] [Dining] [Shopping]    [Jan 2026 ▼] [Export] │
 ├─────────────────────────────────────────────────────────────────┤
 │ Today                                                           │
 │ ┌─────────────────────────────────────────────────────────────┐ │
@@ -457,40 +477,55 @@
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### 4.8 Group Purchase Lobby (`/group-purchase/{code}`)
+### 4.8 Group Purchase Lobby (`/group/{code}`)
 
-**Purpose:** Coordinate group order.
+**Purpose:** Coordinate group order. Multiple consumers contribute items to a shared order from a single merchant. Initiator pays the merchant, participants reimburse externally.
+
+**Core value proposition:**
+- Friends/families coordinate bulk orders together
+- Reach free shipping thresholds by combining orders
+- Even with expensive delivery, cost becomes affordable when split by group
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│ Group Purchase                                        [Invite]  │
-│ From: Halal Mart Shibuya                                        │
+│ Group Order at Halal Mart                               [📤]    │
+│ Created by: Ahmad (you)                                         │
+│ Deadline: 2 days left                                           │
 ├─────────────────────────────────────────────────────────────────┤
 │ Participants (3)                                                │
 │ ┌─────────────────────────────────────────────────────────────┐ │
-│ │ 👤 Ahmad (You) - Initiator                         ¥2,400   │ │
-│ │    • Halal Beef 500g × 2                                    │ │
+│ │ 👤 Ahmad (Initiator)                               ¥3,600   │ │
+│ │    • Halal Beef 500g × 2              ¥2,400                │ │
+│ │    • Rice 5kg × 1                     ¥1,200                │ │
 │ ├─────────────────────────────────────────────────────────────┤ │
-│ │ 👤 Fatima                                          ¥1,200   │ │
-│ │    • Chicken Breast 1kg × 1                                 │ │
+│ │ 👤 Fatima                                          ¥2,940   │ │
+│ │    • Lamb Chops 300g × 3              ¥2,940                │ │
 │ ├─────────────────────────────────────────────────────────────┤ │
-│ │ 👤 Yusuf                                             ¥980   │ │
-│ │    • Lamb Chops 300g × 1                                    │ │
+│ │ 👤 Yusuf                                           ¥1,300   │ │
+│ │    • Chicken Breast × 2               ¥1,300                │ │
 │ └─────────────────────────────────────────────────────────────┘ │
 │                                                                 │
-│ [+ Add Items]                                                   │
+│ [+ Add More Items]                                              │
 ├─────────────────────────────────────────────────────────────────┤
-│ Group Total:                                           ¥4,580   │
-│ Delivery (split 3 ways):                      ¥167 each         │
-│ Your share:                                            ¥2,567   │
-│                                                                 │
-│ [Submit Group Order]  (Only initiator can submit)               │
+│ Subtotal:                                              ¥7,840   │
+│ Shipping:                                              FREE ✓   │
+│ (Free over ¥5,000)                                              │
+│ ─────────────────────────────────────────────────────────────  │
+│ Total:                                                 ¥7,840   │
+├─────────────────────────────────────────────────────────────────┤
+│ [📤 Invite More]              [Submit Order] (Initiator only)   │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
 ### 4.9 POS Main Screen (`/pos`)
 
-**Purpose:** Process in-store sales.
+**Purpose:** Process in-store sales. Desktop-only feature with offline support.
+
+**POS Quota System:**
+- Free Plan: 300 transactions/month
+- Growth Plan: 3,000 transactions/month
+- Pro Plan: Unlimited transactions
+- Top-up packs available for overage
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -513,6 +548,8 @@
 │ │Rice │ │Milk │ │Naan │         │ TOTAL:               ¥1,485 │
 │ └─────┘ └─────┘ └─────┘         │                              │
 │                                  │ [Link Customer QR]          │
+│                                  │ Scan to link to customer's  │
+│                                  │ Expense Insight             │
 │                                  │                              │
 │                                  │ [Complete Sale - ¥1,485]    │
 ├──────────────────────────────────┴──────────────────────────────┤
@@ -622,13 +659,17 @@
 |---------|-------------|-------------|
 | **Directory** | Discover halal places with map view | Home, Places, Place Page |
 | **Marketplace** | Browse and purchase products | Products, Product Page, Cart, Checkout |
-| **Group Purchase** | Coordinate orders with friends | Group Lobby, Invite, Checkout |
-| **Expense Insight** | Track all halal spending | Expenses, Insights, Price History |
+| **Group Purchase** | Coordinate orders with friends to reach free shipping | Group Lobby, Invite, Checkout |
+| **Expense Insight** | Track spending, personal price history, budgeting | Purchases, Insights, My Prices, Frequent, Budgets |
 | **BOPU** | Buy online, pick up in-store | Checkout (pickup option), Order Pickup |
 | **Reviews & Ratings** | Rate places and products | Place Reviews, Product Reviews, Write Review |
 | **Saved Items** | Bookmark favorites | Saved, Collections |
 
 ### 5.2 Merchant Features (MVP)
+
+**Capability-Based Model:** Merchants enable capabilities (Directory Listing, Shop/Marketplace, Restaurant Operations, POS, Analytics) rather than being locked into business types. This allows hybrid businesses (e.g., grocery store with restaurant) to use all relevant features.
+
+**Capability States:** Disabled → Enabled (Needs setup) → Active → Suspended
 
 | Feature | Description | Key Screens |
 |---------|-------------|-------------|
@@ -647,7 +688,13 @@
 | **QR Ordering** | Contactless table ordering | QR Menu, Menu Item, Restaurant Cart |
 | **Kitchen Queue** | Order preparation workflow | Kitchen Queue, Kitchen Display |
 
-### 5.4 Merchant Features (v1.2)
+### 5.4 Consumer Features (v1.2)
+
+| Feature | Description | Key Screens |
+|---------|-------------|-------------|
+| **In-city Group Delivery** | Enhanced group purchase with distribution tracking | Group Lobby (addresses), Distribution Tracking |
+
+### 5.5 Merchant Features (v1.2)
 
 | Feature | Description | Key Screens |
 |---------|-------------|-------------|
@@ -711,15 +758,78 @@
 
 ## 7. Design Guidelines
 
-### 7.1 Responsive Breakpoints
+### 7.1 Dual-Template Architecture
+
+> **Critical:** Halava uses two entirely independent templates based on device type. The mobile template is **NOT** a responsive version of the desktop template. It is a **completely separate codebase** designed like a native mobile app — with its own component tree, layouts, and navigation patterns. No desktop UI elements (hamburger menus, sidebars, hover states) exist in the mobile template. Only the desktop template uses responsive design (scaling from tablet to desktop).
+
+| Template | Target | Breakpoint | Architecture |
+|----------|--------|------------|--------------|
+| **Mobile Template** | Phones | < 640px | Separate component tree, dedicated mobile UI |
+| **Desktop Template** | Tablets, laptops, desktops | ≥ 640px | Single codebase with responsive CSS (tablet ↔ desktop) |
+
+#### Why Separate Templates (Not Responsive)
+
+The mobile template is a distinct implementation designed like a **native mobile app**, not CSS media queries on the desktop template:
+
+- **Native app paradigm:** No desktop elements (no hamburger menus, no sidebars, no hover states)
+- **Different component trees:** Mobile and desktop render entirely different UI components
+- **Different navigation structure:** Bottom tabs only (mobile) vs topbar + sidebar (desktop)
+- **Different page layouts:** Not just resized — fundamentally different information architecture
+- **Different interaction patterns:** Swipe gestures, bottom sheets, pull-to-refresh (no click/hover)
+- **Different bundle:** Mobile loads only mobile components (smaller JS payload)
+- **Different feature set:** POS, Admin, and full Merchant dashboard are desktop-only
+
+#### Directory Structure for Development
+
+```
+Mobile Template (< 640px)
+├── /components/mobile/       ← Separate component directory
+├── /layouts/mobile-layout    ← Different shell
+├── /pages/mobile/            ← Mobile-specific pages
+└── No responsive breakpoints within template
+
+Desktop Template (≥ 640px)
+├── /components/desktop/      ← Separate component directory
+├── /layouts/desktop-layout
+├── /pages/desktop/
+└── Responsive: tablet (640-1024px) ↔ desktop (>1024px)
+```
+
+#### Template Detection
+
+| Method | Purpose |
+|--------|---------|
+| **Server-side (User-Agent)** | Initial SSR render with correct template |
+| **Client-side (viewport width)** | Hydration and resize handling |
+| **Template switch** | Triggers full re-render (not CSS toggle) |
+
+#### Shared Across Templates
+
+Both templates share:
+- Design tokens (colors, typography, spacing)
+- Reusable logic and state management
+- API layer and data fetching
+- Authentication state
+- Business logic and validation
+
+#### Desktop Template Breakpoints
 
 | Breakpoint | Width | Target |
 |------------|-------|--------|
-| Mobile | < 640px | Phones |
 | Tablet | 640px - 1024px | Tablets, small laptops |
 | Desktop | > 1024px | Laptops, desktops |
 
-### 7.2 Color Palette (Suggested)
+### 7.2 Template-Specific Features
+
+| Feature | Mobile Template | Desktop Template |
+|---------|-----------------|------------------|
+| **Consumer browsing** | Full support | Full support |
+| **Consumer checkout** | Full support | Full support |
+| **Merchant dashboard** | Limited (view-only) | Full support |
+| **POS** | Not supported | Full support |
+| **Admin/Moderator** | Not supported | Full support |
+
+### 7.3 Color Palette (Suggested)
 
 | Role | Usage |
 |------|-------|
@@ -730,7 +840,7 @@
 | **Error** | Errors, validation |
 | **Neutral** | Text, borders, backgrounds |
 
-### 7.3 Typography
+### 7.4 Typography
 
 | Element | Usage |
 |---------|-------|
@@ -739,7 +849,7 @@
 | **Caption** | Labels, timestamps |
 | **Monospace** | Codes, order numbers |
 
-### 7.4 Touch Targets
+### 7.5 Touch Targets
 
 - Minimum: 44×44 px
 - Adequate spacing between interactive elements
@@ -758,13 +868,30 @@ Home → Search/Browse → Product Page → Add to Cart → Cart → Checkout �
 ### 8.2 Consumer: Group Purchase
 
 ```
-Product Page → Start Group → Share Invite → Friends Join & Add Items → Initiator Submits → Track Order
+Merchant Shopfront → Start Group Order → Set Deadline → Share Invite Link (WhatsApp/LINE)
+  → Friends Join & Add Items → Reach Free Shipping Threshold
+  → Initiator Reviews & Submits → Pay Full Amount
+  → Receive Order → Distribute to Participants → Share Breakdown for Reimbursement
 ```
 
 ### 8.3 Consumer: Expense Tracking
 
 ```
-Profile → Expenses → View History → Filter by Date/Merchant → View Details → Export
+Profile → Expense Insight → View Purchase History
+  → Filter: Date range, Category (Groceries/Dining/Shopping), Merchant
+  → Tap Transaction → Full Receipt Details
+  → [Export] for personal records
+
+Profile → Expense Insight → Insights
+  → Monthly spending breakdown (chart)
+  → Category distribution (pie chart)
+  → Top merchants by spend
+  → [Set Budget Goal]
+
+Profile → Expense Insight → My Prices
+  → View personal price history for items
+  → "Your best price" highlight
+  → [Shop Here] to buy again from best-price merchant
 ```
 
 ### 8.4 Merchant: Process Online Order
@@ -785,21 +912,33 @@ POS → Search/Tap Products → Build Cart → (Optional: Scan Customer QR) → 
 Kitchen Queue → New Order Arrives → Accept → Preparing → Mark Ready → Customer Notified → Served → Fulfilled
 ```
 
+### 8.7 Consumer: Link In-Store Purchase to Account
+
+```
+At Checkout → Cashier: "Save receipt digitally?"
+  → Open Halava App → Profile → [My QR Code]
+  → Show QR to cashier → Cashier scans
+  → Transaction linked to account
+  → Appears in Expense Insight instantly
+```
+
 ---
 
 ## Appendix: Route Count Summary
 
 | Section | Count |
 |---------|-------|
-| Public Routes | 12 |
+| Public Routes | 14 |
 | Authentication Routes | 6 |
-| Consumer Routes | 28 |
+| Consumer Routes | 29 |
 | Merchant Dashboard Routes | 42 |
 | POS Routes | 7 |
 | Restaurant Routes | 6 |
 | Moderator Routes | 6 |
 | Admin Routes | 9 |
-| **Total** | **116** |
+| **Total** | **119** |
+
+> **Note:** See routes-spec.md for the authoritative complete listing.
 
 ---
 
@@ -807,12 +946,28 @@ Kitchen Queue → New Order Arrives → Accept → Preparing → Mark Ready → 
 
 Halava uses a transparent, merchant-declared halal status system:
 
-| Status | Badge | Description |
-|--------|-------|-------------|
-| **Certified** | ☪️ Halal Certified | Has certification from recognized body |
-| **Muslim-owned** | ☪️ Muslim-owned | Self-declared Muslim ownership |
-| **Halal-friendly** | ☪️ Halal-friendly | Offers halal options |
-| **Not specified** | — | No halal information provided |
+| Status | Badge | Description | Evidence |
+|--------|-------|-------------|----------|
+| **Certified** | ☪️ Certified Halal [View Certificate] | Has certification from recognized body | Certificate uploaded |
+| **Muslim-owned** | ☪️ Muslim-owned | Self-declared Muslim ownership | Optional declaration |
+| **Declared** | ☪️ Halal | Self-declared halal | None required |
+| **Not specified** | — | No halal information provided | — |
+
+> **Note:** Halava does not certify halal status. Merchants self-declare; moderators check for obvious fraud only.
+
+---
+
+## Appendix: Multi-Language Support
+
+Halava supports three languages to serve the Indonesian diaspora and broader market:
+
+| Language | Code | Primary Audience |
+|----------|------|------------------|
+| **English** | EN | Universal default |
+| **Japanese** | JP | Local merchants, Japanese users |
+| **Indonesian** | ID | Primary target: Indonesian diaspora |
+
+Users can change language via `/settings/language`.
 
 ---
 

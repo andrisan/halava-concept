@@ -131,7 +131,11 @@ When working with this repository:
 
 ## Key Terms
 
+> **Full glossary:** See `kms/glossary.md` for complete abbreviations and definitions.
+
 - **GMV:** Gross Merchandise Value
 - **BOPU:** Buy Online, Pick Up (in-store)
+- **CAC:** Customer Acquisition Cost
+- **POS:** Point of Sale
 - **Capability:** A modular feature set merchants can enable/disable
 - **Consumer-first:** Growth strategy prioritizing consumer value over merchant acquisition
