@@ -19,15 +19,18 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 halava-concept/
 ├── kms/                    # Source of truth (Obsidian vault with wikilinks)
 │   ├── index.md            # Map of Content
+│   ├── glossary.md         # Terms and abbreviations
 │   ├── spec/               # Product specifications
 │   │   ├── web-app-spec.md
 │   │   ├── pages-navigation-ux-spec.md
+│   │   ├── routes-spec.md
 │   │   └── api-spec.md
+│   ├── concepts/           # Domain concepts
+│   │   └── order-concepts.md
 │   ├── features/           # Feature specifications by audience
 │   │   ├── consumer/       # Consumer-facing features
 │   │   │   ├── group-purchase.md
-│   │   │   ├── purchase-history.md
-│   │   │   ├── price-comparison.md
+│   │   │   ├── expense-insight.md
 │   │   │   ├── bopu.md
 │   │   │   ├── reviews-ratings.md
 │   │   │   └── saved-items.md
@@ -61,41 +64,24 @@ halava-concept/
 │   └── design/             # Design documentation
 │       ├── wireframes.md
 │       └── design-system.md
-├── flat/                   # AI-readable originals (full detail, no wikilinks)
-│   ├── README.md
-│   ├── halava_web_app_spec_canvas.md
-│   ├── halava_pages_navigation_ux.md
-│   ├── halava_api_spec.md
-│   ├── halava_monetization_pricing_strategy_summary.md
-│   ├── halava_pitch_deck_outline_10_12_slides.md
-│   ├── halava_market_validation.md
-│   ├── halava_risk_assessment.md
-│   └── halava_technical_architecture.md
+├── output/                 # Generated documentation
+│   ├── halava-ui-prototype-brief.md
+│   └── halava-ui-wireframes-detail.md
+├── consumer/               # Consumer research (WIP)
 ├── logo/logo.svg           # Brand logo
-├── sync.sh                 # KMS → Flat sync script
 └── README.md               # Project overview
 ```
 
-### Two Documentation Formats
+### Documentation Format
 
 **kms/ (Obsidian vault):**
 - Condensed, interlinked notes with `[[wikilinks]]`
 - Best for human navigation and knowledge exploration
 - Open in Obsidian for graph view and backlinks
 
-**flat/ (Original specs):**
-- Full-detail specification files
-- Standard markdown (no wikilinks)
-- Best for AI context and comprehensive reference
-
-### Converting KMS to Flat
-
-When syncing or converting KMS documents to flat format:
-1. **Remove all wikilinks** — Convert `[[document]]` to standard Markdown links `[document](document.md)`
-2. **Remove Obsidian tags** — Strip `#halava #business` style tags
-3. **No KMS references** — The flat version must be completely standalone with zero visibility into the KMS structure. Do not mention `/kms/`, wikilinks, or Obsidian
-4. **Self-contained** — Each flat file should work independently without referencing the KMS folder
-5. **Use flat file naming** — Reference other flat files by their `halava_*.md` names, not KMS paths
+**output/ (Generated docs):**
+- UI prototype briefs and wireframe details
+- Generated from specifications for design handoff
 
 ## Key Architectural Concepts
 
@@ -123,11 +109,12 @@ Build value for consumers first through discovery and group purchase features, l
 
 When working with this repository:
 1. **kms/index.md** — Map of Content for navigation
-2. **kms/spec/web-app-spec.md** — Product specification summary
-3. **flat/halava_web_app_spec_canvas.md** — Full detailed specification
-4. **flat/halava_monetization_pricing_strategy_summary.md** — Complete revenue model
-5. **kms/technical/architecture.md** — System architecture summary
-6. **flat/halava_technical_architecture.md** — Full technical architecture
+2. **kms/spec/web-app-spec.md** — Product specification
+3. **kms/spec/pages-navigation-ux-spec.md** — Pages and UX flows
+4. **kms/spec/api-spec.md** — API endpoints
+5. **kms/business/monetization.md** — Revenue model
+6. **kms/technical/architecture.md** — System architecture
+7. **output/halava-ui-prototype-brief.md** — UI prototype brief
 
 ## Key Terms
 
