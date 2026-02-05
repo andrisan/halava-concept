@@ -138,6 +138,22 @@ API endpoints are organized by **module ownership**, not user type. This support
 | [[group-purchase]] | `POST` | [[group-purchase#POST /v1/marketplace/group-purchases/{code}/submit\|/v1/marketplace/group-purchases/{code}/submit]] | Submit order (initiator) |
 | [[group-purchase]] | `GET` | [[group-purchase#GET /v1/marketplace/group-purchases/{code}/breakdown\|/v1/marketplace/group-purchases/{code}/breakdown]] | Get participant breakdown |
 
+### 4.5 Discovery Feed
+
+Home page discovery feed for mobile infinite scroll.
+
+| Feature(s) | Method | Endpoint | Description |
+|------------|--------|----------|-------------|
+| [[marketplace]] | `GET` | `/v1/marketplace/discover` | Get discovery feed (paginated). Returns mixed restaurants and products. |
+
+**Query Parameters:**
+- `cursor` — Pagination cursor for infinite scroll
+- `filter` — `all` (default), `restaurants`, `products`, `deals`
+- `lat`, `lng` — User location for personalization
+- `limit` — Items per page (default: 20)
+
+**Response:** Mixed array of `{ type: "restaurant" | "product", data: {...} }` sorted by relevance.
+
 ---
 
 ## 5. Consumer Module
