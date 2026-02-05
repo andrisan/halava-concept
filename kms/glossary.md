@@ -49,6 +49,7 @@
 | **JSON** | JavaScript Object Notation | Lightweight data interchange format |
 | **JSONB** | JSON Binary | PostgreSQL's binary JSON storage format |
 | **OTP** | One-Time Password | Single-use code for authentication |
+| **PWA** | Progressive Web App | Web application with native app-like features (offline, push notifications, installable) |
 | **REST** | Representational State Transfer | Architectural style for web APIs |
 | **UI** | User Interface | Visual elements users interact with |
 | **URL** | Uniform Resource Locator | Web address |

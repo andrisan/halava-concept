@@ -10,13 +10,15 @@ A halal-first commerce platform for Indonesia, combining a directory of halal bu
 halava-concept/
 ├── kms/                  # 🔗 Source of truth (Obsidian vault)
 │   ├── index.md          # Map of Content
+│   ├── glossary.md       # Terms and abbreviations
 │   ├── spec/             # Product specifications
+│   ├── features/         # Feature specs (consumer, merchant, shared, platform)
 │   ├── business/         # Business documents
 │   ├── technical/        # Technical architecture
 │   └── design/           # Design documentation
-├── flat/                 # 🤖 AI-readable exports (auto-generated)
+├── output/               # 📄 Generated documentation (UI briefs, wireframes)
+├── consumer/             # 🔬 Consumer research (WIP)
 ├── logo/                 # Brand assets
-├── sync.sh               # KMS → Flat sync script
 └── README.md
 ```
 
@@ -28,9 +30,8 @@ halava-concept/
 - Start from `kms/index.md` as the Map of Content
 
 **For AI / automation:**
-- Use `flat/` folder for LLM context
-- Standard markdown links (no wikilinks)
-- Run `./sync.sh` to regenerate from kms/
+- Use `kms/` files directly for context
+- Reference `output/` for generated UI briefs
 
 ---
 
@@ -39,7 +40,7 @@ halava-concept/
 | Document | Description |
 |----------|-------------|
 | **[Web App Spec](kms/spec/web-app-spec.md)** | Core product specification |
-| **[Pages & Navigation](kms/spec/pages-navigation-ux.md)** | UI/UX specifications |
+| **[Pages & Navigation](kms/spec/pages-navigation-ux-spec.md)** | UI/UX specifications |
 | **[API Spec](kms/spec/api-spec.md)** | API contracts |
 | **[Architecture](kms/technical/architecture.md)** | Technical architecture |
 | **[Data Model](kms/technical/data-model.md)** | Database schema |
@@ -58,11 +59,7 @@ git clone https://github.com/andrisan/halava-concept.git
 cd halava-concept
 
 # Open kms/ in Obsidian for linked navigation
-# Or read flat/ for AI-friendly markdown
-
-# Sync kms → flat (after editing in Obsidian)
-chmod +x sync.sh
-./sync.sh
+# Start from kms/index.md as the Map of Content
 ```
 
 ---
@@ -71,8 +68,7 @@ chmod +x sync.sh
 
 1. Edit documents in `kms/` using Obsidian or any markdown editor
 2. Use `[[wikilinks]]` for internal references
-3. Run `./sync.sh` before committing to update `flat/`
-4. Both `kms/` and `flat/` should be committed
+3. Keep `CLAUDE.md` updated when adding new files
 
 ---
 
