@@ -5,7 +5,16 @@
       "Bash(git rm:*)",
       "Bash(done)",
       "Bash(grep:*)",
-      "Bash(wc:*)"
+      "Bash(wc:*)",
+      "WebSearch",
+      "WebFetch(domain:stripe.com)",
+      "WebFetch(domain:docs.adyen.com)",
+      "WebFetch(domain:support.stripe.com)",
+      "WebFetch(domain:www.adyen.com)",
+      "WebFetch(domain:doc.komoju.com)",
+      "WebFetch(domain:www.feecalculator.io)",
+      "WebFetch(domain:noda.live)",
+      "WebFetch(domain:www.globallegalinsights.com)"
     ]
   }
 }

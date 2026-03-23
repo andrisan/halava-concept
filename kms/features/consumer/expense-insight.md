@@ -1,10 +1,11 @@
 # Expense Insight
 
-> **Feature Type:** Consumer (Always Available)
-> **Version:** MVP (v1)
+> **Feature Type:** Consumer App (App Platform)
 > **Status:** Active
 >
 > **Related:** [[marketplace]] · [[pos]] · [[group-purchase]]
+>
+> **Access:** Installed via App Store at `/apps` → runs at `/app/expense-insight`
 
 ---
 
@@ -134,11 +135,11 @@ At Checkout → Cashier: "Save receipt digitally?"
 
 | Screen | Path | Mobile | Desktop |
 |--------|------|--------|---------|
-| **Purchases** | `/profile/expenses` | Full-screen list | Sidebar or main content |
-| **Transaction Detail** | `/profile/expenses/{id}` | Full-screen receipt | Modal overlay |
-| **Insights** | `/profile/expenses/insights` | Full-screen charts | Dashboard cards |
-| **Price History** | `/profile/expenses/prices` | Full-screen list | Table view |
-| **Frequently Bought** | `/profile/expenses/frequent` | Card list | Grid view |
+| **Purchases** | `/app/expense-insight` | Full-screen list | Sidebar or main content |
+| **Transaction Detail** | `/app/expense-insight` (modal) | Full-screen receipt | Modal overlay |
+| **Insights** | `/app/expense-insight` (tab) | Full-screen charts | Dashboard cards |
+| **Price History** | `/app/expense-insight` (tab) | Full-screen list | Table view |
+| **Frequently Bought** | `/app/expense-insight` (tab) | Card list | Grid view |
 | **My QR Code** | `/profile/qr` | Full-screen QR | Modal |
 
 ---

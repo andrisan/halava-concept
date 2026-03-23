@@ -40,13 +40,11 @@ The **POS (Point of Sale)** is Halava's in-store transaction system. It enables 
 3. **Receipt appears** in unified purchase history
 4. **Track expenses** across all halal spending
 
-### Quota System
+### Billing
 
-> See [[monetization#4.1 POS Transaction Top-ups]]
+POS walk-in transactions are billed on a tiered volume basis with a free tier of 500 transactions/month. See [[pos/transaction]] for rates.
 
-- Free tier: 300 transactions/month
-- Overage: Top-up bundles (100 for ¥300, 300 for ¥750, 500 for ¥1,000)
-- Offline transactions sync when online
+Offline transactions sync when online and are counted in the month they are recorded.
 
 ---
 
@@ -99,7 +97,7 @@ No Internet → POS continues working (local-first)
 |--------|------|---------|
 | **POS Main** | `/pos` | Transaction interface |
 | **Transaction History** | `/pos/transactions` | Today's transactions |
-| **Quota Status** | `/pos/quota` | Usage and top-up |
+| **Usage** | `/pos/usage` | Monthly walk-in transaction count |
 | **Prepared Orders** | `/pos/prepared-orders` | Orders awaiting payment |
 
 ---
@@ -340,36 +338,16 @@ Get transaction details.
 }
 ```
 
-### GET /v1/pos/quota
+### GET /v1/pos/usage
 
-Get POS transaction quota status.
+Get POS transaction usage for the current billing month.
 
 ```json
 // Response
 {
-  "plan_limit": 300,
-  "used": 245,
-  "remaining": 55,
-  "topup_available": 100,
-  "period_ends": "2026-02-01"
-}
-```
-
-### POST /v1/pos/quota/topup
-
-Purchase additional transaction quota.
-
-```json
-// Request
-{
-  "bundle": "100"  // 100, 300, or 500
-}
-
-// Response
-{
-  "topup_amount": 100,
-  "price": 300,
-  "new_available": 155
+  "month": "2026-03",
+  "walk_in_transactions": 245,
+  "period_ends": "2026-04-01"
 }
 ```
 
@@ -586,7 +564,7 @@ Table 5 Bill:
 
 - [[web-app-spec#Capability Lifecycle]] — POS must be enabled
 - [[marketplace]] — Shared inventory
-- [[monetization#4.1 POS Transaction Top-ups]] — Transaction quotas
+- [[pos/transaction]] — POS Transaction SKU pricing
 
 ---
 

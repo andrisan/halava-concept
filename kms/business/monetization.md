@@ -1,9 +1,10 @@
 # Halava Monetization & Pricing Strategy
 
-> **Last updated:** February 2026
+> **Last updated:** March 2026
 > **Target market:** Japan (currency: Japanese Yen ¥)
 >
 > **Related documents:**
+> - [[pricing/index]] — Halava SKU registry (per-service pricing files)
 > - [[web-app-spec]] — Detailed product specification
 > - [[pitch-deck]] — Investor presentation (uses this document as source of truth for pricing)
 > - [[risk-assessment]] — Financial risks and mitigations
@@ -38,100 +39,274 @@ Indonesians represent the ideal early adopter segment:
 
 ### 1.2 Revenue Potential Illustration
 
-**Assumptions:**
-- Average monthly halal food spending per person: **¥10,000** (groceries + dining)
-- Transaction fee rate: **5%** (Phase 2, entry tier)
+> **Note:** Illustration will be revised once SKU rates are finalized. The table below reflects the prior flat-rate model and is retained for order-of-magnitude reference only.
 
-| Adoption Rate | Active Users | Monthly GMV | Monthly Trx Fee Revenue | Annual Trx Fee Revenue |
-|---------------|--------------|-------------|-------------------------|------------------------|
+**Assumptions (prior model, for reference):**
+- Average monthly halal food spending per person: **¥10,000** (groceries + dining)
+- Effective blended rate: **~5%** (Phase 2 approximation)
+
+| Adoption Rate | Active Users | Monthly GMV | Monthly Fee Revenue (est.) | Annual Fee Revenue (est.) |
+|---------------|--------------|-------------|---------------------------|--------------------------|
 | 1% | 2,307 | ¥23.1M | ¥1.15M | ¥13.8M |
 | 5% | 11,534 | ¥115.3M | ¥5.77M | ¥69.2M |
 | 10% | 23,069 | ¥230.7M | ¥11.53M | ¥138.4M |
 | 20% | 46,138 | ¥461.4M | ¥23.07M | ¥276.8M |
 
-> **Note:** This excludes POS transactions, membership fees, and non-Indonesian users. Actual revenue will be higher with multi-segment adoption.
-
-**Conservative scenario (5% adoption):**
-- ¥115M monthly GMV from Indonesian diaspora alone
-- ¥5.77M monthly transaction fee revenue
-- Validates unit economics before expansion to other segments
+> **Note:** This excludes POS transactions, staff account fees, and non-Indonesian users. Actual revenue will be higher with multi-segment adoption.
 
 ---
 
 ## 2. Core Monetization Philosophy
 
-**Separation of concerns (very important):**
+### Platform Model
 
-- **Transaction fees** monetize *volume and success* (gradual, scalable, no caps)
-- **Membership plans** monetize *features and operational value*, not volume
+Halava is designed as a **full-suite business platform for halal merchants** — not a marketplace merchants join as a side channel, but the central operating system they run their business on. The model is deliberately analogous to a cloud platform provider:
+
+- Merchants register once and **activate the capabilities they need**: Shop, Restaurant Operations, POS, Directory, Staff Accounts, and more
+- Each capability is independent — a restaurant activates Restaurant Ops; a retailer activates Shop; a hybrid business activates both
+- There is no business type selection at registration and no fixed configuration — the platform adapts to the merchant
+- As the merchant grows, they activate more capabilities and generate more revenue for Halava naturally
+
+This model creates deep merchant stickiness (high switching cost when the whole business runs on Halava), strong revenue per merchant (multiple SKUs activate over time), and direct alignment between merchant success and platform success.
+
+### Billing Model
+
+All Halava fees are **consumption-based** — merchants pay only for what they use, across independently priced SKUs per Halava Service. There are no membership tiers, no plan gates, and no fixed monthly subscription fees.
 
 Guiding principles:
 - No paywalls on core selling functionality
-- No quotas on revenue-generating transactions
-- POS quotas are acceptable (operational tool, not revenue channel)
+- Merchants can use Halava at no cost up to defined free tier thresholds per SKU
+- No quotas on any transaction type — all volume is metered, not capped
 - No opportunity loss on high-GMV merchants
 - Pricing must be explainable in under 10 seconds
 
 ---
 
-## 3. Transaction Fee Model (Gradual Pricing)
+## 3. Billing Model: Halava SKUs
 
-Transaction fees apply to **all merchants** for **online orders**, regardless of plan.
+### 3.1 Structure
 
-### Phase 1 — MVP (Manual Payment Verification)
+Halava uses a **consumption-based pricing model** built around commerce-native billing units. The hierarchy is:
 
-| Monthly GMV | Transaction Fee |
-|------------|-----------------|
-| ¥0 – ¥300k | 2.0% |
-| ¥300k – ¥1M | 1.8% |
-| ¥1M – ¥3M | 1.6% |
-| ¥3M+ | 1.4% (or negotiated) |
+```
+Halava Service
+  └── Halava SKU
+        └── Price definition (unit type, tiers, rate per unit)
+```
 
-### Phase 2+ — Payment Provider Integration
+- A **Halava Service** is a product area (e.g., Shop, Restaurant Operations, Payment Gateway).
+- A **Halava SKU** is a billable unit owned by a specific service. Each SKU has its own independent price definition.
+- **SKU** is used intentionally as a unit-agnostic term — it handles varied pricing models (per transaction, per listing, per % of value, per month, etc.) with a consistent structure.
 
-| Monthly GMV | Transaction Fee |
-|------------|-----------------|
-| ¥0 – ¥300k | 5.0% |
-| ¥300k – ¥1M | 4.5% |
-| ¥1M – ¥3M | 4.0% |
-| ¥3M – ¥10M | 3.0% |
-| ¥10M+ | 2.5% (or negotiated) |
+> **Context separation:** Product SKUs live in the merchant's Shop. Billing SKUs live in the Billing section. Merchants familiar with "SKU" from their own catalogs will encounter the term in both places, but the context makes the distinction clear.
 
-### 3.1 Transaction Fee Scope
+### 3.2 Tiered Volume Pricing
 
-**Phase 1 — MVP (off-platform settlement):**
-- Online marketplace orders: Honor-based monthly invoicing
-- POS transactions: Not subject to transaction fees
+Each SKU uses **tiered volume pricing**: the more a merchant uses, the lower the per-unit rate.
 
-**Phase 2 — Payment provider integration:**
-- Online marketplace orders: Automatically deducted at source via connected-accounts model (Stripe Connect, PAY.JP)
+- Tiers apply on a **marginal basis** (tax-bracket style) — no cliff penalties
+- Tiers reset monthly
+- Lower rates reward high-volume merchants without penalizing them at tier boundaries
 
-### 3.2 GMV Tier Calculation
+**Example (illustrative — actual rates TBD):**
 
-- **Period:** Monthly calendar period
-- **Rate application:** **Marginal rate** (tax-bracket style)
+| Monthly transactions | Per-transaction fee |
+|---------------------|---------------------|
+| 1 – 100 | ¥X per order |
+| 101 – 500 | ¥Y per order |
+| 501+ | ¥Z per order |
 
-**Example:** A merchant with ¥500k monthly GMV pays:
-- 5% × ¥300k = ¥15,000
-- 4.5% × ¥200k = ¥9,000
-- **Total: ¥24,000**
+### 3.3 Free Tier
+
+Most SKUs include a **free tier** — a defined usage threshold below which no charge applies. Merchants can operate on Halava at no cost until they exceed free tier limits across their active SKUs.
+
+Free tier thresholds are defined per SKU and reviewed periodically as the platform scales.
+
+> **Exception:** The Transaction Processing % component has no free tier — payment processing incurs real marginal cost from the first yen. The ¥30 fixed component (Basic Digital Order Fee) is waived in the free tier for each service. See [[payment-gateway/transaction-processing]].
 
 ---
 
-## 4. Membership Plans (Features + POS Quota)
+## 4. Halava SKUs
 
-Membership plans **do not affect transaction fee rates** for online orders.
+Pricing details for each SKU live in dedicated files, grouped by service. See [[pricing/index]] for the full registry.
 
-### Early Adopter Program
+| Halava Service | SKU | File |
+|----------------|-----|------|
+| Shop | Product Listing | [[shop/product-listing]] |
+| Shop | Featured Listings | [[shop/featured-listings]] |
+| Restaurant Operations | Menu Item | [[restaurant-operations/menu-item]] |
+| Payment Gateway | Transaction Processing (incl. ¥30 order fee) | [[payment-gateway/transaction-processing]] |
+| POS | POS Transaction | [[pos/transaction]] |
+| Platform | Staff Accounts | [[platform/staff-accounts]] |
 
-**Pricing benefits:**
-- **Phase 1 (MVP):** 50% discount on all paid plans — locked in for 5 years
-- **Phase 2:** 25% discount for new merchants
-- **Phase 3+:** Full pricing applies
+---
 
-**Feature development partnership:**
+## 5. Payment Architecture
 
-Early adopters (Phase 1 merchants) receive direct input into product development:
+### 5.1 Payment Option Categories
+
+Halava has three payment option categories. What appears at consumer checkout depends on the merchant's configuration and the current platform phase.
+
+#### Halava Pay
+
+Halava manages the full payment flow — authorisation, settlement, buyer protection, dispute intermediation. Available from Phase 2+ onwards. Halava controls this group; merchants cannot disable it.
+
+| Method | Who collects | Notes |
+|--------|-------------|-------|
+| Credit Card | Halava | Processed via Halava Pay |
+| Debit Card | Halava | Processed via Halava Pay |
+| Bank Transfer | Halava | Consumer transfers to Halava's account; Halava confirms and releases to merchant |
+| COD via Delivery Company | Halava's delivery partner | e.g., Kuroneko Yamato 代金引換 — remits to Halava; Halava settles to merchant |
+
+Halava manages the complete order lifecycle for all Halava Pay orders — status updates, notifications, and dispute intermediation are automated.
+
+#### Pay at Pickup
+
+A fulfilment method, not a payment method. The consumer places a digital order and pays cash in person when collecting at the merchant's location. Halava manages the full order lifecycle (status updates, notifications) but does not handle the payment.
+
+Merchants can enable or disable Pay at Pickup in their dashboard. Available in all phases.
+
+#### Merchant-Managed Payment
+
+The merchant handles payment collection outside Halava. Halava records the order, notifies the merchant at placement, and provides the same order management tools as Halava Pay — status updates, tracking number input, and consumer notifications — but payment confirmation and payment-triggered status changes must be handled manually by the merchant. Halava does not intermediate payment or disputes.
+
+**This is the primary payment option in Phase 1 for a regulatory reason.** Intermediating consumer payments — collecting funds and remitting to merchants — requires a 資金移動業 (funds transfer business) license from Japan's FSA. Halava will not hold this license at initial launch. Merchant-Managed Payment allows merchants to collect payment directly (consumer to merchant), keeping Halava outside the money flow and within regulatory compliance.
+
+In Phase 2+, when Halava Pay becomes available via a licensed payment partner, Merchant-Managed Payment remains as a permanent **"bring your own payment"** option for merchants who have existing payment infrastructure they wish to keep — analogous to using your own DNS or storage provider on a cloud platform, rather than the native service.
+
+**This is an application-gated feature.** Merchants cannot self-enable it — each application is reviewed and approved by Halava individually. Any registered merchant can apply; Halava decides case-by-case based on submitted documentation. See [[merchant-managed-payment]] for the full application flow.
+
+| Method | Who collects | Merchant configures |
+|--------|-------------|---------------------|
+| Bank Transfer | Merchant | Bank name, branch, account number, account name — must match business registration |
+| COD (own delivery contract) | Merchant's delivery partner | Declares active delivery contract (e.g., Kuroneko direct) — requires proof of contract |
+
+### 5.2 What Appears at Checkout
+
+Consumer checkout shows only the payment options the merchant has configured, plus Halava Pay in Phase 2+.
+
+| Payment group | Controlled by | Phase 1 | Phase 2+ |
+|---------------|--------------|---------|----------|
+| Halava Pay | Halava — always shown if available | ❌ Not yet available | ✅ Always shown |
+| Pay at Pickup | Merchant opt-in | ✅ If enabled | ✅ If enabled |
+| Merchant-Managed Payment | Merchant opt-in + setup | ✅ If configured | ✅ If configured |
+
+A merchant who has configured all three groups will show all three at checkout. A merchant who has not configured Merchant-Managed Payment will not show it. A merchant with only Pay at Pickup in Phase 1 will show only Pay at Pickup.
+
+### 5.3 Billing Per Payment Option
+
+| Payment option | Combined fee per order |
+|----------------|------------------------|
+| **Halava Pay** (CC, Debit, Bank Transfer, COD) | 4% + ¥30 |
+| **Pay at Pickup** | ¥30 only |
+| **Merchant-Managed** (Bank Transfer, own COD) | 0.95%–0.4% + ¥30 |
+
+The combined fee bundles the Basic Digital Order Fee (¥30 fixed) and the Transaction Processing (% component) into a single merchant-facing rate. The ¥30 is waived in the free tier (first 50 orders/month for Shop; first 100/month for Restaurant Operations). See [[payment-gateway/transaction-processing]] for the canonical rate reference and monthly cost examples.
+
+### 5.4 Payment Method Selection
+
+Within the options the merchant has enabled, the payment method is **selected by the consumer at checkout**.
+
+- Merchants configure which payment groups appear (Merchant-Managed and Pay at Pickup are opt-in)
+- Halava Pay is always shown in Phase 2+ regardless of merchant preference — Halava controls this group
+- Within each group, consumers choose freely
+- Payment method records are **immutable** — set by consumer action, not merchant input
+
+---
+
+## 6. Consumer Checkout Design & Trust
+
+### 6.1 Phase 1 Checkout
+
+In Phase 1, Halava Pay is not available. The checkout shows only what the merchant has configured.
+
+```
+[ Bank Transfer ] [ COD ]                  [ Pay at Pickup ]
+ ←── Merchant-Managed Payment (if set up) ──►    ←── Fulfilment ──►
+```
+
+If the merchant has not configured Merchant-Managed Payment, that group does not appear. If the merchant has not enabled Pay at Pickup, that group does not appear. A merchant with neither configured will not have a functioning checkout in Phase 1.
+
+**Merchant-Managed Payment group:**
+> *"Payment is handled directly with the merchant. Order updates depend on the merchant updating your order status."*
+
+**Pay at Pickup:**
+> *"Place your order now and pay cash when you collect. Your order is tracked by Halava."*
+
+For Merchant-Managed orders, payment confirmation is not automated — Halava cannot detect when the consumer has paid, so the merchant must confirm payment and drive subsequent status updates manually through the dashboard. Fulfillment steps (status, tracking, notifications) work the same as any order type. Pay at Pickup and Halava Pay order lifecycles are fully automated by Halava.
+
+### 6.2 Phase 2+ Checkout
+
+In Phase 2+, Halava Pay is live and always shown. The checkout shows up to three groups depending on what the merchant has configured:
+
+```
+[ CC ] [ Debit ] [ Bank Transfer ] [ COD ]    [ Bank Transfer ] [ COD ]    [ Pay at Pickup ]
+ ←──────────── Halava Pay ────────────────►    ←── Merchant-Managed ──────►    ←── Fulfilment ──►
+```
+
+Halava Pay is always present — Halava controls this group regardless of merchant preference. Merchant-Managed Payment and Pay at Pickup appear only if the merchant has configured them.
+
+**Halava Pay group:**
+> *"Payment secured by Halava. Eligible for dispute resolution and buyer protection."*
+
+**Merchant-Managed Payment group:**
+> *"Payment is handled directly with the merchant. Order updates depend on the merchant updating your order status."*
+
+**Pay at Pickup:**
+> *"Place your order now and pay cash when you collect. Your order is tracked by Halava."*
+
+Halava Pay and Pay at Pickup order lifecycles are fully automated. For Merchant-Managed orders, the merchant manually drives updates — status changes, tracking, and notifications — through the Halava dashboard.
+
+### 6.3 Design Principles (Both Phases)
+
+- **Value-based framing, not fear-based warnings** — the Halava Pay message leads with protection and benefit, not risk.
+- **Halava does not imply the merchant is untrustworthy** for Merchant-Managed orders — the messaging states Halava's limited role without casting doubt on merchant integrity.
+- Info icon (ⓘ) appears at the group level only — not repeated on each individual payment method.
+- Pay at Pickup is presented as a fulfilment choice, not a lesser option — the order is fully tracked in both phases.
+
+---
+
+## 7. Merchant Payment Strategy
+
+Halava's approach to growing gateway revenue is structurally embedded in the product, not driven by sales messaging.
+
+### 7.1 Merchant-Managed Payment as a Permanent Compatibility Layer
+
+Merchant-Managed Payment is designed for established merchants who already have their own payment infrastructure — direct bank accounts, existing delivery contracts (e.g., Kuroneko 直契約), and proven operational workflows. These merchants want to join Halava for consumer reach without restructuring their payment stack.
+
+Access is **application-gated**: any registered merchant can apply, and Halava decides case-by-case. This protects Halava's brand — a consumer who has a poor experience with a merchant's payment handling will associate that experience with Halava regardless of any disclaimer. The application process ensures that Halava has verified the merchant's identity and infrastructure before they are shown to consumers as a payment option.
+
+Halava earns on every Merchant-Managed order via the Transaction Processing (Merchant-Managed rate), covering the real cost of order intake, state management, and record-keeping regardless of payment method.
+
+### 7.2 Organic Discovery of Halava Pay Value
+
+Merchants discover the value of Halava Pay through their own operational experience, not through sales pitches. As order volume grows, the cost of managing Merchant-Managed payments — manual bank transfer confirmation, chasing consumer transfers, no automated order updates, no dispute intermediation — becomes increasingly burdensome. The migration to Halava Pay feels like relief, not obligation.
+
+Merchants are never forced to switch. The operational friction of Merchant-Managed at scale creates a natural pull toward Halava Pay when they're ready.
+
+### 7.3 Consumer Incentives Drive Halava Pay Adoption
+
+Gateway revenue growth is ultimately a **consumer product problem**. Consumer incentives — buyer protection, cashback, loyalty programs, seamless checkout — naturally drive adoption of Halava Pay. Merchants benefit when their customers prefer Halava Pay: Halava manages the full order lifecycle, eliminating manual workload entirely.
+
+### 7.4 Structural Revenue Protection
+
+Gateway revenue is structurally protected:
+- Halava controls which payment options appear at checkout
+- Merchants cannot suppress or reorder Halava Pay options in Phase 2+
+- Halava Pay is always shown once available — consumer preference for it translates directly to gateway revenue without any merchant action required
+- Merchant-Managed remains available for merchants who need it; its operational limitations naturally push volume toward Halava Pay as merchants scale
+
+---
+
+## 8. Early Adopter Program
+
+Early adopters (Phase 1 merchants) receive a pricing discount and direct input into product development.
+
+### Pricing Discount
+
+Early adopters receive a discounted rate on all usage-based fees for a fixed term, locked in at onboarding. Specific discount percentages and lock-in periods are set per cohort at the time of onboarding and are not published here — this section records the program structure only.
+
+### Feature Development Partnership
 
 | Benefit | Description |
 |---------|-------------|
@@ -149,136 +324,35 @@ Early adopters (Phase 1 merchants) receive direct input into product development
 
 This is a **trade exchange**: merchants get discounted pricing + product influence, Halava gets committed feedback partners + feature validation.
 
-### Free Plan (Default)
-- Monthly fee: ¥0
-- Unlimited product uploads
-- Online & group purchase (transaction fees apply)
-- **POS: 300 transactions/month**
-- 2 staff accounts
-
-### Growth Plan
-- Monthly fee: **¥6,000** (waived when monthly transaction fees ≥ ¥6,000)
-  - *Phase 1 early adopter price: ¥3,000*
-- **POS: 3,000 transactions/month**
-- 5 staff accounts
-- Advanced promotions and analytics
-
-### Pro Plan
-- Monthly fee: **¥18,000** (waived when monthly transaction fees ≥ ¥18,000)
-  - *Phase 1 early adopter price: ¥9,000*
-- **POS: Unlimited transactions**
-- Full analytics, 16 staff roles, featured placement
-
-### 4.1 POS Transaction Top-ups
-
-| Pack | Transactions | Price | Per-transaction |
-|------|--------------|-------|-----------------|
-| Small | 100 | ¥300 | ¥3.0 |
-| Medium | 300 | ¥750 | ¥2.5 |
-| Large | 500 | ¥1,000 | ¥2.0 |
-
-**Top-up rules:**
-- Monthly expiry (no rollover)
-- Hard cap with 5-transaction grace buffer (auto-billed at ¥75)
-- Auto top-up available (opt-in)
-
-> See [[pos#UI/UX Specification]] for quota UI implementation.
-
 ---
 
-## 5. Membership Fee Waiver Logic
-
-### 5.1 Automatic Waiver Coupon
-
-Merchants receive an **automatic coupon** that waives the membership fee when their transaction fees reach the plan threshold.
-
-| Plan | Membership Fee | Coupon Threshold | Coupon Value |
-|------|----------------|------------------|--------------|
-| Growth | ¥6,000 | ¥6,000 in trx fees | -¥6,000 (full waiver) |
-| Pro | ¥18,000 | ¥18,000 in trx fees | -¥18,000 (full waiver) |
-
-**How it works:**
-- Membership fee is the base monthly charge
-- When transaction fees ≥ membership fee, a coupon is automatically applied
-	- Coupon waives the full membership fee
-	- Result: Merchant pays only transaction fees (same as MAX formula outcome)
-
-**Example by plan and sales volume:**
-
-| Scenario | Plan | Monthly GMV | Transaction Fee (5%) | Membership Fee | Coupon | Total Payment |
-|----------|------|-------------|---------------------|----------------|--------|---------------|
-| Low sales | Free | ¥50,000 | ¥2,500 | ¥0 | — | **¥2,500** |
-| Low sales | Growth | ¥50,000 | ¥2,500 | ¥6,000 | None | ¥8,500 |
-| Near threshold | Growth | ¥100,000 | ¥5,000 | ¥6,000 | None | ¥11,000 |
-| At threshold | Growth | ¥120,000 | ¥6,000 | ¥6,000 | -¥6,000 | **¥6,000** |
-| High sales | Growth | ¥200,000 | ¥10,000 | ¥6,000 | -¥6,000 | **¥10,000** |
-
-**Key insight:** A low-sales merchant on Free plan pays ¥2,500. The same merchant on Growth plan pays ¥8,500. Only upgrade when you need the extra POS quota or features.
-
-**Break-even GMV by plan:**
-- Growth Plan (¥6,000): ¥120,000 monthly GMV
-- Pro Plan (¥18,000): ¥360,000 monthly GMV
-
-**Merchant benefit:** Reach the threshold and your membership fee is waived — you only pay transaction fees.
-
-### 5.2 Why This Is Fair
-
-**Free plan exists for low-volume merchants.** Upgrading to Growth/Pro is a choice to access more features and quota — not a requirement.
-
-| Merchant Type | Online GMV | POS Needs | Best Plan | What They Pay |
-|---------------|------------|-----------|-----------|---------------|
-| Small/starting | Low | Low (<300/mo) | **Free** | Trx fees only |
-| POS-heavy | Low | High (3000+/mo) | **Growth/Pro** | Membership + trx fees |
-| Online-heavy | High | Any | **Growth/Pro** | Trx fees only (coupon) |
-| High volume | High | High | **Pro** | Trx fees only (coupon) |
-
-**What the membership fee covers:**
-- POS transaction quota (300 → 3,000 → Unlimited)
-- Staff accounts (2 → 5 → 16)
-- Advanced features (analytics, promotions, featured placement)
-
-**The waiver coupon is a bonus**, not an entitlement. Merchants who drive high online GMV are rewarded — their membership fee is waived because their transaction fees already exceed it.
-
-**Low online GMV + paid plan = paying for features**, not being penalized. If a merchant doesn't need the extra POS quota or features, they should stay on Free.
-
-### 5.3 Implementation by Phase
+## 9. Billing Implementation by Phase
 
 **Phase 1 (Honor-based):**
-- Transaction fees invoiced monthly based on reported GMV
-- Membership fee invoiced separately
-- Coupon applied automatically if threshold reached
+- All usage fees invoiced monthly
+- Merchants self-report or Halava tallies from platform data
+- Honor-based collection; formal enforcement begins Phase 2
 
-**Phase 2+ (Payment provider integration):**
-- Transaction fees auto-deducted from each sale (5% at source)
-- At month end:
-  - If transaction fees ≥ membership fee: Coupon applied, no membership charge
-  - If transaction fees < membership fee: Membership fee charged (trx fees already collected separately)
-
-**Example (Growth Plan ¥6,000, high sales month ¥200k GMV):**
-
-| Timing | Event | Amount |
-|--------|-------|--------|
-| During month | Transaction fees deducted (5% × ¥200k) | -¥10,000 |
-| Month end | Membership fee | ¥6,000 |
-| Month end | Waiver coupon applied | -¥6,000 |
-| **Total** | | **¥10,000** |
+**Phase 2+ (Halava Pay integration):**
+- For Halava Pay orders: the combined order fee (4% + ¥30) is auto-deducted at source
+- Listing fees, staff account fees, and Merchant-Managed order fees invoiced monthly at month end
 
 ---
 
-## 6. Refund & Cancellation Policy
+## 10. Refund & Cancellation Policy
 
 ### Phase 1 — MVP
 - Refunds handled directly between consumer and merchant
 - Halava provides mediation services
 
-### Phase 2 — Payment provider integration
+### Phase 2 — Halava Pay integration
 - Platform fee refunded proportionally
 - Gateway fees not refundable (industry standard)
-- Consumer protection via provider's buyer protection
+- Consumer protection via Halava buyer protection
 
 ---
 
-## 7. CAC Strategy
+## 11. CAC Strategy
 
 ### Merchant CAC
 - B2B halal supplier network
@@ -292,7 +366,7 @@ Merchants receive an **automatic coupon** that waives the membership fee when th
 
 ---
 
-## 8. Investment Staging & Co-Founder Equity Structure
+## 12. Investment Staging & Co-Founder Equity Structure
 
 > See [[risk-assessment#Financial Risks]] for runway scenarios.
 
@@ -312,15 +386,15 @@ Merchants receive an **automatic coupon** that waives the membership fee when th
 ### Stage 3 — Commitment Stage (¥7M)
 - Equity: Operating Founder 60%, Co-founder 40%
 - 50+ merchants, ¥10M+ monthly GMV
-- Phase 2 payment provider integration
+- Phase 2 Halava Pay integration
 
 ---
 
-## 9. Competitive Benchmarking
+## 13. Competitive Benchmarking
 
 | Platform | Transaction Fee | Subscription Model |
 |----------|-----------------|-------------------|
-| **Halava** | 2.5–5% (GMV-based) | ¥0–¥18,000/mo (waivable) |
+| **Halava** | Basic Digital Order Fee (flat/trx) + 4.0% Halava Pay (flat) + per-SKU usage fees | No subscription — pay only what you use |
 | **BASE (Japan)** | 3.6% + 40¥ | ¥0 (free plan) |
 | **STORES.jp** | 5% | ¥0–¥2,178/mo |
 | **Shopify Japan** | 3.25–3.9% + gateway | ¥3,650–¥46,000/mo |

@@ -278,7 +278,7 @@ Search Results: "halal beef"
 | Homepage carousel | 1 day | ¥2,000 | ~1,000 |
 | Homepage carousel | 7 days | ¥12,000 | ~7,000 |
 
-> Pricing subject to market testing. See [[monetization#Featured Listings]] for details.
+> Pricing subject to market testing. See [[shop/featured-listings]] for the full SKU definition.
 
 ---
 
@@ -662,7 +662,7 @@ Cancel featured listing.
 ## Dependencies
 
 - [[marketplace]] — Discount application at checkout
-- [[monetization]] — Featured listing fees
+- [[shop/featured-listings]] — Featured listing pricing and SKU definition
 - [[order-management]] — Promo usage tracking
 - [[notifications]] — Promo announcements (future)
 

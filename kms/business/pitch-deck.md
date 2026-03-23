@@ -6,10 +6,10 @@
 ---
 
 ## Slide 1 — Title
-**Halava**
+**Halava** (**Hala**l **Va**lue)
 *A consumer-first halal commerce platform*
 
-- One-line tagline: "Halal, Available Anywhere"
+- One-line tagline: "Everything Halal. All in One Place."
 
 ---
 
@@ -100,7 +100,7 @@ This problem is global, but the value proposition adapts:
 - Real-time inventory sync across all channels
 
 **Early Adopter Program:**
-- 50% discount locked for 5 years
+- Discounted usage fees locked in for a fixed term
 - Direct feature request channel to dev team
 - Monthly feedback sessions and beta access
 - Merchants become product co-creators, not just users
@@ -147,9 +147,9 @@ More consumers → More merchant demand → More listings → Better discovery �
 
 ## Slide 9 — Monetization Philosophy
 
-Two revenue streams:
-1. **Transaction fees** (70–80% at maturity) — scale with GMV
-2. **Membership plans** (20–30%) — waived if transaction fees exceed plan fee
+One revenue model: **fully consumption-based**.
+
+Merchants pay only for what they use — no subscription, no plan tiers, no fixed monthly fee. Revenue scales directly with merchant activity across independently priced SKUs per Halava Service.
 
 ---
 
@@ -178,46 +178,26 @@ Two revenue streams:
 
 ---
 
-## Slide 11 — Membership Plans
+## Slide 11 — Halava SKUs
 
-| Plan | Monthly Fee | POS Quota |
-|------|-------------|-----------|
-| **Free** | ¥0 | 300 txns |
-| **Growth** | ¥6,000 (¥3,000)* | 3,000 txns |
-| **Pro** | ¥18,000 (¥9,000)* | Unlimited |
+| Halava Service | SKU | Billing unit |
+|----------------|-----|--------------|
+| Shop | Basic Digital Order Fee | Per digitally-originated order |
+| Shop | Product Listing | Per product in catalog / month |
+| Shop | Featured Listings | Per paid placement booking |
+| Restaurant Operations | Basic Digital Order Fee | Per digitally-originated order |
+| Restaurant Operations | Menu Item | Per menu item in catalog / month |
+| Payment Gateway | Transaction Processing | % of Halava Pay volume |
+| POS | POS Transaction | Per walk-in order at POS |
+| Platform | Staff Accounts | Per active staff account / month |
 
-*Phase 1 early adopter price (50% off, 5-year lock-in)
+Every SKU has a **free tier** — merchants pay nothing until they exceed it.
 
-**Automatic Waiver Coupon:**
-
-When your transaction fees reach the membership threshold, a coupon is automatically applied to waive your membership fee.
-
-| Plan | Threshold to Unlock Waiver |
-|------|---------------------------|
-| Growth | ¥6,000 in transaction fees (¥120k GMV) |
-| Pro | ¥18,000 in transaction fees (¥360k GMV) |
-
-**Example by plan and sales volume:**
-
-| Scenario | Plan | Monthly GMV | Trx Fee (5%) | Membership | Coupon | You Pay |
-|----------|------|-------------|--------------|------------|--------|---------|
-| Low sales | Free | ¥50,000 | ¥2,500 | ¥0 | — | **¥2,500** |
-| Low sales | Growth | ¥50,000 | ¥2,500 | ¥6,000 | — | ¥8,500 |
-| At threshold | Growth | ¥120,000 | ¥6,000 | ¥6,000 | -¥6,000 | **¥6,000** |
-| High sales | Growth | ¥200,000 | ¥10,000 | ¥6,000 | -¥6,000 | **¥10,000** |
-
-**Key insight:** Low-sales merchant on Free = ¥2,500. Same merchant on Growth = ¥8,500. Only upgrade for POS quota/features.
-
-**What this means for you:**
-- Sell enough to hit the threshold → membership fee waived
-- Coupon applied automatically on your monthly bill
-- The more you sell, the better the deal
-
-**Why this is fair:**
-- **Free plan exists** for low-volume merchants (pay trx fees only)
-- **Upgrade for features**, not volume — POS quota, staff accounts, analytics
-- **Waiver coupon is a bonus** for high performers, not an entitlement
-- Low GMV + paid plan = paying for features you need, not a penalty
+**Why consumption-based wins:**
+- Merchants start for free — no barrier to onboarding
+- Revenue scales with merchant success, not just headcount
+- No plan complexity to explain or sell
+- Early adopter pricing incentives locked in at onboarding
 
 ---
 
@@ -257,7 +237,7 @@ When your transaction fees reach the membership threshold, a coupon is automatic
 | **Merchants route orders off-platform** | Medium | Medium | Platform value (analytics, history), anomaly detection |
 | **Building wrong features** | Low | Medium | Early Adopter Program — merchants co-create roadmap |
 | **Misleading halal claims** | Medium | Medium | Disclaimer policy, community reporting, moderation |
-| **Payment licensing (資金移動業)** | Low | High | Phase 2 fallback via Stripe/PAY.JP |
+| **Payment licensing (資金移動業)** | Low | High | Stripe Connect provides regulatory coverage in Phase 2 — no own license needed |
 | **Single founder dependency** | High | Critical | Document processes, staged co-founder commitment |
 
 ---
@@ -270,12 +250,12 @@ When your transaction fees reach the membership threshold, a coupon is automatic
 
 **Use of funds:**
 
-| Category | Allocation |
-|----------|------------|
-| Development (founder salary) | 60% |
-| Infrastructure (hosting, services) | 15% |
-| Merchant promotion kits | 15% |
-| Legal & compliance | 10% |
+| Category                           | Allocation |
+| ---------------------------------- | ---------- |
+| Development (founder salary)       | 60%        |
+| Infrastructure (hosting, services) | 15%        |
+| Merchant promotion kits            | 15%        |
+| Legal & compliance                 | 10%        |
 
 **Stage 1 Milestones:**
 - MVP live with core features (Directory, Marketplace, POS, Group Purchase)
@@ -295,11 +275,11 @@ When your transaction fees reach the membership threshold, a coupon is automatic
 
 **Three-stage investment plan (¥15M total):**
 
-| Stage | Raise | Equity (Op. Founder / Co-founder) | Key Goals |
-|-------|-------|-----------------------------------|-----------|
-| **1. Validation** | ¥3M | 90% / 10% | MVP, 5-10 merchants, fee validation |
-| **2. Traction** | ¥5M | 75% / 25% | 25 merchants, ¥5M+ GMV, payment integration |
-| **3. Commitment** | ¥7M | 60% / 40% | 50+ merchants, ¥10M+ GMV, profitability |
+| Stage             | Raise | Co-founder Equity | Company Valuation |
+| ----------------- | ----- | ----------------- | ----------------- |
+| **1. Validation** | ¥3M   | 10%               | ¥30M              |
+| **2. Traction**   | ¥5M   | +15%              | ~¥33M             |
+| **3. Commitment** | ¥7M   | +20%              | ¥35M              |
 
 **Geographic expansion:**
 1. Year 1–3: Japan (prove model)

@@ -6,7 +6,7 @@
 
 ## Vision
 
-**Halava** is an abbreviation for "HALal, AVailable Anywhere." It is a **two-sided halal commerce platform** designed to serve both consumers and merchants with purpose-built features.
+**Halava** is an abbreviation for "Hala(l) Va(lue)." It is a **two-sided halal commerce platform** designed to serve both consumers and merchants with purpose-built features.
 
 **For Consumers:**
 One trusted platform to discover, shop, and take control of halal spending with expense tracking tools.
@@ -79,7 +79,9 @@ All-in-one tools to reach halal-conscious customers and grow the business.
 | Concept | Document |
 |---------|----------|
 | Capability-based merchant model | [[web-app-spec#Capability Model]] |
-| Transaction fee tiers | [[monetization#3. Transaction Fee Model (Gradual Pricing)]] |
+| Billing model & SKUs | [[monetization#3. Billing Model: Halava SKUs]] |
+| Halava SKU registry | [[pricing/index]] |
+| Payment architecture | [[monetization#5. Payment Architecture]] |
 | Expense tracking | [[expense-insight]] |
 | POS interface | [[pos#UI/UX Specification]] |
 | Technical stack | [[architecture#3. Technology Stack]] |

@@ -45,10 +45,10 @@ The **Marketplace** is Halava's online commerce system enabling consumers to bro
 | Phase | Payment Model | Fee Collection |
 |-------|---------------|----------------|
 | **Phase 1 (MVP)** | Off-platform (bank transfer) | Honor-based monthly invoice |
-| **Phase 2** | In-app via Stripe/PAY.JP | Auto-deducted at payout |
-| **Phase 3 (3-5+ years)** | Direct payment intermediation | Halava obtains 資金移動業 license |
+| **Phase 2** | In-app via Stripe Connect | Auto-deducted at payout |
+| **Phase 3** | Stripe Connect or surveyed alternative (Adyen / KOMOJU / GMO-PG) | Auto-deducted at payout |
 
-> See [[monetization#Transaction Fee Model]] for fee rates and collection methods.
+> See [[payment-gateway/transaction-processing#Transaction Fee Model]] for fee rates and collection methods.
 
 ### Unified Item Model
 
@@ -521,7 +521,7 @@ Marketplace shares inventory with [[pos]]:
 - [[web-app-spec#Capability Lifecycle]] — Shop/Marketplace must be enabled
 - [[pos]] — Shared inventory
 - [[group-purchase]] — Extended flow for group orders
-- [[monetization#Transaction Fee Model]] — Fee structure
+- [[payment-gateway/transaction-processing]] — Fee structure
 
 ---
 

@@ -4,21 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "f0c4be3f816904da",
+        "id": "a32a801109d9c18e",
         "type": "tabs",
         "children": [
           {
-            "id": "43470e0c2525d442",
+            "id": "bb0267a2250e6a26",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "kms/spec/web-app-spec.md",
+                "file": "kms/business/pricing/merchant-expense-simulation.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "web-app-spec"
+              "title": "merchant-expense-simulation"
             }
           }
         ]
@@ -156,13 +156,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "kms/spec/web-app-spec.md",
+                "file": "kms/business/founder-structure.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of web-app-spec"
+              "title": "Outline of founder-structure"
             }
           },
           {
@@ -171,8 +171,8 @@
             "state": {
               "type": "git-view",
               "state": {},
-              "icon": "git-pull-request",
-              "title": "Source Control"
+              "icon": "lucide-ghost",
+              "title": "git-view"
             }
           }
         ],
@@ -180,7 +180,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 395.5
+    "width": 395.5,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -194,42 +195,43 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "43470e0c2525d442",
+  "active": "bb0267a2250e6a26",
   "lastOpenFiles": [
-    "consumer/directory.md",
-    "kms/spec/web-app-spec.md",
-    "output/halava-ui-prototype-brief.md",
-    "kms/spec/web-app-spec.md.tmp.11040.1770193849233",
-    "kms/features/merchant/pos.md",
-    "kms/features/shared/directory.md",
-    "kms/index.md",
-    "kms/design/design-system.md",
-    "README.md",
-    "kms/business/market-validation.md",
-    "kms/features/platform/roles-permissions.md.tmp.11040.1770193322067",
-    "kms/features/platform/admin-moderation.md.tmp.11040.1770193320985",
-    "kms/features/merchant/accounting.md.tmp.11040.1770193317735",
-    "kms/spec/pages-navigation-ux-spec.md",
-    "kms/features/shared/marketplace.md.tmp.11040.1770193294863",
-    "kms/features/consumer/bopu.md.tmp.11040.1770193291026",
-    "kms/features/consumer/reviews-ratings.md.tmp.11040.1770193289567",
-    "kms/features/shared/onboarding.md.tmp.11040.1770193265396",
-    "kms/features/shared/notifications.md.tmp.11040.1770193261379",
-    "kms/features/merchant/promotions.md.tmp.11040.1770193258517",
-    "kms/features/consumer/group-purchase.md",
-    "kms/features/consumer/expense-tracker.md",
+    "kms/business/pricing/payment-gateway/transaction-processing.md",
+    "kms/business/pricing/merchant-expense-simulation.md",
+    "kms/business/pricing/restaurant-operations/basic-digital-order-fee.md",
+    "kms/business/pricing/shop/basic-digital-order-fee.md",
+    "kms/business/payment-processors.md",
+    "kms/business/pricing/index.md",
+    "kms/features/merchant/merchant-managed-payment.md",
     "kms/business/monetization.md",
-    "kms/features/shared/onboarding.md",
-    "kms/business/pitch-deck.md",
-    "kms/spec/routes-spec.md",
-    "kms/spec/api-spec.md",
-    "kms/features/merchant/restaurant-ops.md",
-    "kms/features/shared/authentication.md",
-    "kms/features/shared/multi-language.md",
-    "kms/features/shared/marketplace.md",
-    "kms/features/shared/notifications.md",
-    "kms/features/platform/roles-permissions.md",
-    "kms/spec/roadmap.md",
-    "kms/features/merchant/accounting.md"
+    "kms/business/pricing/platform/staff-accounts.md",
+    "kms/business/pricing/platform",
+    "kms/business/pricing/restaurant-operations/digital-order-fee.md",
+    "kms/business/pricing/restaurant-operations/order-management-fee.md",
+    "kms/business/pricing/shop/digital-order-fee.md",
+    "kms/business/pricing/restaurant-operations/menu-item.md",
+    "kms/business/pricing/shop/product-listing.md",
+    "kms/business/pricing/restaurant-operations/active-menu-item.md",
+    "kms/business/pricing/shop/order-management-fee.md",
+    "kms/business/pricing/shop/featured-listings.md",
+    "kms/business/pricing/pos/transaction.md",
+    "kms/business/founders/stage-1-use-of-funds.md",
+    "kms/business/pricing/pos/transaction-quota.md",
+    "kms/business/pricing/pos",
+    "kms/business/pricing/payment-gateway",
+    "kms/business/pricing/restaurant-operations",
+    "kms/business/pricing/shop/active-product-listing.md",
+    "kms/business/pricing/shop",
+    "kms/business/pricing",
+    "kms/business/founders/founder-agreement-consolidated-id.md",
+    "consumer/directory.md",
+    "kms/business/founders/founder-agreement-consolidated.md",
+    "kms/business/founders/stage-1-use-of-funds-id.md",
+    "kms/business/founders/vesting-and-repurchase-terms.md",
+    "kms/business/founders",
+    "founder-structure.pdf",
+    "kms/technical/sprints",
+    "implementation-summary.pdf"
   ]
 }

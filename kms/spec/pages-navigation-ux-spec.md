@@ -123,7 +123,7 @@ Below is a summary of key routes. See [[routes-spec]] for the complete listing.
 |----------|-----------|-------------|
 | `/` | Home / Explore | Primary marketplace landing page |
 | `/search` | Search Results | Global search results across all merchants |
-| `/places` | Places Directory | Map + list view of all merchants |
+| `/places` | Places Directory | List view of halal places |
 | `/places/{slug}` | Place Page | Business details, photos, halal status |
 | `/products` | Products | Browse all marketplace products |
 | `/products/{slug}` | Product Details | Product info, reviews, purchase |
@@ -134,9 +134,11 @@ Below is a summary of key routes. See [[routes-spec]] for the complete listing.
 | `/orders` | My Orders | List of all consumer orders |
 | `/orders/{id}` | Order Details | Order tracking and status |
 | `/saved` | Saved Items | All saved places and products |
-| `/profile/expenses` | Expense Insight | Expense tracking and insights |
-| `/group-purchase/{code}` | Group Purchase | Join/manage group purchase |
+| `/group-order/{code}` | Group Order | Join/manage group order |
+| `/messages` | Messages | Consumer-merchant messaging |
 | `/profile` | User Profile | Personal settings and preferences |
+| `/apps` | App Store | Connected and available apps |
+| `/app/{slug}` | Running App | App instance (e.g., expense-insight) |
 
 #### Merchant Dashboard Routes
 
@@ -145,13 +147,14 @@ Below is a summary of key routes. See [[routes-spec]] for the complete listing.
 | `/dashboard` | Merchant Dashboard | Overview and quick actions |
 | `/dashboard/capabilities` | Capabilities | Enable/configure business capabilities |
 | `/dashboard/products` | Products | Product catalog management |
-| `/dashboard/menu` | Menu | Restaurant menu management |
+| `/dashboard/menu` | Menu | Restaurant menu management (includes QR codes) |
 | `/dashboard/orders` | Orders | All orders and transactions |
 | `/dashboard/kitchen` | Kitchen Queue | Real-time kitchen order management |
 | `/dashboard/inventory` | Inventory | Stock levels and alerts |
 | `/dashboard/promotions` | Promotions | Coupons and discounts |
 | `/dashboard/accounting` | Accounting | Financial overview and reports |
-| `/dashboard/staff` | Staff & Roles | Team member management |
+| `/dashboard/staff` | Staff & Roles | Team members and role permissions (combined) |
+| `/dashboard/billing` | Billing | Usage-based fees and monthly invoice |
 | `/dashboard/settings` | Settings | Business configuration |
 
 #### POS Routes (Desktop Only)

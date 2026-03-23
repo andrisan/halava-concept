@@ -318,8 +318,7 @@ Home page discovery feed for mobile infinite scroll.
 | [[pos]] | `POST` | [[pos#POST /v1/pos/transactions\|/v1/pos/transactions]] | Create transaction |
 | [[pos]] | `GET` | [[pos#GET /v1/pos/transactions\|/v1/pos/transactions]] | List transactions |
 | [[pos]] | `GET` | [[pos#GET /v1/pos/transactions/{id}\|/v1/pos/transactions/{id}]] | Get transaction |
-| [[pos]] | `GET` | [[pos#GET /v1/pos/quota\|/v1/pos/quota]] | Get quota status |
-| [[pos]] | `POST` | [[pos#POST /v1/pos/quota/topup\|/v1/pos/quota/topup]] | Purchase top-up |
+| [[pos]] | `GET` | [[pos#GET /v1/pos/usage\|/v1/pos/usage]] | Get monthly usage |
 | [[pos]] | `POST` | [[pos#POST /v1/pos/sync\|/v1/pos/sync]] | Sync offline transactions |
 
 ---

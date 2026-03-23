@@ -149,17 +149,9 @@ Merchant roles are **dynamic** and managed by **each Merchant Owner**. Each merc
 | **Permissions** | Full merchant access | Role-based (dynamic) |
 | **Can manage roles** | ✅ Yes | ❌ No |
 | **Can manage staff** | ✅ Yes | ❌ No |
-| **Limit per merchant** | 1 | By plan (see below) |
+| **Limit per merchant** | 1 | Unlimited (consumption-based billing applies) |
 
-### Staff Limits by Membership Plan
-
-> See [[monetization#Membership Plans]] for full plan details.
-
-| Plan | Staff Limit | Notes |
-|------|-------------|-------|
-| **Free** | 0 | Owner-only operation |
-| **Growth** | 5 | Small team (¥6,000/mo or waived) |
-| **Pro** | 16 | Full team (¥18,000/mo or waived) |
+Staff accounts are billed on a consumption basis — the first 2 staff accounts are free, additional accounts are metered monthly. See [[pricing/platform/staff-accounts]] for rates.
 
 ### How Staff Roles Work
 

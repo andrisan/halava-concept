@@ -1,6 +1,6 @@
 # Halava — Web App Spec
 
-> **Last updated:** February 2026
+> **Last updated:** March 2026
 > **Status:** Active specification
 >
 > **Related:** [[index]] · [[roadmap]] · [[pages-navigation-ux-spec]] · [[api-spec]]
@@ -27,17 +27,14 @@
 
 Consumer features focus on **discovery, purchasing, and financial empowerment**. Halava empowers consumers to find halal options easily, shop individually or collectively, and take control of their halal spending through comprehensive expense tracking tools. These features are designed to reduce the friction Muslim consumers face when seeking halal products and services while providing personal finance insights that help them shop smarter.
 
-| Feature                                                                           | Description                                                 | Version |
-| --------------------------------------------------------------------------------- | ----------------------------------------------------------- | ------- |
-| [[directory#Place Pages\|Directory: Place Pages]]                                 | Hours, photos, tags, halal status disclosure                | MVP     |
-| [[directory#Search & Filters\|Directory: Search & Filters]]                       | Distance, open now, cuisine, amenities                      | MVP     |
-| [[group-purchase\|Group Purchase]]                                                | Multiple users contribute to shared order                   | MVP     |
-| [[expense-insight\|Expense Insight]]                                            | Expense tracking, spending insights, personal price history | MVP     |
-| [[expense-insight#Item Price History\|Personal Price History]]                    | Track what you paid for items across merchants              | MVP     |
-| [[bopu\|BOPU (Buy Online, Pick Up)]]                                              | Buy-online-pick-up options                                  | MVP     |
-| [[reviews-ratings\|Reviews & Ratings]]                                            | Rate places and products                                    | MVP     |
-| [[saved-items\|Saved Items (Bookmarks)]]                                          | Bookmark places and products                                | MVP     |
-| [[group-purchase#In-city Group Delivery\|Group Purchase: In-city Group Delivery]] | Collaborative cart, dynamic shipping, distribution tracking | v1.2    |
+| Feature                                                                           | Description                                                 |
+| --------------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| [[directory#Place Pages\|Directory: Place Pages]]                                 | Hours, photos, tags, halal status disclosure                |
+| [[directory#Search & Filters\|Directory: Search & Filters]]                       | Distance, open now, cuisine, amenities                      |
+| [[group-purchase\|Group Order]]                                                   | Multiple users contribute to shared order                   |
+| [[bopu\|BOPU (Buy Online, Pick Up)]]                                              | Buy-online-pick-up options                                  |
+| [[reviews-ratings\|Reviews & Ratings]]                                            | Rate places and products                                    |
+| [[saved-items\|Saved Items (Bookmarks)]]                                          | Bookmark places and products                                |
 
 ### Merchant Features
 
@@ -45,42 +42,44 @@ Merchant features provide **operational tools for running halal businesses**. Fr
 
 Merchants **do not choose** a business type during registration. Instead, they progressively **enable capabilities** as their business grows.
 
-| Feature                                                                    | Description                           | Version |
-| -------------------------------------------------------------------------- | ------------------------------------- | ------- |
-| [[pos\|POS (Point of Sale)]]                                               | POS capability for in-store sales     | MVP     |
-| [[products\|Products (Catalog Management)]]                                | Manage products with prices and stock | MVP     |
-| [[order-management\|Order Management]]                                     | Online orders + POS transactions      | MVP     |
-| [[inventory\|Inventory (Stock Management)]]                                | Low-stock alerts (online + in-store)  | MVP     |
-| [[promotions\|Promotions]]                                                 | Basic coupon codes                    | MVP     |
-| [[restaurant-ops\|Restaurant Operations]]                                  | Restaurant Operations capability      | v1.1    |
-| [[restaurant-ops#Menu Management\|Restaurant Operations: Menu Management]] | Menu items with modifiers             | v1.1    |
-| [[restaurant-ops#QR Menu\|Restaurant Operations: QR Menu]]                 | Contactless ordering                  | v1.1    |
-| [[restaurant-ops#Kitchen Queue\|Restaurant Operations: Kitchen Queue]]     | Order preparation workflow            | v1.1    |
-| [[restaurant-ops#Reservations\|Restaurant Operations: Reservations]]       | Table booking system                  | v1.1    |
-| [[pos#Advanced POS\|POS: Advanced POS]]                                    | Tables, split bills, modifiers        | v1.1    |
-| [[accounting\|Accounting]]                                                 | Bookkeeping, invoicing, tax exports   | v1.2    |
+| Feature                                                                    | Description                           |
+| -------------------------------------------------------------------------- | ------------------------------------- |
+| [[pos\|POS (Point of Sale)]]                                               | POS capability for in-store sales     |
+| [[products\|Products (Catalog Management)]]                                | Manage products with prices and stock |
+| [[order-management\|Order Management]]                                     | Online orders + POS transactions      |
+| [[inventory\|Inventory (Stock Management)]]                                | Low-stock alerts (online + in-store)  |
+| [[promotions\|Promotions]]                                                 | Basic coupon codes                    |
+| [[restaurant-ops\|Restaurant Operations]]                                  | Restaurant Operations capability      |
+| [[restaurant-ops#Menu Management\|Restaurant Operations: Menu Management]] | Menu items with modifiers             |
+| [[restaurant-ops#QR Menu\|Restaurant Operations: QR Menu]]                 | Contactless ordering                  |
+| [[restaurant-ops#Kitchen Queue\|Restaurant Operations: Kitchen Queue]]     | Order preparation workflow            |
+| [[restaurant-ops#Reservations\|Restaurant Operations: Reservations]]       | Table booking system                  |
+| [[pos#Advanced POS\|POS: Advanced POS]]                                    | Tables, split bills, modifiers        |
+| [[accounting\|Accounting]]                                                 | Bookkeeping, invoicing, tax exports   |
 
 ### Shared Features
 
 Shared features are **platform infrastructure used by both consumers and merchants**. These provide the foundational experience — secure authentication, seamless onboarding, permission management, and real-time notifications. The Directory and Marketplace appear here because they serve both sides: consumers discover and shop, while merchants manage their presence and listings.
 
-| Feature | Description | Version |
-|---------|-------------|---------|
-| [[authentication\|Authentication]] | Email/OTP passwordless login (consumers & merchants) | MVP |
-| [[onboarding\|Onboarding (Registration & Setup)]] | Profile setup for consumers and merchants | MVP |
-| [[roles-permissions\|Roles & Permissions]] | Role-based access (Owner, Staff: Cashier/Inventory/Part-time) | MVP |
-| [[notifications\|Notifications]] | Order updates, alerts, low-stock warnings | MVP |
-| [[directory\|Directory (Halal Place Discovery)]] | Consumers discover places; merchants manage listings | MVP |
-| [[marketplace\|Marketplace (Online Shopping)]] | Consumers shop; merchants sell products | MVP |
-| [[multi-language\|Multi-language Support]] | EN + JP + ID support across platform | v1.1 |
+| Feature | Description |
+|---------|-------------|
+| [[authentication\|Authentication]] | Email/OTP passwordless login (consumers & merchants) |
+| [[onboarding\|Onboarding (Registration & Setup)]] | Profile setup for consumers and merchants |
+| [[roles-permissions\|Roles & Permissions]] | Role-based access (Owner, Staff: Cashier/Inventory/Part-time) |
+| [[notifications\|Notifications]] | Order updates, alerts, low-stock warnings |
+| [[directory\|Directory (Halal Place Discovery)]] | Consumers discover places; merchants manage listings |
+| [[marketplace\|Marketplace (Online Shopping)]] | Consumers shop; merchants sell products |
+| [[multi-language\|Multi-language Support]] | EN + JP + ID support across platform |
+| Messaging | Consumer ↔ Merchant conversation threads |
 
 ### Platform Features
 
 Platform features are **internal tools for platform governance**. These are used by Halava staff (moderators and administrators) to manage content quality, handle reports, and oversee platform operations.
 
-| Feature | Description | Version |
-|---------|-------------|---------|
-| [[admin-moderation\|Admin & Moderation]] | Content moderation, report handling, user management | MVP |
+| Feature | Description |
+|---------|-------------|
+| [[admin-moderation\|Admin & Moderation]] | Content moderation, report handling, user management |
+| App Platform | Installable first-party and third-party apps (`halava-platform`) |
 
 ---
 
@@ -116,11 +115,9 @@ Each merchant feature has an explicit lifecycle:
 
 > **Full roadmap:** [[roadmap]]
 
-| Version | Codename                    | Key Features                                     | Status  |
-| ------- | --------------------------- | ------------------------------------------------ | ------- |
-| v1.0    | Discover + Shop + POS       | Directory, Marketplace, POS, Group Purchase      | MVP     |
-| v1.1    | Restaurant Ops              | Menu, QR ordering, Kitchen queue, Multi-language | Planned |
-| v1.2    | Advanced Order & Accounting | In-city group delivery, Bookkeeping, Invoicing   | Future  |
+| Version | Codename                    | Key Features                                     |
+| ------- | --------------------------- | ------------------------------------------------ |
+| v1.0    | Full Platform               | All features — no version gating                 |
 
 ---
 

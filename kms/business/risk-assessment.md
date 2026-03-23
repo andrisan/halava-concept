@@ -44,7 +44,7 @@
 | Risk | Description | Mitigation |
 |------|-------------|------------|
 | **Unlicensed fund handling** | Operating as payment intermediary without license | Phase 1: Off-platform. Phase 2: Use licensed provider (Stripe Connect) |
-| **資金移動業 license requirements** | Direct payment intermediation requires FSA license | Phase 3 is 3-5+ years. Maintain Phase 2 as fallback |
+| **資金移動業 license requirements** | Direct payment intermediation requires FSA license | Halava operates under Stripe's license coverage in Phase 2+. No own license planned — survey Adyen/KOMOJU/GMO-PG in Phase 3 if Stripe margin becomes unsustainable. See [[payment-processors]]. |
 
 ### 2.2 Consumer Protection
 
@@ -99,7 +99,7 @@
 
 ### 4.2 Break-Even Analysis
 
-> See [[monetization#Transaction Fee Model]] for fee rates.
+> See [[payment-gateway/transaction-processing#Transaction Fee Model]] for fee rates.
 
 **Phase 1 (MVP):**
 - Monthly costs: ¥350,000
